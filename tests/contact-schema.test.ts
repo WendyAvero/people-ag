@@ -45,7 +45,6 @@ describe("parsePayload", () => {
     expect(serviceOptions.empresa.map((o) => o.value)).toEqual([
       "reclutamiento",
       "consultoria",
-      "acompanamiento",
       "otro",
     ]);
   });
@@ -76,7 +75,7 @@ describe("parsePayload", () => {
   });
 
   it("rechaza servicios que no existen (incluidos los de empleabilidad, ya eliminados)", () => {
-    for (const service of ["cv", "linkedin", "entrevistas", "empleabilidad-360"]) {
+    for (const service of ["cv", "linkedin", "entrevistas", "empleabilidad-360", "acompanamiento"]) {
       expect(parsePayload({ ...validCompany, service }).errors.service).toBeTruthy();
     }
     expect(parsePayload({ ...validCompany, service: "reclutamiento" }).errors.service).toBeUndefined();

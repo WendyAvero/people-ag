@@ -19,9 +19,9 @@ export function Empresas() {
           title="Recursos Humanos con mirada estratégica de negocio"
           className="max-w-3xl!"
         >
-          Una consultora boutique para organizaciones que necesitan incorporar
-          talento, profesionalizar sus procesos o contar con respaldo
-          especializado en la gestión de personas.
+          Consultoría estratégica de Recursos Humanos para organizaciones que
+          necesitan incorporar talento, profesionalizar sus procesos o contar
+          con respaldo especializado en la gestión de personas.
         </SectionHeading>
 
         <div className="mt-14">
@@ -84,7 +84,7 @@ export function Empresas() {
           </div>
         </article>
 
-        {/* 02 y 03 — Consultoría y acompañamiento */}
+        {/* 02 — Consultoría estratégica de Recursos Humanos */}
         <div className="mt-6">
           {others.map((service, index) => (
             <article

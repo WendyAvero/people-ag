@@ -6,7 +6,6 @@ import { companyServices } from "@/content/services";
 const shortLabels: Record<string, string> = {
   reclutamiento: "Del perfil a los finalistas, con acompañamiento.",
   consultoria: "Ordenar, profesionalizar y desarrollar la gestión de personas.",
-  acompanamiento: "Respaldo especializado según las prioridades del negocio.",
 };
 
 export function Hero() {
@@ -19,7 +18,7 @@ export function Hero() {
       <Container className="grid items-center gap-14 lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-7">
           <p className="eyebrow text-lavender-deep">
-            Consultora boutique de RR. HH. para empresas
+            Consultoría estratégica de Recursos Humanos para empresas
           </p>
 
           <h1
@@ -33,10 +32,9 @@ export function Hero() {
           </h1>
 
           <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted">
-            Ayudamos a dueños, directores y gerentes a incorporar a las personas
-            adecuadas y a ordenar, profesionalizar y desarrollar la gestión de
-            Recursos Humanos, con una mirada estratégica del negocio y
-            soluciones a la medida de cada organización.
+            Ayudamos a empresas a incorporar talento, profesionalizar la gestión
+            de personas y tomar mejores decisiones de RR. HH., con soluciones
+            alineadas a sus objetivos y necesidades de negocio.
           </p>
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">

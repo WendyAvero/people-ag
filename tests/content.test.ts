@@ -11,11 +11,10 @@ describe("contenido de servicios", () => {
     }
   });
 
-  it("hay exactamente tres servicios principales para empresas", () => {
+  it("hay exactamente dos servicios principales, sin el antiguo acompañamiento", () => {
     expect(companyServices.map((s) => s.id)).toEqual([
       "reclutamiento",
       "consultoria",
-      "acompanamiento",
     ]);
   });
 
@@ -30,12 +29,12 @@ describe("contenido de servicios", () => {
     expect(rec?.items?.[5]).toMatch(/finalistas/i);
   });
 
-  it("consultoría se organiza en ordenar, profesionalizar y desarrollar", () => {
+  it("consultoría estratégica integra los cinco ejes sin repetir ítems", () => {
     const c = companyServices.find((s) => s.id === "consultoria");
-    expect(c?.groups?.map((g) => g.label)).toEqual([
-      "Ordenar",
-      "Profesionalizar",
-      "Desarrollar",
-    ]);
+    expect(c?.title).toBe("Consultoría estratégica de Recursos Humanos");
+    expect(c?.items).toHaveLength(5);
+    expect(new Set(c?.items).size).toBe(5);
+    expect(c?.items?.[0]).toMatch(/Diagnóstico organizacional/);
+    expect(c?.items?.[4]).toMatch(/Seguimiento continuo/);
   });
 });

@@ -1,6 +1,6 @@
 # People AG — sitio web
 
-Landing de People AG, consultora boutique de Recursos Humanos para empresas (dueños, directores y gerentes). El sitio es exclusivamente B2B.
+Landing de People AG, consultoría estratégica de Recursos Humanos para empresas (dueños, directores y gerentes). El sitio es exclusivamente B2B.
 Next.js (App Router) + TypeScript + Tailwind CSS.
 
 > **Resumen en una línea:** la web informativa se puede publicar ya mismo, sin configurar nada más que el dominio.

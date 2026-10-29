@@ -8,12 +8,12 @@
 
 export type CompanyService = {
   /** También es el ancla de la sección: /#reclutamiento, etc. */
-  id: "reclutamiento" | "consultoria" | "acompanamiento";
+  id: "reclutamiento" | "consultoria";
   title: string;
   lead: string;
   /** Pasos o ítems del servicio (se muestran en orden). */
   items?: string[];
-  /** Variante agrupada (consultoría): ordenar, profesionalizar, desarrollar. */
+  /** Variante agrupada (opcional): ítems organizados por grupos. */
   groups?: { label: string; items: string[] }[];
   cta: { label: string; service: string };
 };
@@ -36,44 +36,16 @@ export const companyServices: CompanyService[] = [
   },
   {
     id: "consultoria",
-    title: "Consultoría de Recursos Humanos",
-    lead: "Para organizaciones que necesitan ordenar, profesionalizar y desarrollar su gestión de personas, con soluciones adaptadas a su realidad.",
-    groups: [
-      {
-        label: "Ordenar",
-        items: ["Diagnóstico de necesidades."],
-      },
-      {
-        label: "Profesionalizar",
-        items: [
-          "Profesionalización de procesos de RR. HH.",
-          "Diseño y mejora de prácticas de gestión de personas.",
-        ],
-      },
-      {
-        label: "Desarrollar",
-        items: [
-          "Acompañamiento a líderes y responsables de negocio.",
-          "Desarrollo de soluciones adaptadas a la realidad de cada organización.",
-        ],
-      },
+    title: "Consultoría estratégica de Recursos Humanos",
+    lead: "Acompañamos a las empresas a ordenar, profesionalizar y desarrollar su gestión de personas, combinando proyectos específicos con asesoramiento continuo según las necesidades del negocio.",
+    items: [
+      "Diagnóstico organizacional y definición de prioridades.",
+      "Diseño y mejora de procesos, políticas y herramientas de RR. HH.",
+      "Acompañamiento a líderes y desarrollo de prácticas de gestión.",
+      "Asesoramiento a dueños, directores y gerentes en decisiones sobre personas y organización.",
+      "Seguimiento continuo de prioridades y proyectos.",
     ],
     cta: { label: "Quiero profesionalizar RR. HH.", service: "consultoria" },
-  },
-  {
-    id: "acompanamiento",
-    title: "Acompañamiento estratégico en RR. HH.",
-    lead: "Respaldo especializado para fortalecer tu gestión de personas sin necesidad de armar un equipo interno completo, según las prioridades de tu negocio.",
-    items: [
-      "Soporte especializado para empresas que necesitan fortalecer su gestión de personas.",
-      "Organización y sistematización de procesos.",
-      "Desarrollo de herramientas y prácticas de gestión.",
-      "Acompañamiento según las prioridades y necesidades del negocio.",
-    ],
-    cta: {
-      label: "Quiero fortalecer mi gestión de personas",
-      service: "acompanamiento",
-    },
   },
 ];
 

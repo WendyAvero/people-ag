@@ -7,8 +7,7 @@ import { Logo } from "./Logo";
 
 const serviceLinks = [
   { label: "Reclutamiento y selección", href: "/#reclutamiento" },
-  { label: "Consultoría de RR. HH.", href: "/#consultoria" },
-  { label: "Acompañamiento estratégico", href: "/#acompanamiento" },
+  { label: "Consultoría estratégica de RR. HH.", href: "/#consultoria" },
   { label: "Cómo trabajamos", href: "/#metodo" },
 ];
 

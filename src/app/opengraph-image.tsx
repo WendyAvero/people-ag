@@ -3,7 +3,7 @@ import { join } from "node:path";
 
 import { ImageResponse } from "next/og";
 
-export const alt = "People AG — Consultora boutique de RR. HH. para empresas";
+export const alt = "People AG — Consultoría estratégica de Recursos Humanos para empresas";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -73,7 +73,7 @@ export default async function OpenGraphImage() {
             Gestioná personas con criterio.
           </span>
           <span style={{ marginTop: 28, fontSize: 30, color: "#5D5760" }}>
-            Consultora boutique de RR. HH. para empresas
+            Consultoría estratégica de Recursos Humanos para empresas
           </span>
         </div>
       </div>

@@ -13,8 +13,7 @@ export const serviceOptions: Record<
 > = {
   empresa: [
     { value: "reclutamiento", label: "Reclutamiento y selección" },
-    { value: "consultoria", label: "Consultoría de Recursos Humanos" },
-    { value: "acompanamiento", label: "Acompañamiento estratégico en RR. HH." },
+    { value: "consultoria", label: "Consultoría estratégica de Recursos Humanos" },
     { value: "otro", label: "Todavía no lo tengo claro" },
   ],
 };
