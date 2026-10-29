@@ -85,18 +85,18 @@ export const processSteps = [
 
 export const aboutPillars = [
   {
-    title: "Criterio técnico",
+    title: "Criterio profesional",
     description:
-      "Selección, desarrollo y acompañamiento organizacional abordados con método, no con recetas genéricas.",
+      "Conocimiento técnico aplicado a los desafíos reales de la gestión de personas.",
   },
   {
     title: "Visión de negocio",
     description:
-      "Cada decisión sobre personas impacta en la marcha de la empresa. Partimos de lo que tu negocio necesita.",
+      "Soluciones de RR. HH. alineadas con los objetivos, la estructura y el momento de cada organización.",
   },
   {
-    title: "Cercanía y soluciones a medida",
+    title: "Compromiso con los resultados",
     description:
-      "Trato directo y propuestas adaptadas a la realidad de cada organización, no paquetes cerrados.",
+      "Acompañamiento personalizado, prioridades claras y foco en soluciones aplicables.",
   },
 ] as const;

@@ -88,9 +88,15 @@ export const siteConfig = {
    *   photoAlt     texto alternativo de la foto
    */
   founder: {
-    name: null as string | null,
-    role: null as string | null,
-    bio: null as string[] | null,
+    name: "Wendy Avero González" as string | null,
+    role: "Licenciada en Relaciones del Trabajo · Universidad de Buenos Aires" as
+      | string
+      | null,
+    bio: [
+      "Soy profesional de Recursos Humanos y fundadora de People AG, una consultora orientada a acompañar a las empresas en sus desafíos de gestión de personas.",
+      "Mi enfoque combina formación técnica, visión de negocio y una mirada integral de las organizaciones. Trabajo para que Recursos Humanos aporte soluciones concretas: desde incorporar a las personas adecuadas hasta profesionalizar procesos, fortalecer el liderazgo y acompañar decisiones estratégicas.",
+      "Creo en una gestión de personas con criterio, cercana a la realidad de cada empresa y alineada con sus objetivos. Por eso, cada propuesta parte de comprender la necesidad, definir prioridades y construir soluciones que puedan implementarse y sostenerse en el tiempo.",
+    ] as string[] | null,
     credentials: null as string[] | null,
     /** Ruta dentro de /public, por ejemplo "/fundadora.jpg". */
     photo: null as string | null,

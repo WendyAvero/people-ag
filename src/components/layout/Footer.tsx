@@ -28,8 +28,9 @@ export function Footer() {
           <div className="md:col-span-5">
             <Logo className="h-20" />
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-cream/75">
-              {siteConfig.tagline} para empresas, con atención personalizada y
-              una mirada estratégica del negocio.
+              Consultoría estratégica de Recursos Humanos para empresas.
+              Selección, profesionalización de la gestión de personas y
+              asesoramiento adaptado a cada organización.
             </p>
 
             {linkedin || instagram ? (

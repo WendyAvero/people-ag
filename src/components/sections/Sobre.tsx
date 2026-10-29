@@ -26,14 +26,9 @@ export function Sobre() {
           <SectionHeading
             id="sobre-title"
             eyebrow="Sobre People AG"
-            title="Quién está detrás de la consultora"
+            title="Experiencia profesional. Criterio de negocio. Soluciones reales."
             className="max-w-3xl!"
-          >
-            People AG es una consultora de Recursos Humanos con una mirada
-            integral del negocio y de las personas. Detrás de la marca hay
-            experiencia profesional en gestión de personas, selección,
-            desarrollo y acompañamiento organizacional.
-          </SectionHeading>
+          />
 
           {hasProfile ? (
             <div className="mt-10 max-w-2xl border-l-2 border-sand pl-6">
