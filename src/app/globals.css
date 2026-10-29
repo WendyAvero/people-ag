@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+/*
+  Sistema visual de People AG
+  Base de marca: beige #CEB69A + lavanda grisácea #9E86A1.
+  Los tonos "deep" existen porque los colores de marca puros no alcanzan
+  contraste AA como texto sobre fondos claros: se usan solo para texto/acentos.
+*/
+@theme {
+  --color-sand: #ceb69a;
+  --color-sand-light: #efe6da;
+  --color-sand-deep: #6f5940;
+  --color-lavender: #9e86a1;
+  --color-lavender-light: #ece6ed;
+  --color-lavender-deep: #5a4660;
+  --color-ink: #231f24;
+  --color-muted: #5d5760;
+  --color-cream: #f8f4ee;
+  --color-line: #e3dacd;
+  --color-error: #a3262a;
+  --color-success: #2f6b4f;
+
+  --shadow-soft: 0 1px 2px rgb(35 31 36 / 0.04), 0 8px 24px -12px rgb(35 31 36 / 0.12);
+}
+
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    background: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.65;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-lavender-deep);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--color-sand);
+    color: var(--color-ink);
+  }
+}
+
+@layer components {
+  .eyebrow {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+}
