@@ -2,17 +2,17 @@ import Link from "next/link";
 
 import { Container } from "@/components/ui/Container";
 import { InstagramIcon, LinkedInIcon } from "@/components/ui/icons";
-import { siteConfig } from "@/config/site";
+import { mailtoHref, siteConfig } from "@/config/site";
 import { Logo } from "./Logo";
 
 const serviceLinks = [
-  { label: "Reclutamiento y selección", href: "/#reclutamiento" },
-  { label: "Consultoría estratégica de RR. HH.", href: "/#consultoria" },
+  { label: "Reclutamiento y selección de personal", href: "/reclutamiento-y-seleccion-de-personal" },
+  { label: "Consultoría estratégica de RR. HH.", href: "/consultoria-estrategica-de-recursos-humanos" },
   { label: "Cómo trabajamos", href: "/#metodo" },
 ];
 
 const contactLinks = [
-  { label: "Consultas de empresas", href: "/#contacto-empresa" },
+  { label: "Consultas de empresas", href: "/#contacto" },
 ];
 
 const linkClass =
@@ -88,6 +88,11 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <a href={mailtoHref()} className={`${linkClass} break-all`}>
+                  {siteConfig.contactEmail}
+                </a>
+              </li>
             </ul>
           </nav>
         </div>

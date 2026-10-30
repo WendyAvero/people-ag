@@ -16,28 +16,36 @@ function cleanUrl(value: string | undefined): string | null {
 }
 
 /**
- * URL pública: NEXT_PUBLIC_SITE_URL, o el dominio de producción que Vercel
- * expone automáticamente, o localhost solo en desarrollo.
+ * URL pública y canónica. Prioridad:
+ *  1. NEXT_PUBLIC_SITE_URL (https), si está definida.
+ *  2. https://people-ag.com en builds de producción: el dominio propio es el
+ *     canónico aunque el sitio también responda en people-ag.vercel.app.
+ *  3. localhost solo en desarrollo.
  */
-const vercelHost = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
+const PRODUCTION_URL = "https://people-ag.com";
 const siteUrl =
   cleanUrl(process.env.NEXT_PUBLIC_SITE_URL) ??
-  (vercelHost ? `https://${vercelHost}` : "http://localhost:3000");
-
-// Evita publicar a producción con sitemap/canonical/OG apuntando a localhost.
-if (process.env.VERCEL_ENV === "production" && siteUrl.startsWith("http://localhost")) {
-  throw new Error(
-    "Falta NEXT_PUBLIC_SITE_URL (https://tu-dominio.com) para el build de producción.",
-  );
-}
+  (process.env.NODE_ENV === "production" ? PRODUCTION_URL : "http://localhost:3000");
 
 export const siteConfig = {
   name: "People AG",
-  tagline: "Consultora de Recursos Humanos",
+  tagline: "Selección de personal y consultoría de RR. HH.",
   description:
-    "Consultoría estratégica de Recursos Humanos para empresas: reclutamiento y selección, diagnóstico, procesos y acompañamiento en la gestión de personas.",
+    "Selección de personal y consultoría estratégica de RR. HH. para empresas de Argentina y Uruguay: reclutamiento, diagnóstico, procesos y acompañamiento.",
   url: siteUrl,
   locale: "es_AR",
+
+  /**
+   * Canal de contacto provisorio mientras el formulario no esté habilitado.
+   * Es el único correo real del sitio; se usa vía enlace mailto:.
+   */
+  contactEmail: "consultorapeopleag@gmail.com",
+
+  /** Países donde se ofrecen los servicios (también para datos estructurados). */
+  areas: [
+    { code: "AR", name: "Argentina" },
+    { code: "UY", name: "Uruguay" },
+  ],
 
   /** Año que se muestra en el pie. Actualizalo al publicar. */
   copyrightYear: 2026,
@@ -121,3 +129,9 @@ export const navItems = [
   { label: "Sobre People AG", href: "#sobre", id: "sobre" },
   { label: "Contacto", href: "#contacto", id: "contacto" },
 ] as const;
+
+/** Enlace mailto: al canal de contacto, con asunto opcional. */
+export function mailtoHref(subject?: string): string {
+  const base = `mailto:${siteConfig.contactEmail}`;
+  return subject ? `${base}?subject=${encodeURIComponent(subject)}` : base;
+}

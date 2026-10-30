@@ -1,6 +1,8 @@
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ContactPanel } from "@/components/forms/ContactPanel";
+import { ButtonLink } from "@/components/ui/ButtonLink";
+import { mailtoHref, siteConfig } from "@/config/site";
 import { isContactFormEnabled } from "@/lib/forms-status";
 
 const nextSteps = [
@@ -17,13 +19,24 @@ function ContactUnavailable() {
   return (
     <div className="border border-ink/10 border-l-4 border-l-lavender-deep bg-white p-6 sm:p-9">
       <h3 className="font-display text-lg font-semibold">
-        El formulario de consultas todavía no está habilitado
+        Escribinos por correo
       </h3>
       <p className="mt-3 leading-relaxed text-muted">
-        Estamos terminando de configurar el canal de contacto. Por ahora no
-        recibimos consultas desde esta página; volvé a visitarla en los
-        próximos días.
+        El formulario de consultas todavía no está habilitado. Mientras tanto,
+        podés contarnos qué necesita tu empresa por correo y te respondemos
+        para coordinar una primera conversación.
       </p>
+      <p className="mt-5 font-display text-lg font-semibold break-all">
+        <a
+          href={mailtoHref("Consulta de empresa")}
+          className="underline underline-offset-4 hover:text-lavender-deep"
+        >
+          {siteConfig.contactEmail}
+        </a>
+      </p>
+      <ButtonLink href={mailtoHref("Consulta de empresa")} className="mt-6">
+        Enviar un correo
+      </ButtonLink>
     </div>
   );
 }

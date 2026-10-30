@@ -7,10 +7,15 @@ import { navItems } from "@/config/site";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { Logo } from "./Logo";
 
-export function Header() {
+/**
+ * En la home los enlaces son anclas de la misma página; en las páginas de
+ * servicio (`home={false}`) apuntan a la home ("/#sección").
+ */
+export function Header({ home = true }: { home?: boolean }) {
+  const prefix = home ? "" : "/";
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [active, setActive] = useState<string>("inicio");
+  const [active, setActive] = useState<string>(home ? "inicio" : "");
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   // Fondo del encabezado al hacer scroll.
@@ -64,7 +69,7 @@ export function Header() {
       }`}
     >
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-5 sm:px-8 sm:h-20 lg:px-10">
-        <a href="#inicio" aria-label="People AG, ir al inicio" className="inline-block rounded-sm py-1">
+        <a href={`${prefix}#inicio`} aria-label="People AG, ir al inicio" className="inline-block rounded-sm py-1">
           <Logo />
         </a>
 
@@ -75,7 +80,7 @@ export function Header() {
               return (
                 <li key={item.id}>
                   <a
-                    href={item.href}
+                    href={`${prefix}${item.href}`}
                     aria-current={isActive ? "true" : undefined}
                     className={`relative py-2 text-sm font-medium transition-colors hover:text-lavender-deep ${
                       isActive ? "text-lavender-deep" : "text-ink/80"
@@ -95,7 +100,7 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <ButtonLink
-            href="#contacto"
+            href={`${prefix}#contacto`}
             className="!px-5 !py-2.5 sm:!px-6"
           >
             Hablemos
@@ -125,7 +130,7 @@ export function Header() {
           {navItems.map((item) => (
             <li key={item.id}>
               <a
-                href={item.href}
+                href={`${prefix}${item.href}`}
                 onClick={() => setOpen(false)}
                 aria-current={active === item.id ? "true" : undefined}
                 className={`flex min-h-12 items-center justify-between border-b border-line/70 py-3 font-display text-base font-medium last:border-b-0 ${

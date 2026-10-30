@@ -2,6 +2,7 @@ import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { ArrowRight } from "@/components/ui/icons";
 import { companyServices } from "@/content/services";
+import { contactHref, servicePathById } from "@/lib/contact-link";
 
 const shortLabels: Record<string, string> = {
   reclutamiento: "Del perfil a los finalistas, con acompañamiento.",
@@ -25,7 +26,7 @@ export function Hero() {
             id="hero-title"
             className="mt-6 text-[2.5rem] font-semibold leading-[1.05] sm:text-6xl lg:text-[4rem]"
           >
-            Contratá mejor.
+            Contratá mejor.{" "}
             <span className="block text-lavender-deep">
               Gestioná personas con criterio.
             </span>
@@ -38,11 +39,14 @@ export function Hero() {
           </p>
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href="#contacto-empresa" data-servicio="reclutamiento">
+            <ButtonLink
+              href={contactHref("reclutamiento")}
+              data-servicio="reclutamiento"
+            >
               Necesito incorporar talento
             </ButtonLink>
             <ButtonLink
-              href="#contacto-empresa"
+              href={contactHref("consultoria")}
               data-servicio="consultoria"
               variant="secondary"
             >
@@ -77,7 +81,7 @@ export function Hero() {
                     className="border-t border-ink/10 first:border-t-0"
                   >
                     <a
-                      href={`#${service.id}`}
+                      href={servicePathById[service.id]}
                       className="group flex items-start gap-4 py-4"
                     >
                       <span

@@ -55,7 +55,7 @@ export function validatePublicEnv(env) {
   const warnings = [];
 
   const site = clean(env.NEXT_PUBLIC_SITE_URL);
-  if (!site) warnings.push("NEXT_PUBLIC_SITE_URL no está definida: sitemap, canonical y Open Graph no tendrán el dominio final.");
+  if (!site) warnings.push("NEXT_PUBLIC_SITE_URL no está definida: se usará https://people-ag.com como dominio canónico (sitemap, canonical y Open Graph).");
   else if (!/^https:\/\/[^\s/]+\.[^\s/]+\/?$/.test(site)) errors.push("NEXT_PUBLIC_SITE_URL debe ser una URL https sin ruta (ej. https://www.tu-dominio.com).");
 
   for (const [name, host] of [

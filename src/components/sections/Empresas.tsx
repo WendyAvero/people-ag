@@ -1,9 +1,27 @@
 import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { ArrowRight } from "@/components/ui/icons";
 import { companyMoments, companyServices } from "@/content/services";
+import { contactHref, servicePathById } from "@/lib/contact-link";
 
 const [recruiting, ...others] = companyServices;
+
+function ServiceLink({ id, label }: { id: "reclutamiento" | "consultoria"; label: string }) {
+  return (
+    <a
+      href={servicePathById[id]}
+      className="group mt-5 inline-flex items-center gap-2 font-display text-sm font-semibold text-lavender-deep underline-offset-4 hover:underline"
+    >
+      {label}
+      <ArrowRight
+        size={16}
+        aria-hidden="true"
+        className="transition-transform group-hover:translate-x-0.5"
+      />
+    </a>
+  );
+}
 
 export function Empresas() {
   return (
@@ -57,12 +75,18 @@ export function Empresas() {
               </h3>
               <p className="mt-5 leading-relaxed text-ink/85">{recruiting.lead}</p>
               <ButtonLink
-                href="#contacto-empresa"
+                href={contactHref("reclutamiento")}
                 data-servicio={recruiting.cta.service}
                 className="mt-8"
               >
                 {recruiting.cta.label}
               </ButtonLink>
+              <div>
+                <ServiceLink
+                  id="reclutamiento"
+                  label="Ver reclutamiento y selección de personal"
+                />
+              </div>
             </div>
 
             <ol className="grid gap-x-10 md:grid-cols-2 lg:col-span-7">
@@ -105,13 +129,19 @@ export function Empresas() {
                 </h3>
                 <p className="mt-4 leading-relaxed text-muted">{service.lead}</p>
                 <ButtonLink
-                  href="#contacto-empresa"
+                  href={contactHref("consultoria")}
                   data-servicio={service.cta.service}
                   variant="secondary"
                   className="mt-7"
                 >
                   {service.cta.label}
                 </ButtonLink>
+                <div>
+                  <ServiceLink
+                    id="consultoria"
+                    label="Ver consultoría estratégica de RR. HH."
+                  />
+                </div>
               </div>
 
               <div className="lg:col-span-7">
@@ -159,7 +189,7 @@ export function Empresas() {
             Cada trabajo se define en conjunto. No ofrecemos paquetes cerrados:
             armamos el alcance según lo que tu organización necesita.
           </p>
-          <ButtonLink href="#contacto-empresa" className="shrink-0">
+          <ButtonLink href={contactHref()} className="shrink-0">
             Conversemos sobre tu empresa
           </ButtonLink>
         </div>

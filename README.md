@@ -29,7 +29,15 @@ Qué hace `NEXT_PUBLIC_SITE_URL`: define la dirección oficial del sitio para Go
 3. *Deployments* → los tres puntos del último deploy → **Redeploy** (las variables se aplican en el próximo despliegue).
 4. Abrí `https://www.tu-dominio.com/sitemap.xml` y confirmá que las direcciones usan tu dominio.
 
-Mientras tanto, con la dirección `*.vercel.app` el sitio funciona; solo no tendrá el dominio final en el SEO.
+Si no definís la variable, el sitio usa `https://people-ag.com` como dominio canónico (sitemap, canonical y Open Graph). La dirección `people-ag.vercel.app` sigue funcionando como alternativa, pero los buscadores reciben siempre `people-ag.com` como principal.
+
+### SEO y páginas de servicio
+
+- Páginas indexables: `/`, `/reclutamiento-y-seleccion-de-personal` y `/consultoria-estrategica-de-recursos-humanos`. El contenido está en `src/content/service-pages.ts` (se edita sin tocar el diseño).
+- Cada página tiene su propio title, description, canonical y Open Graph. El sitemap (`/sitemap.xml`) y `robots.txt` se generan solos.
+- Datos estructurados (Schema.org) en `src/lib/structured-data.ts`: Argentina y Uruguay como zonas de servicio. No incluyen reseñas, teléfono ni dirección.
+- Contacto provisorio: `consultorapeopleag@gmail.com` por enlace `mailto:` (se cambia en `contactEmail`, `src/config/site.ts`). Con el formulario apagado, los botones de contacto abren el correo; cuando se habilite el formulario vuelven a llevar al formulario.
+- Pendientes manuales: verificar `people-ag.com` en Google Search Console, enviar el sitemap y, si querés, redirigir `vercel.app` hacia `people-ag.com` desde Vercel.
 
 ### Etapa 2 — Habilitar el formulario (NO hacer hasta tener lo legal resuelto)
 
