@@ -27,9 +27,12 @@ const FIELD_ORDER = [
 export function ContactForm({
   audience,
   preset = null,
+  testMode = false,
 }: {
   audience: Audience;
   preset?: { service: string; nonce: number } | null;
+  /** Entorno que no es producción (Preview): se avisa que es de prueba. */
+  testMode?: boolean;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   const successRef = useRef<HTMLDivElement>(null);
@@ -37,6 +40,8 @@ export function ContactForm({
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
+  // Evita dos envíos simultáneos aunque se haga doble clic antes de re-renderizar.
+  const sendingRef = useRef(false);
 
   // Al confirmarse el envío, el foco pasa al mensaje para lectores de pantalla.
   useEffect(() => {
@@ -67,7 +72,7 @@ export function ContactForm({
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (status === "sending") return;
+    if (status === "sending" || sendingRef.current) return;
 
     const form = event.currentTarget;
     const fd = new FormData(form);
@@ -94,6 +99,7 @@ export function ContactForm({
 
     setErrors({});
     setFormError(null);
+    sendingRef.current = true;
     setStatus("sending");
 
     try {
@@ -132,6 +138,8 @@ export function ContactForm({
         "No pudimos conectarnos. Revisá tu conexión y probá de nuevo.",
       );
       setStatus("error");
+    } finally {
+      sendingRef.current = false;
     }
   }
 
@@ -171,6 +179,15 @@ export function ContactForm({
       aria-describedby={formError ? `${idp}-form-error` : undefined}
       className="space-y-6"
     >
+      {testMode ? (
+        <p
+          role="note"
+          className="border-l-4 border-sand-deep bg-white px-4 py-3 text-sm font-semibold text-sand-deep"
+        >
+          Formulario en entorno de prueba. No ingreses datos personales reales.
+        </p>
+      ) : null}
+
       {process.env.NODE_ENV === "development" ? (
         <p className="border-l-2 border-sand-deep bg-white px-4 py-3 text-sm text-sand-deep">
           Modo desarrollo: el envío real requiere configurar{" "}
@@ -201,8 +218,7 @@ export function ContactForm({
 
       <Field
         id={`${idp}-company`}
-        label="Empresa"
-        required
+        label="Empresa (opcional)"
         error={errors.company}
       >
         <input
@@ -211,7 +227,6 @@ export function ContactForm({
           type="text"
           autoComplete="organization"
           maxLength={LIMITS.companyMax}
-          aria-required="true"
           aria-invalid={errors.company ? true : undefined}
           aria-describedby={describedBy(`${idp}-company`, errors.company)}
           className={controlClass(!!errors.company)}
@@ -317,7 +332,8 @@ export function ContactForm({
             htmlFor={`${idp}-consent`}
             className="text-sm leading-relaxed text-ink"
           >
-            Leí y acepto el{" "}
+            Acepto que People AG use los datos que envío para responder mi
+            consulta, según el{" "}
             <Link
               href="/privacidad"
               target="_blank"

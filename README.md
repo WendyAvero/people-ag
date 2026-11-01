@@ -41,20 +41,24 @@ Si no definís la variable, el sitio usa `https://people-ag.com` como dominio ca
 
 ### Etapa 2 — Habilitar el formulario (NO hacer hasta tener lo legal resuelto)
 
-El formulario recibe **datos personales**. Antes de habilitarlo:
+El formulario recibe **datos personales**. Antes de habilitarlo en producción:
 
-- [ ] Completar los datos reales de `/privacidad` (los marcados `[COMPLETAR: …]`).
-- [ ] Que un/a abogado/a revise el aviso y el texto del consentimiento.
+- [ ] Completar los datos reales de `/privacidad` (los marcados `[COMPLETAR: …]`) y cargar `legal` en `src/config/site.ts`.
+- [ ] Que un/a abogado/a revise el aviso y el texto del consentimiento (Argentina y también Uruguay).
 - [ ] Cambiar `privacyIsDraft` a `false` en `src/config/site.ts` (ver "Política de privacidad").
-- [ ] Cuenta de [Resend](https://resend.com) con tu dominio verificado y una API key.
+- [ ] Cuenta de [Resend](https://resend.com) con el dominio `people-ag.com` verificado (registros DNS que Resend indica) y una API key.
+
+**Seguro por diseño:** en **producción** el formulario no aparece mientras `privacyIsDraft` sea `true`, aunque las variables estén cargadas (así nunca se pide un consentimiento que remita a un aviso incompleto). En *Preview* y desarrollo sí se puede probar con el aviso en borrador.
 
 Variables **solo para el formulario** (secretas, solo servidor):
 
 | Variable | Qué poner |
 |---|---|
 | `RESEND_API_KEY` | La clave de Resend (empieza con `re_`) |
-| `CONTACT_TO_EMAIL` | La casilla que recibe las consultas (una sola dirección) |
-| `CONTACT_FROM_EMAIL` | Remitente de un dominio verificado en Resend, ej. `People AG <contacto@tu-dominio.com>` |
+| `CONTACT_TO_EMAIL` | `consultorapeopleag@gmail.com` (una sola dirección) |
+| `CONTACT_FROM_EMAIL` | Remitente de un dominio verificado en Resend, ej. `People AG <contacto@people-ag.com>` |
+
+Campos del formulario: nombre y apellido, empresa (opcional), correo, servicio de interés (Reclutamiento y selección de personal / Consultoría estratégica de RR. HH. / Otro), mensaje y casilla de consentimiento (no premarcada). Protecciones: validación en navegador y servidor, campo trampa (honeypot), máximo 5 envíos por IP cada 10 minutos, descarte de reenvíos idénticos (doble clic) y clave de idempotencia en Resend.
 
 Cómo se enciende: cuando las **tres** están cargadas y son válidas, y se hace **Redeploy**, aparece el formulario. Si falta alguna, la web muestra un aviso de "formulario no habilitado" y el servidor rechaza cualquier envío (error 503). **Nunca se simula un envío exitoso.**
 

@@ -9,7 +9,7 @@ import { ContactForm } from "./ContactForm";
  * Los botones "#contacto-empresa" repartidos por la página llevan hasta acá y,
  * si traen `data-servicio`, preseleccionan ese servicio en el formulario.
  */
-export function ContactPanel() {
+export function ContactPanel({ testMode = false }: { testMode?: boolean }) {
   // Servicio sugerido por el botón que se tocó (ej. "Necesito incorporar talento").
   const [preset, setPreset] = useState<{ service: string; nonce: number } | null>(null);
 
@@ -30,7 +30,7 @@ export function ContactPanel() {
       id="contacto-empresa"
       className="scroll-mt-28 border border-ink/10 bg-white p-6 shadow-soft sm:p-9"
     >
-      <ContactForm audience="empresa" preset={preset} />
+      <ContactForm audience="empresa" preset={preset} testMode={testMode} />
     </div>
   );
 }

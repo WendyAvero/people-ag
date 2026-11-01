@@ -120,14 +120,14 @@ export default function PrivacidadPage() {
             <ul className="list-disc space-y-1 pl-6">
               <li>Nombre y apellido.</li>
               <li>Correo electrónico.</li>
-              <li>Nombre de la empresa (solo en el formulario para empresas).</li>
+              <li>Nombre de la empresa (opcional).</li>
               <li>Servicio de interés.</li>
               <li>El contenido del mensaje que escribas.</li>
             </ul>
             <p>
-              Todos los campos del formulario son obligatorios (la empresa solo
-              en el formulario para empresas): sin ellos no podemos responder tu
-              consulta.
+              Son obligatorios el nombre y apellido, el correo, el servicio de
+              interés y el mensaje (la empresa es opcional): sin ellos no
+              podemos responder tu consulta.
             </p>
             <p>
               No pedimos datos sensibles. Te pedimos que tampoco los incluyas en

@@ -24,7 +24,7 @@ describe("parsePayload", () => {
     const { data, errors } = parsePayload({ audience: "empresa" });
     expect(data).toBeNull();
     expect(Object.keys(errors).sort()).toEqual(
-      ["company", "consent", "email", "message", "name", "service"].sort(),
+      ["consent", "email", "message", "name", "service"].sort(),
     );
   });
 
@@ -47,6 +47,26 @@ describe("parsePayload", () => {
       "consultoria",
       "otro",
     ]);
+  });
+
+  it("la empresa es opcional, pero si se completa se valida el largo", () => {
+    const base = { ...validCompany };
+    expect(parsePayload({ ...base, company: "" }).data).not.toBeNull();
+    expect(parsePayload({ ...base, company: "A" }).errors.company).toBeTruthy();
+    expect(parsePayload({ ...base, company: "x".repeat(121) }).errors.company).toBeTruthy();
+  });
+
+  it("las etiquetas de servicio son las pedidas", () => {
+    expect(serviceOptions.empresa.map((o) => o.label)).toEqual([
+      "Reclutamiento y selección de personal",
+      "Consultoría estratégica de RR. HH.",
+      "Otro",
+    ]);
+  });
+
+  it("elimina caracteres de control del mensaje", () => {
+    const { data } = parsePayload({ ...validCompany, message: "Hola\u0000 necesitamos\u0007 ayuda" });
+    expect(data?.message).toBe("Hola necesitamos ayuda");
   });
 
   it("rechaza consentimiento que no sea exactamente true", () => {

@@ -12,9 +12,9 @@ export const serviceOptions: Record<
   ReadonlyArray<{ value: string; label: string }>
 > = {
   empresa: [
-    { value: "reclutamiento", label: "Reclutamiento y selección" },
-    { value: "consultoria", label: "Consultoría estratégica de Recursos Humanos" },
-    { value: "otro", label: "Todavía no lo tengo claro" },
+    { value: "reclutamiento", label: "Reclutamiento y selección de personal" },
+    { value: "consultoria", label: "Consultoría estratégica de RR. HH." },
+    { value: "otro", label: "Otro" },
   ],
 };
 
@@ -46,8 +46,11 @@ export type FieldErrors = Partial<
 
 const EMAIL_RE = /^[^\s@<>()[\]\\,;:"]+@[^\s@<>()[\]\\,;:"]+\.[^\s@<>()[\]\\,;:"]{2,}$/;
 
+// Caracteres de control (salvo tabulación y saltos de línea): no tienen lugar en un mensaje.
+const CONTROL_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g;
+
 function asString(value: unknown): string {
-  return typeof value === "string" ? value.trim() : "";
+  return typeof value === "string" ? value.replace(CONTROL_CHARS, "").trim() : "";
 }
 
 export function parsePayload(input: unknown): {
@@ -82,9 +85,8 @@ export function parsePayload(input: unknown): {
     errors.name = `Usá hasta ${LIMITS.nameMax} caracteres.`;
   }
 
-  if (!company) {
-    errors.company = "Ingresá el nombre de tu empresa.";
-  } else if (company.length < LIMITS.companyMin) {
+  // La empresa es opcional: solo se valida si se completó.
+  if (company && company.length < LIMITS.companyMin) {
     errors.company = "El nombre de la empresa es demasiado corto.";
   } else if (company.length > LIMITS.companyMax) {
     errors.company = `Usá hasta ${LIMITS.companyMax} caracteres.`;

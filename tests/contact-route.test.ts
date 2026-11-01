@@ -2,7 +2,8 @@ import { NextRequest } from "next/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { POST } from "@/app/api/contact/route";
-import { buildEmail } from "@/lib/mailer";
+import { buildEmail, idempotencyKey } from "@/lib/mailer";
+import { resetForTests } from "@/lib/rate-limit";
 
 const valid = {
   audience: "empresa",
@@ -40,6 +41,7 @@ let fetchMock: ReturnType<typeof vi.fn>;
 let errorSpy: ReturnType<typeof vi.spyOn>;
 
 beforeEach(() => {
+  resetForTests();
   fetchMock = vi.fn();
   vi.stubGlobal("fetch", fetchMock);
   errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
@@ -100,6 +102,41 @@ describe("POST /api/contact", () => {
     expect(sent.reply_to).toBe("ana@acme.com");
     expect(sent.subject).not.toMatch(/[\r\n]/);
     expect(sent.text).toContain("Consentimiento");
+    expect(init.headers["Idempotency-Key"]).toMatch(/^people-ag-contact-[0-9a-f]{40}$/);
+  });
+
+  it("acepta una consulta sin empresa y lo indica en el correo", async () => {
+    configure();
+    fetchMock.mockResolvedValue(new Response("{}", { status: 200 }));
+    const res = await POST(req({ ...valid, company: "" }));
+    expect(res.status).toBe(200);
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body).text).toContain("Empresa: (no indicada)");
+  });
+
+  it("un reenvío idéntico (doble clic) no manda un segundo correo", async () => {
+    configure();
+    fetchMock.mockResolvedValue(new Response("{}", { status: 200 }));
+    expect((await POST(req(valid))).status).toBe(200);
+    const second = await POST(req(valid));
+    expect(second.status).toBe(200);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("un envío que falló sí puede reintentarse", async () => {
+    configure();
+    fetchMock.mockResolvedValueOnce(new Response("{}", { status: 500 }));
+    expect((await POST(req(valid))).status).toBe(502);
+    fetchMock.mockResolvedValueOnce(new Response("{}", { status: 200 }));
+    expect((await POST(req(valid))).status).toBe(200);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("en producción con la privacidad en borrador no envía (503), aunque el correo esté configurado", async () => {
+    configure();
+    vi.stubEnv("VERCEL_ENV", "production");
+    const res = await POST(req(valid));
+    expect(res.status).toBe(503);
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("si el proveedor falla, responde 502 y nunca ok:true", async () => {
@@ -135,7 +172,7 @@ describe("POST /api/contact", () => {
     const ip = "203.0.113.50";
     const statuses: number[] = [];
     for (let i = 0; i < 6; i++) {
-      statuses.push((await POST(req(valid, { ip }))).status);
+      statuses.push((await POST(req({ ...valid, message: `Consulta número ${i} sobre una búsqueda` }, { ip }))).status);
     }
     expect(statuses).toEqual([200, 200, 200, 200, 200, 429]);
     expect(fetchMock).toHaveBeenCalledTimes(5);
@@ -163,6 +200,17 @@ describe("POST /api/contact", () => {
       req(valid, { headers: { origin: "http://localhost:3000" } }),
     );
     expect(res.status).toBe(200);
+  });
+});
+
+describe("idempotencyKey", () => {
+  const data = { ...valid, audience: "empresa" as const };
+  it("es estable para el mismo envío y cambia si cambia el contenido", () => {
+    const t = new Date("2026-10-26T18:00:00Z");
+    expect(idempotencyKey(data, t)).toBe(idempotencyKey(data, t));
+    expect(idempotencyKey({ ...data, message: "Otro mensaje distinto" }, t)).not.toBe(
+      idempotencyKey(data, t),
+    );
   });
 });
 
