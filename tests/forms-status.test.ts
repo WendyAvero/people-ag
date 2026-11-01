@@ -43,6 +43,17 @@ describe("isContactFormEnabled", () => {
   });
 });
 
+describe("fail-safe en producción", () => {
+  it("si no se puede determinar el entorno en un build de producción, queda apagado", () => {
+    vi.stubEnv("RESEND_API_KEY", "re_abc");
+    vi.stubEnv("CONTACT_TO_EMAIL", "inbox@example.com");
+    vi.stubEnv("CONTACT_FROM_EMAIL", "People AG <contacto@example.com>");
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("VERCEL_ENV", "");
+    expect(isContactFormEnabled()).toBe(false);
+  });
+});
+
 describe("isTestEnvironment", () => {
   it("es true en preview y desarrollo, false solo en producción", () => {
     vi.stubEnv("VERCEL_ENV", "preview");
