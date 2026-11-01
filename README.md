@@ -36,7 +36,7 @@ Si no definís la variable, el sitio usa `https://people-ag.com` como dominio ca
 - Páginas indexables: `/`, `/reclutamiento-y-seleccion-de-personal` y `/consultoria-estrategica-de-recursos-humanos`. El contenido está en `src/content/service-pages.ts` (se edita sin tocar el diseño).
 - Cada página tiene su propio title, description, canonical y Open Graph. El sitemap (`/sitemap.xml`) y `robots.txt` se generan solos.
 - Datos estructurados (Schema.org) en `src/lib/structured-data.ts`: Argentina y Uruguay como zonas de servicio. No incluyen reseñas, teléfono ni dirección.
-- Contacto provisorio: `consultorapeopleag@gmail.com` por enlace `mailto:` (se cambia en `contactEmail`, `src/config/site.ts`). Con el formulario apagado, los botones de contacto abren el correo; cuando se habilite el formulario vuelven a llevar al formulario.
+- Canal de contacto: `wendyavero@people-ag.com` por enlace `mailto:` (se cambia en `contactEmail`, `src/config/site.ts`). Con el formulario apagado, los botones de contacto abren el correo; cuando se habilite el formulario vuelven a llevar al formulario.
 - Pendientes manuales: verificar `people-ag.com` en Google Search Console, enviar el sitemap y, si querés, redirigir `vercel.app` hacia `people-ag.com` desde Vercel.
 
 ### Etapa 2 — Habilitar el formulario (NO hacer hasta tener lo legal resuelto)
@@ -55,7 +55,7 @@ Variables **solo para el formulario** (secretas, solo servidor):
 | Variable | Qué poner |
 |---|---|
 | `RESEND_API_KEY` | La clave de Resend (empieza con `re_`) |
-| `CONTACT_TO_EMAIL` | `consultorapeopleag@gmail.com` (una sola dirección) |
+| `CONTACT_TO_EMAIL` | `wendyavero@people-ag.com` (una sola dirección) |
 | `CONTACT_FROM_EMAIL` | Remitente de un dominio verificado en Resend, ej. `People AG <contacto@people-ag.com>` |
 
 Campos del formulario: nombre y apellido, empresa (opcional), correo, servicio de interés (Reclutamiento y selección de personal / Consultoría estratégica de RR. HH. / Otro), mensaje y casilla de consentimiento (no premarcada). Protecciones: validación en navegador y servidor, campo trampa (honeypot), máximo 5 envíos por IP cada 10 minutos, descarte de reenvíos idénticos (doble clic) y clave de idempotencia en Resend.

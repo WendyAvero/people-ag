@@ -36,10 +36,10 @@ export const siteConfig = {
   locale: "es_AR",
 
   /**
-   * Canal de contacto provisorio mientras el formulario no esté habilitado.
+   * Correo de contacto (enlaces mailto, datos estructurados). Las consultas del formulario llegan a CONTACT_TO_EMAIL.
    * Es el único correo real del sitio; se usa vía enlace mailto:.
    */
-  contactEmail: "consultorapeopleag@gmail.com",
+  contactEmail: "wendyavero@people-ag.com",
 
   /** Países donde se ofrecen los servicios (también para datos estructurados). */
   areas: [
