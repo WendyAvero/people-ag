@@ -23,7 +23,8 @@ const inter = localFont({
   display: "swap",
 });
 
-const title = `${siteConfig.name} | ${siteConfig.tagline}`;
+// Primero la búsqueda que queremos captar; la marca va al final.
+const title = `${siteConfig.tagline} | ${siteConfig.name}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -33,7 +34,8 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   applicationName: siteConfig.name,
-  alternates: { canonical: "/" },
+  // Sin canonical global: cada página define el suyo (si no, la 404 y
+  // cualquier página nueva heredarían "/" como canonical).
   openGraph: {
     type: "website",
     locale: siteConfig.locale,

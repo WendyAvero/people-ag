@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { servicePageList, servicePages } from "@/content/service-pages";
@@ -65,6 +68,45 @@ describe("páginas de servicio", () => {
     const text = JSON.stringify(servicePages);
     expect(text).not.toMatch(/\b(ISO|certificad|testimonio|caso de éxito|clientes? satisfech)/i);
     expect(text).not.toMatch(/\d+\s?(%|años|clientes|empresas)/i);
+  });
+});
+
+describe("metadata y palabras clave de la home", () => {
+  // layout.tsx usa next/font, que no se puede importar en Vitest: se revisa el
+  // código fuente y la configuración de la que sale el title.
+  const layoutSource = readFileSync(
+    join(process.cwd(), "src", "app", "layout.tsx"),
+    "utf8",
+  );
+
+  it("el title de la home nombra 'Recursos Humanos' y no pasa de 60 caracteres", async () => {
+    const { siteConfig } = await import("@/config/site");
+    expect(layoutSource).toContain("`${siteConfig.tagline} | ${siteConfig.name}`");
+    const title = `${siteConfig.tagline} | ${siteConfig.name}`;
+    expect(title).toMatch(/Recursos Humanos/);
+    expect(title.length).toBeLessThanOrEqual(60);
+  });
+
+  it("la description de la home menciona PyMEs, Argentina y Uruguay y cabe en el snippet", async () => {
+    const { siteConfig } = await import("@/config/site");
+    expect(siteConfig.description).toMatch(/PyMEs/);
+    expect(siteConfig.description).toMatch(/Argentina y Uruguay/);
+    expect(siteConfig.description.length).toBeLessThanOrEqual(170);
+  });
+
+  it("el canonical de la home lo define la home y el layout no lo impone a todas las páginas", async () => {
+    const home = await import("@/app/page");
+    expect(layoutSource).not.toMatch(/alternates\s*:/);
+    expect(home.metadata.alternates?.canonical).toBe("/");
+  });
+
+  it("las páginas de servicio tienen preguntas frecuentes sin repetir y mencionan PyMEs", () => {
+    for (const p of servicePageList) {
+      const qs = p.faqs.map((f) => f.q);
+      expect(new Set(qs).size, p.slug).toBe(qs.length);
+      expect(qs.length, p.slug).toBeGreaterThanOrEqual(5);
+      expect(JSON.stringify(p), p.slug).toMatch(/PyMEs?/);
+    }
   });
 });
 

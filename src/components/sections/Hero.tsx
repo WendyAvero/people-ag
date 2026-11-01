@@ -33,9 +33,10 @@ export function Hero() {
           </h1>
 
           <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted">
-            Ayudamos a empresas a incorporar talento, profesionalizar la gestión
-            de personas y tomar mejores decisiones de RR. HH., con soluciones
-            alineadas a sus objetivos y necesidades de negocio.
+            Somos una consultora de Recursos Humanos que ayuda a empresas y
+            PyMEs a incorporar talento, profesionalizar la gestión de personas y
+            tomar mejores decisiones de RR. HH., con soluciones alineadas a sus
+            objetivos y necesidades de negocio.
           </p>
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">

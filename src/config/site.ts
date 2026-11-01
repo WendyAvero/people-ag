@@ -29,9 +29,9 @@ const siteUrl =
 
 export const siteConfig = {
   name: "People AG",
-  tagline: "Selección de personal y consultoría de RR. HH.",
+  tagline: "Consultora de Recursos Humanos para empresas",
   description:
-    "Selección de personal y consultoría estratégica de RR. HH. para empresas de Argentina y Uruguay: reclutamiento, diagnóstico, procesos y acompañamiento.",
+    "Consultora de Recursos Humanos para empresas y PyMEs de Argentina y Uruguay: selección de personal, consultoría estratégica de RR. HH. y acompañamiento.",
   url: siteUrl,
   locale: "es_AR",
 

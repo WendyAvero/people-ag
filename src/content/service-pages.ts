@@ -40,11 +40,11 @@ export const servicePages: Record<ServiceSlug, ServicePage> = {
     serviceId: "reclutamiento",
     metaTitle: "Reclutamiento y selección de personal",
     metaDescription:
-      "Reclutamiento y selección de personal para empresas de Argentina y Uruguay: definición del perfil, búsqueda, evaluación y finalistas. Modalidad remota.",
+      "Reclutamiento y selección de personal para empresas y PyMEs de Argentina y Uruguay: definición del perfil, búsqueda, evaluación y finalistas. Modalidad remota.",
     name: "Reclutamiento y selección de personal",
     eyebrow: "Reclutamiento y selección",
     h1: "Reclutamiento y selección de personal para empresas",
-    lead: "Un proceso de selección de punta a punta para dueños, directores y gerentes que necesitan incorporar a la persona indicada: desde definir bien el perfil hasta presentarte a los finalistas y acompañarte en la decisión. Trabajamos con empresas de Argentina y Uruguay, también de forma remota.",
+    lead: "Un proceso de selección de punta a punta para dueños, directores y gerentes que necesitan incorporar a la persona indicada: desde definir bien el perfil hasta presentarte a los finalistas y acompañarte en la decisión. Trabajamos con PyMEs y empresas de Argentina y Uruguay, también de forma remota.",
     ctaLabel: "Necesito incorporar talento",
     mailSubject: "Consulta por reclutamiento y selección",
     whenTitle: "Cuándo conviene sumar un proceso de selección profesional",
@@ -116,6 +116,14 @@ export const servicePages: Record<ServiceSlug, ServicePage> = {
         a: "Depende del alcance de la búsqueda. Lo conversamos en la primera reunión y te proponemos un esquema acorde.",
       },
       {
+        q: "¿Qué diferencia hay entre reclutamiento y selección de personal?",
+        a: "El reclutamiento consiste en atraer y reunir candidatos para una posición; la selección, en evaluarlos, compararlos con el perfil definido y elegir a quién incorporar. Un proceso completo de búsqueda y selección de personal abarca ambas etapas.",
+      },
+      {
+        q: "¿Sirve para una PyME que no tiene área de Recursos Humanos?",
+        a: "Sí. Está pensado para empresas que no cuentan con un área de RR. HH. con tiempo para una búsqueda. Nos ocupamos del proceso y vos participás en las decisiones clave, como la definición del perfil y la elección final.",
+      },
+      {
         q: "¿Cómo empiezo?",
         a: "Escribinos contándonos qué posición necesitás cubrir. Te respondemos por correo para coordinar una primera conversación.",
       },
@@ -132,11 +140,11 @@ export const servicePages: Record<ServiceSlug, ServicePage> = {
     serviceId: "consultoria",
     metaTitle: "Consultoría estratégica de Recursos Humanos",
     metaDescription:
-      "Consultoría de Recursos Humanos para dueños, directores y gerentes de Argentina y Uruguay: diagnóstico, procesos, acompañamiento a líderes y asesoramiento continuo.",
+      "Consultoría de Recursos Humanos para empresas y PyMEs de Argentina y Uruguay: diagnóstico, procesos, acompañamiento a líderes y asesoramiento continuo.",
     name: "Consultoría estratégica de Recursos Humanos",
     eyebrow: "Consultoría de RR. HH.",
     h1: "Consultoría estratégica de Recursos Humanos para empresas",
-    lead: "Acompañamos a dueños, directores y gerentes a ordenar, profesionalizar y desarrollar la gestión de personas, combinando proyectos específicos con asesoramiento continuo según las necesidades del negocio. Trabajamos con empresas de Argentina y Uruguay, también de forma remota.",
+    lead: "Acompañamos a dueños, directores y gerentes a ordenar, profesionalizar y desarrollar la gestión de personas, combinando proyectos específicos con asesoramiento continuo según las necesidades del negocio. Trabajamos con PyMEs y empresas de Argentina y Uruguay, también de forma remota.",
     ctaLabel: "Quiero profesionalizar RR. HH.",
     mailSubject: "Consulta por consultoría de Recursos Humanos",
     whenTitle: "Cuándo conviene contar con una consultoría de RR. HH.",
@@ -188,6 +196,10 @@ export const servicePages: Record<ServiceSlug, ServicePage> = {
     ],
     faqs: [
       {
+        q: "¿Qué es una consultoría de Recursos Humanos?",
+        a: "Es un servicio externo que ayuda a una empresa a ordenar y mejorar cómo gestiona a las personas: desde un diagnóstico de la situación hasta el diseño de procesos y políticas, el acompañamiento a los líderes y el asesoramiento en decisiones. Cada propuesta se arma según el momento y las prioridades de la organización.",
+      },
+      {
         q: "¿Es para empresas que no tienen área de Recursos Humanos?",
         a: "También. Acompañamos tanto a organizaciones sin un área de RR. HH. completa como a las que quieren profesionalizar la que ya tienen.",
       },
@@ -198,6 +210,10 @@ export const servicePages: Record<ServiceSlug, ServicePage> = {
       {
         q: "¿Se contrata un proyecto o un servicio mensual?",
         a: "Ambas opciones son posibles. Definimos el alcance en conjunto según la necesidad de tu empresa.",
+      },
+      {
+        q: "¿La consultoría de RR. HH. sirve para una PyME?",
+        a: "Sí. Está pensada para empresas que están profesionalizando la gestión de personas, incluso sin un área de RR. HH. propia. Definimos en conjunto un alcance acorde al tamaño y a las prioridades de tu organización.",
       },
       {
         q: "¿Cómo empiezo?",

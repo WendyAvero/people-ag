@@ -12,7 +12,7 @@ export function Logo({ className = "h-12 sm:h-16" }: { className?: string }) {
   return (
     <Image
       src={logo}
-      alt="People AG Consultora"
+      alt="People AG, consultora de Recursos Humanos"
       width={logo.width}
       height={logo.height}
       unoptimized
