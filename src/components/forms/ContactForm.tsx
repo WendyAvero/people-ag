@@ -1,12 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import Link from "next/link";
 
 import {
   LIMITS,
   parsePayload,
-  serviceOptions,
   type Audience,
   type FieldErrors,
 } from "@/lib/contact-schema";
@@ -19,24 +17,20 @@ const FIELD_ORDER = [
   "name",
   "company",
   "email",
-  "service",
   "message",
   "consent",
 ] as const;
 
 export function ContactForm({
   audience,
-  preset = null,
   testMode = false,
 }: {
   audience: Audience;
-  preset?: { service: string; nonce: number } | null;
   /** Entorno que no es producción (Preview): se avisa que es de prueba. */
   testMode?: boolean;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   const successRef = useRef<HTMLDivElement>(null);
-  const serviceRef = useRef<HTMLSelectElement>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
@@ -47,17 +41,6 @@ export function ContactForm({
   useEffect(() => {
     if (status === "success") successRef.current?.focus();
   }, [status]);
-
-  // Servicio sugerido por el botón que llevó hasta el formulario.
-  useEffect(() => {
-    if (
-      preset &&
-      serviceRef.current &&
-      serviceOptions[audience].some((o) => o.value === preset.service)
-    ) {
-      serviceRef.current.value = preset.service;
-    }
-  }, [preset, audience]);
 
   const idp = `${audience}`; // prefijo para ids únicos entre formularios
 
@@ -81,7 +64,6 @@ export function ContactForm({
       name: String(fd.get("name") ?? ""),
       company: String(fd.get("company") ?? ""),
       email: String(fd.get("email") ?? ""),
-      service: String(fd.get("service") ?? ""),
       message: String(fd.get("message") ?? ""),
       consent: fd.get("consent") === "on",
       website: String(fd.get("website") ?? ""),
@@ -169,8 +151,6 @@ export function ContactForm({
     );
   }
 
-  const options = serviceOptions[audience];
-
   return (
     <form
       ref={formRef}
@@ -254,33 +234,6 @@ export function ContactForm({
       </Field>
 
       <Field
-        id={`${idp}-service`}
-        label="Servicio de interés"
-        required
-        error={errors.service}
-      >
-        <select
-          ref={serviceRef}
-          id={`${idp}-service`}
-          name="service"
-          defaultValue=""
-          aria-required="true"
-          aria-invalid={errors.service ? true : undefined}
-          aria-describedby={describedBy(`${idp}-service`, errors.service)}
-          className={controlClass(!!errors.service)}
-        >
-          <option value="" disabled>
-            Elegí una opción
-          </option>
-          {options.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </select>
-      </Field>
-
-      <Field
         id={`${idp}-message`}
         label="Mensaje"
         required
@@ -332,16 +285,8 @@ export function ContactForm({
             htmlFor={`${idp}-consent`}
             className="text-sm leading-relaxed text-ink"
           >
-            Acepto que People AG use los datos que envío para responder mi
-            consulta, según el{" "}
-            <Link
-              href="/privacidad"
-              target="_blank"
-              className="font-semibold text-lavender-deep underline underline-offset-4 hover:text-ink"
-            >
-              aviso de privacidad
-            </Link>
-            .
+            Acepto que People AG use mis datos para responderme y gestionar
+            el contacto comercial.
           </label>
         </div>
         <div className="pl-8">

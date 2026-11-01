@@ -102,7 +102,9 @@ export default function PrivacidadPage() {
               , CUIT <Val value={siteConfig.legal.taxId} label="número" />, con
               domicilio en{" "}
               <Val value={siteConfig.legal.address} label="domicilio legal" />,
-              que actúa bajo la marca {siteConfig.name}.
+              que actúa bajo la marca {siteConfig.name}.{" "}
+              <Pending>validar con asesor jurídico si el responsable es una
+              persona humana o una sociedad, y completar sus datos</Pending>
             </p>
             <p>
               Para consultas sobre privacidad y para ejercer tus derechos podés
@@ -121,13 +123,11 @@ export default function PrivacidadPage() {
               <li>Nombre y apellido.</li>
               <li>Correo electrónico.</li>
               <li>Nombre de la empresa (opcional).</li>
-              <li>Servicio de interés.</li>
               <li>El contenido del mensaje que escribas.</li>
             </ul>
             <p>
-              Son obligatorios el nombre y apellido, el correo, el servicio de
-              interés y el mensaje (la empresa es opcional): sin ellos no
-              podemos responder tu consulta.
+              Son obligatorios el nombre y apellido, el correo y el mensaje (la
+              empresa es opcional): sin ellos no podemos responder tu consulta.
             </p>
             <p>
               No pedimos datos sensibles. Te pedimos que tampoco los incluyas en
@@ -138,9 +138,10 @@ export default function PrivacidadPage() {
 
           <Block title="3. Para qué los usamos">
             <p>
-              Usamos estos datos únicamente para leer tu consulta, responderte y
-              coordinar una primera conversación. No los usamos para enviarte
-              publicidad ni los cedemos a terceros con fines comerciales.
+              Usamos estos datos para leer tu consulta, responderte y gestionar
+              el contacto comercial con tu empresa. No los usamos para enviarte
+              newsletters ni comunicaciones comerciales automáticas, ni los
+              cedemos a terceros con fines comerciales.
             </p>
           </Block>
 

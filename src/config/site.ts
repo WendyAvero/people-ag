@@ -77,7 +77,7 @@ export const siteConfig = {
    * Si privacyIsDraft pasa a false con alguno vacío, el build falla a propósito.
    */
   legal: {
-    responsible: null as string | null,
+    responsible: "Wendy Avero González" as string | null,
     taxId: null as string | null,
     address: null as string | null,
     privacyEmail: null as string | null,

@@ -76,7 +76,6 @@ export function Empresas() {
               <p className="mt-5 leading-relaxed text-ink/85">{recruiting.lead}</p>
               <ButtonLink
                 href={contactHref("reclutamiento")}
-                data-servicio={recruiting.cta.service}
                 className="mt-8"
               >
                 {recruiting.cta.label}
@@ -130,7 +129,6 @@ export function Empresas() {
                 <p className="mt-4 leading-relaxed text-muted">{service.lead}</p>
                 <ButtonLink
                   href={contactHref("consultoria")}
-                  data-servicio={service.cta.service}
                   variant="secondary"
                   className="mt-7"
                 >

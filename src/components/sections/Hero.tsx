@@ -41,13 +41,11 @@ export function Hero() {
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <ButtonLink
               href={contactHref("reclutamiento")}
-              data-servicio="reclutamiento"
             >
               Necesito incorporar talento
             </ButtonLink>
             <ButtonLink
               href={contactHref("consultoria")}
-              data-servicio="consultoria"
               variant="secondary"
             >
               Quiero profesionalizar RR. HH.

@@ -10,7 +10,6 @@ const valid = {
   name: "Ana Pérez",
   company: "Acme SA",
   email: "ana@acme.com",
-  service: "reclutamiento",
   message: "Necesitamos cubrir un puesto de analista.",
   consent: true,
 };
@@ -222,8 +221,7 @@ describe("buildEmail", () => {
         name: "Luis Gómez",
         company: "Acme SA",
         email: "luis@mail.com",
-        service: "reclutamiento",
-        message: "<script>alert(1)</script>",
+              message: "<script>alert(1)</script>",
         consent: true,
       },
       new Date("2026-10-26T18:00:00Z"),

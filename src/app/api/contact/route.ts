@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Mismo envío repetido (doble clic): ya se despachó, no se manda otro correo.
-  const fingerprint = `${data.email}|${data.service}|${data.message}`;
+  const fingerprint = `${data.email}|${data.message}`;
   if (wasRecentlySent(fingerprint, Date.now())) {
     return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
   }

@@ -3,7 +3,7 @@ import "server-only";
 import { createHash } from "node:crypto";
 
 import { siteConfig } from "@/config/site";
-import { serviceLabel, type ContactPayload } from "./contact-schema";
+import { type ContactPayload } from "./contact-schema";
 import { validateMailerEnv } from "./env-validation.mjs";
 
 /**
@@ -43,10 +43,8 @@ function oneLine(value: string): string {
 }
 
 export function buildEmail(data: ContactPayload, receivedAt: Date) {
-  const service = serviceLabel(data.audience, data.service);
-
   const subject = oneLine(
-    `[People AG] Nueva consulta de empresa: ${service}`,
+    "[People AG] Nueva consulta desde el sitio web",
   );
 
   const when = new Intl.DateTimeFormat("es-AR", {
@@ -60,7 +58,6 @@ export function buildEmail(data: ContactPayload, receivedAt: Date) {
     `Nombre y apellido: ${data.name}`,
     `Empresa: ${data.company || "(no indicada)"}`,
     `Correo: ${data.email}`,
-    `Servicio de interés: ${service}`,
     "",
     "Mensaje:",
     data.message,
@@ -85,7 +82,7 @@ export function buildEmail(data: ContactPayload, receivedAt: Date) {
 export function idempotencyKey(data: ContactPayload, now: Date): string {
   const bucket = Math.floor(now.getTime() / (10 * 60 * 1000));
   const hash = createHash("sha256")
-    .update(JSON.stringify([data.email, data.service, data.message, bucket]))
+    .update(JSON.stringify([data.email, data.message, bucket]))
     .digest("hex");
   return `people-ag-contact-${hash.slice(0, 40)}`;
 }

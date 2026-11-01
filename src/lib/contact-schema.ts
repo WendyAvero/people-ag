@@ -7,17 +7,6 @@
 /** El formulario es exclusivamente para empresas. */
 export type Audience = "empresa";
 
-export const serviceOptions: Record<
-  Audience,
-  ReadonlyArray<{ value: string; label: string }>
-> = {
-  empresa: [
-    { value: "reclutamiento", label: "Reclutamiento y selección de personal" },
-    { value: "consultoria", label: "Consultoría estratégica de RR. HH." },
-    { value: "otro", label: "Otro" },
-  ],
-};
-
 export const LIMITS = {
   nameMin: 3,
   nameMax: 100,
@@ -33,7 +22,6 @@ export type ContactPayload = {
   name: string;
   company: string;
   email: string;
-  service: string;
   message: string;
   consent: boolean;
   /** Campo trampa anti-bots: debe llegar vacío. */
@@ -41,7 +29,7 @@ export type ContactPayload = {
 };
 
 export type FieldErrors = Partial<
-  Record<"name" | "company" | "email" | "service" | "message" | "consent", string>
+  Record<"name" | "company" | "email" | "message" | "consent", string>
 >;
 
 const EMAIL_RE = /^[^\s@<>()[\]\\,;:"]+@[^\s@<>()[\]\\,;:"]+\.[^\s@<>()[\]\\,;:"]{2,}$/;
@@ -66,13 +54,12 @@ export function parsePayload(input: unknown): {
   const audience: Audience | null = raw.audience === "empresa" ? "empresa" : null;
   if (!audience) {
     // No es un error de campo: el cliente siempre lo envía.
-    return { data: null, errors: { service: "Solicitud inválida." } };
+    return { data: null, errors: { message: "Solicitud inválida." } };
   }
 
   const name = asString(raw.name).replace(/\s+/g, " ");
   const company = asString(raw.company).replace(/\s+/g, " ");
   const email = asString(raw.email).toLowerCase();
-  const service = asString(raw.service);
   const message = asString(raw.message);
   const consent = raw.consent === true;
   const website = asString(raw.website);
@@ -98,12 +85,6 @@ export function parsePayload(input: unknown): {
     errors.email = "Revisá el correo: parece que le falta algo (ej. nombre@dominio.com).";
   }
 
-  if (!service) {
-    errors.service = "Elegí el servicio que te interesa.";
-  } else if (!serviceOptions[audience].some((o) => o.value === service)) {
-    errors.service = "Elegí una de las opciones de la lista.";
-  }
-
   if (!message) {
     errors.message = "Contanos brevemente en qué podemos ayudarte.";
   } else if (message.length < LIMITS.messageMin) {
@@ -125,17 +106,10 @@ export function parsePayload(input: unknown): {
       name,
       company,
       email,
-      service,
       message,
       consent,
       website,
     },
     errors,
   };
-}
-
-export function serviceLabel(audience: Audience, value: string): string {
-  return (
-    serviceOptions[audience].find((o) => o.value === value)?.label ?? value
-  );
 }
