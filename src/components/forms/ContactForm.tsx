@@ -285,8 +285,8 @@ export function ContactForm({
             htmlFor={`${idp}-consent`}
             className="text-sm leading-relaxed text-ink"
           >
-            Acepto que People AG use mis datos para responderme y gestionar
-            el contacto comercial.
+            Acepto que People AG utilice mis datos para responder mi consulta y
+            mantener conversaciones relacionadas con los servicios solicitados.
           </label>
         </div>
         <div className="pl-8">

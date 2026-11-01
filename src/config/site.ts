@@ -78,9 +78,7 @@ export const siteConfig = {
    */
   legal: {
     responsible: "Wendy Avero González" as string | null,
-    taxId: null as string | null,
     address: null as string | null,
-    privacyEmail: null as string | null,
     aaipLegend: null as string | null,
   },
 

@@ -108,11 +108,6 @@ export function Footer() {
                 Aviso de privacidad
               </Link>
             </li>
-            <li>
-              <Link href="/privacidad#informacion-legal" className={linkClass}>
-                Información legal
-              </Link>
-            </li>
           </ul>
         </div>
       </Container>
