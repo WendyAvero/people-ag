@@ -1,16 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { serviceOptions } from "@/lib/contact-schema";
 import { companyServices, processSteps } from "@/content/services";
 
 describe("contenido de servicios", () => {
-  it("cada CTA de servicio preselecciona una opción válida del formulario de empresas", () => {
-    const valid = serviceOptions.empresa.map((o) => o.value);
-    for (const s of companyServices) {
-      expect(valid, s.id).toContain(s.cta.service);
-    }
-  });
-
   it("hay exactamente dos servicios principales, sin el antiguo acompañamiento", () => {
     expect(companyServices.map((s) => s.id)).toEqual([
       "reclutamiento",

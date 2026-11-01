@@ -36,10 +36,10 @@ export const siteConfig = {
   locale: "es_AR",
 
   /**
-   * Canal de contacto provisorio mientras el formulario no esté habilitado.
+   * Correo de contacto (enlaces mailto, datos estructurados). Las consultas del formulario llegan a CONTACT_TO_EMAIL.
    * Es el único correo real del sitio; se usa vía enlace mailto:.
    */
-  contactEmail: "consultorapeopleag@gmail.com",
+  contactEmail: "wendyavero@people-ag.com",
 
   /** Países donde se ofrecen los servicios (también para datos estructurados). */
   areas: [
@@ -77,10 +77,8 @@ export const siteConfig = {
    * Si privacyIsDraft pasa a false con alguno vacío, el build falla a propósito.
    */
   legal: {
-    responsible: null as string | null,
-    taxId: null as string | null,
+    responsible: "Wendy Avero González" as string | null,
     address: null as string | null,
-    privacyEmail: null as string | null,
     aaipLegend: null as string | null,
   },
 

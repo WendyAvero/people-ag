@@ -1,13 +1,12 @@
 import { describe, expect, it } from "vitest";
 
-import { LIMITS, parsePayload, serviceOptions } from "@/lib/contact-schema";
+import { LIMITS, parsePayload } from "@/lib/contact-schema";
 
 const validCompany = {
   audience: "empresa",
   name: "Ana Pérez",
   company: "Acme SA",
   email: "Ana@Acme.com",
-  service: "reclutamiento",
   message: "Necesitamos cubrir un puesto de analista.",
   consent: true,
 };
@@ -24,7 +23,7 @@ describe("parsePayload", () => {
     const { data, errors } = parsePayload({ audience: "empresa" });
     expect(data).toBeNull();
     expect(Object.keys(errors).sort()).toEqual(
-      ["company", "consent", "email", "message", "name", "service"].sort(),
+      ["consent", "email", "message", "name"].sort(),
     );
   });
 
@@ -33,20 +32,23 @@ describe("parsePayload", () => {
       audience: "persona",
       name: "Luis Gómez",
       email: "luis@mail.com",
-      service: "cv",
       message: "Quiero mejorar mi CV, gracias.",
       consent: true,
     });
     expect(data).toBeNull();
-    expect(errors.service).toBeTruthy();
+    expect(errors.message).toBeTruthy();
   });
 
-  it("solo ofrece los servicios de empresa en el formulario", () => {
-    expect(serviceOptions.empresa.map((o) => o.value)).toEqual([
-      "reclutamiento",
-      "consultoria",
-      "otro",
-    ]);
+  it("la empresa es opcional, pero si se completa se valida el largo", () => {
+    const base = { ...validCompany };
+    expect(parsePayload({ ...base, company: "" }).data).not.toBeNull();
+    expect(parsePayload({ ...base, company: "A" }).errors.company).toBeTruthy();
+    expect(parsePayload({ ...base, company: "x".repeat(121) }).errors.company).toBeTruthy();
+  });
+
+  it("elimina caracteres de control del mensaje", () => {
+    const { data } = parsePayload({ ...validCompany, message: "Hola\u0000 necesitamos\u0007 ayuda" });
+    expect(data?.message).toBe("Hola necesitamos ayuda");
   });
 
   it("rechaza consentimiento que no sea exactamente true", () => {
@@ -74,11 +76,10 @@ describe("parsePayload", () => {
     }
   });
 
-  it("rechaza servicios que no existen (incluidos los de empleabilidad, ya eliminados)", () => {
-    for (const service of ["cv", "linkedin", "entrevistas", "empleabilidad-360", "acompanamiento"]) {
-      expect(parsePayload({ ...validCompany, service }).errors.service).toBeTruthy();
-    }
-    expect(parsePayload({ ...validCompany, service: "reclutamiento" }).errors.service).toBeUndefined();
+  it("no pide ni conserva un servicio de interés", () => {
+    const { data } = parsePayload({ ...validCompany, service: "reclutamiento" });
+    expect(data).not.toBeNull();
+    expect(data).not.toHaveProperty("service");
   });
 
   it("aplica los límites de largo del mensaje", () => {

@@ -31,3 +31,27 @@ export function isRateLimited(key: string, now: number): boolean {
   }
   return false;
 }
+
+// --- Duplicados (doble clic, reenvíos) -------------------------------------
+const DUPLICATE_WINDOW_MS = 60 * 1000;
+const sent = new Map<string, number>();
+
+/** true si el mismo envío ya se despachó con éxito hace menos de un minuto. */
+export function wasRecentlySent(fingerprint: string, now: number): boolean {
+  const at = sent.get(fingerprint);
+  return at !== undefined && now - at < DUPLICATE_WINDOW_MS;
+}
+
+/** Registrar solo después de un envío exitoso: un fallo debe poder reintentarse. */
+export function markSent(fingerprint: string, now: number): void {
+  sent.set(fingerprint, now);
+  for (const [k, t] of sent) {
+    if (now - t >= DUPLICATE_WINDOW_MS) sent.delete(k);
+  }
+}
+
+/** Solo para pruebas. */
+export function resetForTests(): void {
+  hits.clear();
+  sent.clear();
+}

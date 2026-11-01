@@ -30,9 +30,9 @@ describe("dominio canónico", () => {
 
   it("mailto usa el único correo real y codifica el asunto", async () => {
     const { mailtoHref } = await import("@/config/site");
-    expect(mailtoHref()).toBe("mailto:consultorapeopleag@gmail.com");
+    expect(mailtoHref()).toBe("mailto:wendyavero@people-ag.com");
     expect(mailtoHref("Consulta de empresa")).toBe(
-      "mailto:consultorapeopleag@gmail.com?subject=Consulta%20de%20empresa",
+      "mailto:wendyavero@people-ag.com?subject=Consulta%20de%20empresa",
     );
   });
 });
@@ -81,7 +81,7 @@ describe("sitemap y datos estructurados", () => {
     const json = JSON.stringify(homeJsonLd());
     expect(json).toContain('"name":"Argentina"');
     expect(json).toContain('"name":"Uruguay"');
-    expect(json).toContain("consultorapeopleag@gmail.com");
+    expect(json).toContain("wendyavero@people-ag.com");
     expect(json.match(/"@type":"Service"/g)).toHaveLength(2);
     expect(json).not.toMatch(/aggregateRating|review|telephone|streetAddress/);
   });

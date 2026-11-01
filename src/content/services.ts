@@ -15,7 +15,7 @@ export type CompanyService = {
   items?: string[];
   /** Variante agrupada (opcional): ítems organizados por grupos. */
   groups?: { label: string; items: string[] }[];
-  cta: { label: string; service: string };
+  cta: { label: string };
 };
 
 export const companyServices: CompanyService[] = [
@@ -32,7 +32,7 @@ export const companyServices: CompanyService[] = [
       "Presentación de finalistas.",
       "Acompañamiento durante el proceso de selección.",
     ],
-    cta: { label: "Necesito incorporar talento", service: "reclutamiento" },
+    cta: { label: "Necesito incorporar talento" },
   },
   {
     id: "consultoria",
@@ -45,7 +45,7 @@ export const companyServices: CompanyService[] = [
       "Asesoramiento a dueños, directores y gerentes en decisiones sobre personas y organización.",
       "Seguimiento continuo de prioridades y proyectos.",
     ],
-    cta: { label: "Quiero profesionalizar RR. HH.", service: "consultoria" },
+    cta: { label: "Quiero profesionalizar RR. HH." },
   },
 ];
 

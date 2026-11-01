@@ -3,7 +3,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ContactPanel } from "@/components/forms/ContactPanel";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { mailtoHref, siteConfig } from "@/config/site";
-import { isContactFormEnabled } from "@/lib/forms-status";
+import { isContactFormEnabled, isTestEnvironment } from "@/lib/forms-status";
 
 const nextSteps = [
   "Leemos tu consulta con atención.",
@@ -92,7 +92,7 @@ export function Contacto() {
         </div>
 
         <div className="lg:col-span-7">
-          {formEnabled ? <ContactPanel /> : <ContactUnavailable />}
+          {formEnabled ? <ContactPanel testMode={isTestEnvironment()} /> : <ContactUnavailable />}
         </div>
       </Container>
     </section>

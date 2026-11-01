@@ -5,7 +5,7 @@ import { isContactFormEnabled } from "@/lib/forms-status";
 /**
  * Destino de los botones de contacto de la home.
  * - Con el formulario habilitado: ancla al formulario (comportamiento actual).
- * - Sin formulario: correo provisorio, con el asunto del servicio.
+ * - Sin formulario: correo de contacto, con el asunto del servicio.
  */
 export function contactHref(serviceId?: "reclutamiento" | "consultoria"): string {
   if (isContactFormEnabled()) return "#contacto-empresa";

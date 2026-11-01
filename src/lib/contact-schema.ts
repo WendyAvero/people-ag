@@ -7,17 +7,6 @@
 /** El formulario es exclusivamente para empresas. */
 export type Audience = "empresa";
 
-export const serviceOptions: Record<
-  Audience,
-  ReadonlyArray<{ value: string; label: string }>
-> = {
-  empresa: [
-    { value: "reclutamiento", label: "Reclutamiento y selección" },
-    { value: "consultoria", label: "Consultoría estratégica de Recursos Humanos" },
-    { value: "otro", label: "Todavía no lo tengo claro" },
-  ],
-};
-
 export const LIMITS = {
   nameMin: 3,
   nameMax: 100,
@@ -33,7 +22,6 @@ export type ContactPayload = {
   name: string;
   company: string;
   email: string;
-  service: string;
   message: string;
   consent: boolean;
   /** Campo trampa anti-bots: debe llegar vacío. */
@@ -41,13 +29,16 @@ export type ContactPayload = {
 };
 
 export type FieldErrors = Partial<
-  Record<"name" | "company" | "email" | "service" | "message" | "consent", string>
+  Record<"name" | "company" | "email" | "message" | "consent", string>
 >;
 
 const EMAIL_RE = /^[^\s@<>()[\]\\,;:"]+@[^\s@<>()[\]\\,;:"]+\.[^\s@<>()[\]\\,;:"]{2,}$/;
 
+// Caracteres de control (salvo tabulación y saltos de línea): no tienen lugar en un mensaje.
+const CONTROL_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g;
+
 function asString(value: unknown): string {
-  return typeof value === "string" ? value.trim() : "";
+  return typeof value === "string" ? value.replace(CONTROL_CHARS, "").trim() : "";
 }
 
 export function parsePayload(input: unknown): {
@@ -63,13 +54,12 @@ export function parsePayload(input: unknown): {
   const audience: Audience | null = raw.audience === "empresa" ? "empresa" : null;
   if (!audience) {
     // No es un error de campo: el cliente siempre lo envía.
-    return { data: null, errors: { service: "Solicitud inválida." } };
+    return { data: null, errors: { message: "Solicitud inválida." } };
   }
 
   const name = asString(raw.name).replace(/\s+/g, " ");
   const company = asString(raw.company).replace(/\s+/g, " ");
   const email = asString(raw.email).toLowerCase();
-  const service = asString(raw.service);
   const message = asString(raw.message);
   const consent = raw.consent === true;
   const website = asString(raw.website);
@@ -82,9 +72,8 @@ export function parsePayload(input: unknown): {
     errors.name = `Usá hasta ${LIMITS.nameMax} caracteres.`;
   }
 
-  if (!company) {
-    errors.company = "Ingresá el nombre de tu empresa.";
-  } else if (company.length < LIMITS.companyMin) {
+  // La empresa es opcional: solo se valida si se completó.
+  if (company && company.length < LIMITS.companyMin) {
     errors.company = "El nombre de la empresa es demasiado corto.";
   } else if (company.length > LIMITS.companyMax) {
     errors.company = `Usá hasta ${LIMITS.companyMax} caracteres.`;
@@ -94,12 +83,6 @@ export function parsePayload(input: unknown): {
     errors.email = "Ingresá tu correo electrónico.";
   } else if (email.length > LIMITS.emailMax || !EMAIL_RE.test(email)) {
     errors.email = "Revisá el correo: parece que le falta algo (ej. nombre@dominio.com).";
-  }
-
-  if (!service) {
-    errors.service = "Elegí el servicio que te interesa.";
-  } else if (!serviceOptions[audience].some((o) => o.value === service)) {
-    errors.service = "Elegí una de las opciones de la lista.";
   }
 
   if (!message) {
@@ -123,17 +106,10 @@ export function parsePayload(input: unknown): {
       name,
       company,
       email,
-      service,
       message,
       consent,
       website,
     },
     errors,
   };
-}
-
-export function serviceLabel(audience: Audience, value: string): string {
-  return (
-    serviceOptions[audience].find((o) => o.value === value)?.label ?? value
-  );
 }

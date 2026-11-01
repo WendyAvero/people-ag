@@ -2,7 +2,8 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { parsePayload } from "@/lib/contact-schema";
 import { getMailerConfig, sendContactEmail } from "@/lib/mailer";
-import { isRateLimited } from "@/lib/rate-limit";
+import { isContactFormEnabled } from "@/lib/forms-status";
+import { isRateLimited, markSent, wasRecentlySent } from "@/lib/rate-limit";
 
 const MAX_BODY_BYTES = 10_000;
 
@@ -106,6 +107,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
   }
 
+  // Mismo envío repetido (doble clic): ya se despachó, no se manda otro correo.
+  const fingerprint = `${data.email}|${data.message}`;
+  if (wasRecentlySent(fingerprint, Date.now())) {
+    return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
+  }
+
   if (isRateLimited(clientKey(request), Date.now())) {
     return fail(429, {
       ok: false,
@@ -115,7 +122,7 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  const config = getMailerConfig();
+  const config = isContactFormEnabled() ? getMailerConfig() : null;
   if (!config) {
     // Integración pendiente: nunca se confirma un envío que no ocurrió.
     // (El motivo, sin valores, ya quedó registrado por getMailerConfig.)
@@ -151,6 +158,8 @@ export async function POST(request: NextRequest) {
         "No pudimos enviar tu mensaje por un problema técnico. Probá de nuevo en unos minutos.",
     });
   }
+
+  markSent(fingerprint, Date.now());
 
   // Éxito real: el proveedor aceptó el correo. No se guarda nada en el servidor.
   return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });

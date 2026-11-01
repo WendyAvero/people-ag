@@ -94,165 +94,146 @@ export default function PrivacidadPage() {
             Última actualización: <Pending>fecha</Pending>
           </p>
 
-          <Block title="1. Quién es responsable de tus datos">
+          <Block title="1. Quién es responsable">
             <p>
-              El responsable del tratamiento de los datos personales que se
-              reciben a través de este sitio es{" "}
-              <Val value={siteConfig.legal.responsible} label="nombre completo o razón social" />
-              , CUIT <Val value={siteConfig.legal.taxId} label="número" />, con
-              domicilio en{" "}
-              <Val value={siteConfig.legal.address} label="domicilio legal" />,
-              que actúa bajo la marca {siteConfig.name}.
+              La responsable del tratamiento de tus datos es{" "}
+              <Val value={siteConfig.legal.responsible} label="nombre completo" />
+              , persona humana, que presta sus servicios profesionales bajo la
+              marca {siteConfig.name}. Podés escribirle a{" "}
+              <a
+                href={`mailto:${siteConfig.contactEmail}`}
+                className="font-semibold text-lavender-deep underline underline-offset-4"
+              >
+                {siteConfig.contactEmail}
+              </a>
+              .
             </p>
             <p>
-              Para consultas sobre privacidad y para ejercer tus derechos podés
-              escribir a{" "}
-              <Val value={siteConfig.legal.privacyEmail} label="correo de contacto para temas de privacidad" />
+              Domicilio de la responsable:{" "}
+              <Val
+                value={siteConfig.legal.address}
+                label="domicilio, pendiente de validación jurídica"
+              />
               .
             </p>
           </Block>
 
-          <Block title="2. Qué datos recolectamos">
+          <Block title="2. Qué datos pedimos">
             <p>
-              Solo los que completás voluntariamente en el formulario de
-              contacto:
-            </p>
-            <ul className="list-disc space-y-1 pl-6">
-              <li>Nombre y apellido.</li>
-              <li>Correo electrónico.</li>
-              <li>Nombre de la empresa (solo en el formulario para empresas).</li>
-              <li>Servicio de interés.</li>
-              <li>El contenido del mensaje que escribas.</li>
-            </ul>
-            <p>
-              Todos los campos del formulario son obligatorios (la empresa solo
-              en el formulario para empresas): sin ellos no podemos responder tu
-              consulta.
+              Solo los que completás en el formulario de contacto: nombre y
+              apellido, correo electrónico, empresa (opcional) y el mensaje que
+              escribas. No pedimos DNI, CUIT, domicilio, teléfono, datos
+              financieros ni datos sensibles; te pedimos que tampoco los
+              incluyas en el mensaje. El nombre, el correo y el mensaje son
+              obligatorios: sin ellos no podemos responderte.
             </p>
             <p>
-              No pedimos datos sensibles. Te pedimos que tampoco los incluyas en
-              el mensaje (por ejemplo, datos de salud, orientación sexual,
-              afiliación política o sindical, o creencias religiosas).
+              Este formulario es solo para consultas por nuestros servicios. No
+              es una plataforma de empleo y no recibimos postulaciones
+              laborales.
             </p>
           </Block>
 
           <Block title="3. Para qué los usamos">
+            <p>Únicamente para:</p>
+            <ul className="list-disc space-y-1 pl-6">
+              <li>responder la consulta que iniciaste voluntariamente;</li>
+              <li>darte información sobre los servicios profesionales de {siteConfig.name};</li>
+              <li>
+                mantener conversaciones comerciales vinculadas con una posible
+                contratación.
+              </li>
+            </ul>
             <p>
-              Usamos estos datos únicamente para leer tu consulta, responderte y
-              coordinar una primera conversación. No los usamos para enviarte
-              publicidad ni los cedemos a terceros con fines comerciales.
+              Antes de enviar el formulario te pedimos que marques una casilla
+              aceptando este uso. Podés retirar tu consentimiento escribiendo al
+              correo del punto 1.{" "}
+              <Pending>validar con asesor jurídico la base jurídica del
+              tratamiento y si corresponde mantener la casilla de
+              consentimiento</Pending>
             </p>
           </Block>
 
-          <Block title="4. Consentimiento">
+          <Block title="4. Para qué no los usamos">
             <p>
-              Antes de enviar el formulario te pedimos que confirmes que leíste
-              este aviso. Sin esa conformidad el formulario no se envía. Podés
-              retirar tu consentimiento en cualquier momento escribiendo al
-              correo indicado en el punto 1.
+              No enviamos newsletters ni hacemos campañas de marketing
+              automatizadas. No elaboramos perfiles comerciales. No usamos tus
+              datos para ninguna finalidad distinta de las anteriores.
             </p>
             <p>
-              El sitio no guarda un registro propio del consentimiento: la
-              constancia (que aceptaste el aviso, con fecha y hora) queda
-              incluida en el correo con tu consulta.
-            </p>
-          </Block>
-
-          <Block title="5. Cómo se reciben y se protegen">
-            <p>
-              Los mensajes se envían por correo electrónico a una casilla de uso
-              restringido a <Pending>quién accede</Pending>. El sitio no guarda
-              los mensajes en una base de datos pública ni en el propio sitio.
-              La transmisión se realiza mediante conexión cifrada (HTTPS).
-            </p>
-            <p>
-              Datos técnicos: para prevenir abusos, el servidor usa tu
-              dirección IP de forma temporal (en memoria, unos minutos) para
-              limitar envíos repetidos, y el proveedor de alojamiento puede
-              registrar datos de conexión (IP, fecha, navegador) en sus
-              registros técnicos. <Pending>Confirmar con la configuración
-              real del hosting el alcance y la duración de esos registros.</Pending>
-            </p>
-            <p>
-              <Pending>Describir medidas adicionales: acceso con contraseña
-              fuerte y verificación en dos pasos, dispositivos protegidos,
-              etc.</Pending>
+              No comercializamos ni compartimos tus datos con terceros para sus
+              propias finalidades. Los proveedores tecnológicos intervienen
+              exclusivamente para prestar los servicios necesarios para gestionar
+              tu consulta.
             </p>
           </Block>
 
-          <Block title="6. Con quién podemos compartirlos">
+          <Block title="5. Cómo llegan tus datos y quién interviene">
             <p>
-              Para que el formulario funcione utilizamos proveedores de servicios
-              tecnológicos que procesan datos por nuestra cuenta: un servicio de
-              envío de correo (<Pending>proveedor, ej. Resend</Pending>) y un
-              servicio de alojamiento del sitio (<Pending>proveedor, ej.
-              Vercel</Pending>). Estos proveedores pueden estar ubicados fuera
-              de Argentina y pueden conservar una copia de los mensajes o
-              registros técnicos según sus propias condiciones{" "}
-              <Pending>verificar plazos de retención de cada proveedor</Pending>.
+              Tu consulta llega a la casilla de correo de {siteConfig.name}. El
+              sitio no tiene una base de datos propia para guardar las
+              consultas, pero los mensajes se reciben y quedan en esa casilla, y
+              pueden existir registros técnicos en los proveedores que se
+              describen a continuación.
             </p>
             <p>
-              <Pending>Con asesoramiento jurídico: describir el marco
-              contractual con cada proveedor y, para transferencias
-              internacionales a países sin nivel de protección adecuado, el
-              mecanismo aplicable (por ejemplo, cláusulas contractuales modelo
-              aprobadas por la AAIP) o el consentimiento expreso.</Pending>
+              Para que el formulario funcione usamos dos servicios: Vercel, para
+              el alojamiento del sitio, y Resend, para el envío de la consulta
+              por correo electrónico. Tus datos pasan por ellos para que el
+              mensaje llegue. Pueden tener servidores fuera de Argentina y
+              conservar registros técnicos según sus propias condiciones.{" "}
+              <Pending>revisar las condiciones contractuales de Vercel y Resend,
+              la ubicación de sus servidores, si hay transferencia internacional
+              de datos y qué exige la normativa en ese caso, y los plazos de
+              retención de cada uno</Pending>
             </p>
-          </Block>
-
-          <Block title="7. Cuánto tiempo los conservamos">
             <p>
-              Conservamos tu consulta durante <Pending>plazo de conservación</Pending>{" "}
-              y luego la eliminamos, salvo que hayamos iniciado una relación de
-              trabajo o que una norma nos obligue a conservarla.
+              Para evitar envíos abusivos, el sitio usa tu dirección IP de forma
+              temporal, durante unos minutos y sin guardarla.
             </p>
           </Block>
 
-          <Block title="8. Tus derechos">
+          <Block title="6. Cuánto tiempo los conservamos">
             <p>
-              Tenés derecho a solicitar el acceso, la rectificación, la
-              actualización y la supresión de tus datos personales. Para
-              ejercerlos, escribinos al correo indicado en el punto 1.{" "}
-              <Pending>Revisión jurídica: indicar plazos de respuesta (la Ley
-              25.326 prevé 10 días corridos para el acceso y 5 días hábiles para
-              rectificación o supresión) y la gratuidad del acceso a intervalos
-              no inferiores a seis meses.</Pending>
+              El tiempo necesario para responderte y, si corresponde, mantener
+              la conversación comercial.{" "}
+              <Pending>plazo concreto de conservación, a definir con asesor
+              jurídico</Pending>
+            </p>
+          </Block>
+
+          <Block title="7. Tus derechos">
+            <p>
+              Podés pedir el acceso, la rectificación, la actualización o la
+              supresión de tus datos escribiendo a{" "}
+              {siteConfig.contactEmail}.
             </p>
             <p>
               {siteConfig.legal.aaipLegend ?? (
-                <Pending>texto textual que exige la Resolución AAIP 14/2018
-                (art. 3) sobre el rol de la Agencia de Acceso a la Información
-                Pública como órgano de control; copiarlo tal como figura en la
+                <Pending>texto textual que exige la normativa sobre el derecho de
+                acceso y el rol de la Agencia de Acceso a la Información
+                Pública; que el asesor jurídico lo copie tal como figura en la
                 norma</Pending>
               )}
             </p>
-          </Block>
-
-          <Block title="9. Cookies y analítica">
             <p>
-              Este sitio no utiliza cookies publicitarias ni de seguimiento.{" "}
-              <Pending>Confirmar y ajustar según la analítica que se active: si
-              se usa una herramienta sin cookies, indicarlo; si se usa una que
-              sí las instala, agregar banner de consentimiento y detallar
-              finalidades.</Pending>
+              <Pending>aplicabilidad de la inscripción de bases de datos ante la
+              AAIP y de la normativa uruguaya cuando corresponda</Pending>
             </p>
           </Block>
 
-          <Block id="informacion-legal" title="10. Información legal">
+          <Block title="8. Cookies y cambios en este aviso">
             <p>
-              {siteConfig.name} es una marca de <Val value={siteConfig.legal.responsible} label="titular: nombre o razón social" />
-              , CUIT <Val value={siteConfig.legal.taxId} label="número" />,
-              domicilio <Val value={siteConfig.legal.address} label="domicilio legal" />. Los contenidos de este sitio
-              son informativos y no constituyen una oferta ni una garantía de
-              resultados. <Pending>Agregar otros datos legales exigibles (por
-              ejemplo, inscripciones) según indique el asesor jurídico.</Pending>
+              Por ahora, este sitio no instala cookies, no guarda información en
+              tu dispositivo, no usa herramientas de analítica y no carga
+              scripts de terceros.{" "}
+              <Pending>confirmar antes de publicar, con la configuración final
+              de Vercel (analítica, registros del proveedor), que esta
+              afirmación sigue siendo exacta</Pending>
             </p>
-          </Block>
-
-          <Block title="11. Cambios en este aviso">
             <p>
               Si modificamos este aviso, publicaremos la versión actualizada en
-              esta misma página con su fecha.
+              esta misma página, con su fecha.
             </p>
           </Block>
         </Container>

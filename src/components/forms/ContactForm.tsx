@@ -1,12 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import Link from "next/link";
 
 import {
   LIMITS,
   parsePayload,
-  serviceOptions,
   type Audience,
   type FieldErrors,
 } from "@/lib/contact-schema";
@@ -19,40 +17,30 @@ const FIELD_ORDER = [
   "name",
   "company",
   "email",
-  "service",
   "message",
   "consent",
 ] as const;
 
 export function ContactForm({
   audience,
-  preset = null,
+  testMode = false,
 }: {
   audience: Audience;
-  preset?: { service: string; nonce: number } | null;
+  /** Entorno que no es producción (Preview): se avisa que es de prueba. */
+  testMode?: boolean;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   const successRef = useRef<HTMLDivElement>(null);
-  const serviceRef = useRef<HTMLSelectElement>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
+  // Evita dos envíos simultáneos aunque se haga doble clic antes de re-renderizar.
+  const sendingRef = useRef(false);
 
   // Al confirmarse el envío, el foco pasa al mensaje para lectores de pantalla.
   useEffect(() => {
     if (status === "success") successRef.current?.focus();
   }, [status]);
-
-  // Servicio sugerido por el botón que llevó hasta el formulario.
-  useEffect(() => {
-    if (
-      preset &&
-      serviceRef.current &&
-      serviceOptions[audience].some((o) => o.value === preset.service)
-    ) {
-      serviceRef.current.value = preset.service;
-    }
-  }, [preset, audience]);
 
   const idp = `${audience}`; // prefijo para ids únicos entre formularios
 
@@ -67,7 +55,7 @@ export function ContactForm({
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (status === "sending") return;
+    if (status === "sending" || sendingRef.current) return;
 
     const form = event.currentTarget;
     const fd = new FormData(form);
@@ -76,7 +64,6 @@ export function ContactForm({
       name: String(fd.get("name") ?? ""),
       company: String(fd.get("company") ?? ""),
       email: String(fd.get("email") ?? ""),
-      service: String(fd.get("service") ?? ""),
       message: String(fd.get("message") ?? ""),
       consent: fd.get("consent") === "on",
       website: String(fd.get("website") ?? ""),
@@ -94,6 +81,7 @@ export function ContactForm({
 
     setErrors({});
     setFormError(null);
+    sendingRef.current = true;
     setStatus("sending");
 
     try {
@@ -132,6 +120,8 @@ export function ContactForm({
         "No pudimos conectarnos. Revisá tu conexión y probá de nuevo.",
       );
       setStatus("error");
+    } finally {
+      sendingRef.current = false;
     }
   }
 
@@ -161,8 +151,6 @@ export function ContactForm({
     );
   }
 
-  const options = serviceOptions[audience];
-
   return (
     <form
       ref={formRef}
@@ -171,6 +159,15 @@ export function ContactForm({
       aria-describedby={formError ? `${idp}-form-error` : undefined}
       className="space-y-6"
     >
+      {testMode ? (
+        <p
+          role="note"
+          className="border-l-4 border-sand-deep bg-white px-4 py-3 text-sm font-semibold text-sand-deep"
+        >
+          Formulario en entorno de prueba. No ingreses datos personales reales.
+        </p>
+      ) : null}
+
       {process.env.NODE_ENV === "development" ? (
         <p className="border-l-2 border-sand-deep bg-white px-4 py-3 text-sm text-sand-deep">
           Modo desarrollo: el envío real requiere configurar{" "}
@@ -201,8 +198,7 @@ export function ContactForm({
 
       <Field
         id={`${idp}-company`}
-        label="Empresa"
-        required
+        label="Empresa (opcional)"
         error={errors.company}
       >
         <input
@@ -211,7 +207,6 @@ export function ContactForm({
           type="text"
           autoComplete="organization"
           maxLength={LIMITS.companyMax}
-          aria-required="true"
           aria-invalid={errors.company ? true : undefined}
           aria-describedby={describedBy(`${idp}-company`, errors.company)}
           className={controlClass(!!errors.company)}
@@ -236,33 +231,6 @@ export function ContactForm({
           aria-describedby={describedBy(`${idp}-email`, errors.email)}
           className={controlClass(!!errors.email)}
         />
-      </Field>
-
-      <Field
-        id={`${idp}-service`}
-        label="Servicio de interés"
-        required
-        error={errors.service}
-      >
-        <select
-          ref={serviceRef}
-          id={`${idp}-service`}
-          name="service"
-          defaultValue=""
-          aria-required="true"
-          aria-invalid={errors.service ? true : undefined}
-          aria-describedby={describedBy(`${idp}-service`, errors.service)}
-          className={controlClass(!!errors.service)}
-        >
-          <option value="" disabled>
-            Elegí una opción
-          </option>
-          {options.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </select>
       </Field>
 
       <Field
@@ -317,15 +285,8 @@ export function ContactForm({
             htmlFor={`${idp}-consent`}
             className="text-sm leading-relaxed text-ink"
           >
-            Leí y acepto el{" "}
-            <Link
-              href="/privacidad"
-              target="_blank"
-              className="font-semibold text-lavender-deep underline underline-offset-4 hover:text-ink"
-            >
-              aviso de privacidad
-            </Link>
-            .
+            Acepto que People AG utilice mis datos para responder mi consulta y
+            mantener conversaciones relacionadas con los servicios solicitados.
           </label>
         </div>
         <div className="pl-8">
