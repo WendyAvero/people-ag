@@ -200,8 +200,8 @@ export const servicePages: Record<ServiceSlug, ServicePage> = {
         a: "Es un servicio externo que ayuda a una empresa a ordenar y mejorar cómo gestiona a las personas: desde un diagnóstico de la situación hasta el diseño de procesos y políticas, el acompañamiento a los líderes y el asesoramiento en decisiones. Cada propuesta se arma según el momento y las prioridades de la organización.",
       },
       {
-        q: "¿Es para empresas que no tienen área de Recursos Humanos?",
-        a: "También. Acompañamos tanto a organizaciones sin un área de RR. HH. completa como a las que quieren profesionalizar la que ya tienen.",
+        q: "¿Sirve para una PyME o para una empresa sin área de Recursos Humanos?",
+        a: "Sí. Acompañamos tanto a organizaciones sin un área de RR. HH. completa como a las que quieren profesionalizar la que ya tienen. El alcance se define en conjunto, según el tamaño y las prioridades de tu empresa.",
       },
       {
         q: "¿Trabajan con empresas de Uruguay?",
@@ -210,10 +210,6 @@ export const servicePages: Record<ServiceSlug, ServicePage> = {
       {
         q: "¿Se contrata un proyecto o un servicio mensual?",
         a: "Ambas opciones son posibles. Definimos el alcance en conjunto según la necesidad de tu empresa.",
-      },
-      {
-        q: "¿La consultoría de RR. HH. sirve para una PyME?",
-        a: "Sí. Está pensada para empresas que están profesionalizando la gestión de personas, incluso sin un área de RR. HH. propia. Definimos en conjunto un alcance acorde al tamaño y a las prioridades de tu organización.",
       },
       {
         q: "¿Cómo empiezo?",
