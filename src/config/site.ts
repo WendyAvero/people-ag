@@ -71,6 +71,15 @@ export const siteConfig = {
   privacyIsDraft: true,
 
   /**
+   * Envío real del formulario de contacto. Mientras sea false, el formulario
+   * solo puede mostrarse en Preview/desarrollo en "modo de prueba": valida pero
+   * NO envía correos, NO llama a terceros y NO guarda datos, aunque haya
+   * variables de correo cargadas. Pasalo a true únicamente cuando lo autorices
+   * (y, en producción, además exige privacyIsDraft = false).
+   */
+  contactDeliveryEnabled: false,
+
+  /**
    * Datos legales del responsable del tratamiento. Completar con datos REALES
    * y revisados por un profesional; no inventar.
    * - aaipLegend: texto textual exigido por la normativa de la AAIP (ver README).

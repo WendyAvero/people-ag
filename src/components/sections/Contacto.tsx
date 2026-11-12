@@ -3,7 +3,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ContactPanel } from "@/components/forms/ContactPanel";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { mailtoHref, siteConfig } from "@/config/site";
-import { isContactFormEnabled, isTestEnvironment } from "@/lib/forms-status";
+import { getContactMode } from "@/lib/forms-status";
 
 const nextSteps = [
   "Leemos tu consulta con atención.",
@@ -42,7 +42,8 @@ function ContactUnavailable() {
 }
 
 export function Contacto() {
-  const formEnabled = isContactFormEnabled();
+  const mode = getContactMode();
+  const formEnabled = mode !== "off";
   return (
     <section
       id="contacto"
@@ -92,7 +93,7 @@ export function Contacto() {
         </div>
 
         <div className="lg:col-span-7">
-          {formEnabled ? <ContactPanel testMode={isTestEnvironment()} /> : <ContactUnavailable />}
+          {formEnabled ? <ContactPanel dryRun={mode === "dry-run"} /> : <ContactUnavailable />}
         </div>
       </Container>
     </section>

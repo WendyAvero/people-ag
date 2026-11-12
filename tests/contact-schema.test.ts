@@ -7,6 +7,8 @@ const validCompany = {
   name: "Ana Pérez",
   company: "Acme SA",
   email: "Ana@Acme.com",
+  phone: "",
+  position: "Analista contable",
   message: "Necesitamos cubrir un puesto de analista.",
   consent: true,
 };
@@ -23,7 +25,7 @@ describe("parsePayload", () => {
     const { data, errors } = parsePayload({ audience: "empresa" });
     expect(data).toBeNull();
     expect(Object.keys(errors).sort()).toEqual(
-      ["consent", "email", "message", "name"].sort(),
+      ["company", "consent", "email", "name", "position"].sort(),
     );
   });
 
@@ -39,9 +41,9 @@ describe("parsePayload", () => {
     expect(errors.message).toBeTruthy();
   });
 
-  it("la empresa es opcional, pero si se completa se valida el largo", () => {
+  it("la empresa es obligatoria y se valida su largo", () => {
     const base = { ...validCompany };
-    expect(parsePayload({ ...base, company: "" }).data).not.toBeNull();
+    expect(parsePayload({ ...base, company: "" }).errors.company).toBeTruthy();
     expect(parsePayload({ ...base, company: "A" }).errors.company).toBeTruthy();
     expect(parsePayload({ ...base, company: "x".repeat(121) }).errors.company).toBeTruthy();
   });
@@ -82,10 +84,34 @@ describe("parsePayload", () => {
     expect(data).not.toHaveProperty("service");
   });
 
-  it("aplica los límites de largo del mensaje", () => {
+  it("el perfil o posición es obligatorio y tiene límites de largo", () => {
+    expect(parsePayload({ ...validCompany, position: "" }).errors.position).toBeTruthy();
+    expect(parsePayload({ ...validCompany, position: "ab" }).errors.position).toBeTruthy();
     expect(
-      parsePayload({ ...validCompany, message: "corto" }).errors.message,
+      parsePayload({ ...validCompany, position: "x".repeat(LIMITS.positionMax + 1) }).errors.position,
     ).toBeTruthy();
+    expect(parsePayload({ ...validCompany, position: "Analista  contable" }).data?.position).toBe("Analista contable");
+  });
+
+  it("el teléfono es opcional; si se completa, acepta formatos habituales y rechaza letras", () => {
+    expect(parsePayload({ ...validCompany, phone: "" }).data?.phone).toBe("");
+    for (const phone of ["+54 11 5555-1234", "(011) 5555 1234", "1155551234", "+598 99 123 456"]) {
+      expect(parsePayload({ ...validCompany, phone }).errors.phone, phone).toBeUndefined();
+    }
+    for (const phone of ["llamame", "123", "+54 11 abcd 1234", "1".repeat(31)]) {
+      expect(parsePayload({ ...validCompany, phone }).errors.phone, phone).toBeTruthy();
+    }
+  });
+
+  it("el email laboral solo se valida por formato: no se bloquean dominios personales", () => {
+    for (const email of ["ana@gmail.com", "ana@hotmail.com", "ana@yahoo.com.ar"]) {
+      expect(parsePayload({ ...validCompany, email }).errors.email, email).toBeUndefined();
+    }
+  });
+
+  it("los comentarios son opcionales y solo se limita su largo", () => {
+    expect(parsePayload({ ...validCompany, message: "" }).data?.message).toBe("");
+    expect(parsePayload({ ...validCompany, message: "corto" }).errors.message).toBeUndefined();
     expect(
       parsePayload({ ...validCompany, message: "x".repeat(LIMITS.messageMax + 1) })
         .errors.message,

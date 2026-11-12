@@ -4,14 +4,25 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { POST } from "@/app/api/contact/route";
 import { buildEmail, idempotencyKey } from "@/lib/mailer";
 import { resetForTests } from "@/lib/rate-limit";
+import { siteConfig } from "@/config/site";
 
-const valid = {
+const base = {
   audience: "empresa",
   name: "Ana Pérez",
   company: "Acme SA",
   email: "ana@acme.com",
+  phone: "",
+  position: "Analista contable",
   message: "Necesitamos cubrir un puesto de analista.",
   consent: true,
+};
+
+/** Payload válido: el formulario se mostró hace 10 s (supera el tiempo mínimo de llenado). */
+const valid = {
+  ...base,
+  get startedAt() {
+    return Date.now() - 10_000;
+  },
 };
 
 let ipCounter = 0;
@@ -30,7 +41,11 @@ function req(body: unknown, init: { ip?: string; headers?: Record<string, string
   });
 }
 
+const cfg = siteConfig as { contactDeliveryEnabled: boolean };
+
+/** Habilita el envío real (solo en pruebas): variables de correo + interruptor de site.ts. */
 function configure() {
+  cfg.contactDeliveryEnabled = true;
   vi.stubEnv("RESEND_API_KEY", "re_test_key_123");
   vi.stubEnv("CONTACT_TO_EMAIL", "inbox@example.com");
   vi.stubEnv("CONTACT_FROM_EMAIL", "People AG <contacto@example.com>");
@@ -47,13 +62,15 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  cfg.contactDeliveryEnabled = false;
   vi.unstubAllEnvs();
   vi.unstubAllGlobals();
   errorSpy.mockRestore();
 });
 
 describe("POST /api/contact", () => {
-  it("no confirma envíos si el correo no está configurado (503) y no llama al proveedor", async () => {
+  it("en producción, con el correo sin configurar, no confirma envíos (503) y no llama al proveedor", async () => {
+    vi.stubEnv("VERCEL_ENV", "production");
     const res = await POST(req(valid));
     const json = await res.json();
     expect(res.status).toBe(503);
@@ -74,6 +91,43 @@ describe("POST /api/contact", () => {
     expect(logged).not.toContain("re_test_key_123");
     expect(logged).not.toContain("ana@acme.com");
     expect(logged).not.toContain("Necesitamos cubrir");
+  });
+
+  it("modo de prueba (Preview/desarrollo sin envío real): valida, responde dryRun y NO llama a ningún tercero ni guarda nada", async () => {
+    vi.stubEnv("VERCEL_ENV", "preview");
+    const res = await POST(req(valid));
+    const json = await res.json();
+    expect(res.status).toBe(200);
+    expect(json).toEqual({ ok: true, dryRun: true });
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("modo de prueba: aunque haya variables de correo cargadas, no envía si el interruptor de site.ts está apagado", async () => {
+    vi.stubEnv("VERCEL_ENV", "preview");
+    vi.stubEnv("RESEND_API_KEY", "re_test_key_123");
+    vi.stubEnv("CONTACT_TO_EMAIL", "inbox@example.com");
+    vi.stubEnv("CONTACT_FROM_EMAIL", "People AG <contacto@example.com>");
+    const res = await POST(req(valid));
+    expect((await res.json()).dryRun).toBe(true);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("modo de prueba: también valida (422) y descarta bots igual que en el envío real", async () => {
+    vi.stubEnv("VERCEL_ENV", "preview");
+    expect((await POST(req({ ...valid, position: "" }))).status).toBe(422);
+    const bot = await POST(req({ ...valid, website: "http://spam.example" }));
+    expect((await bot.json()).dryRun).toBeUndefined();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("antispam de tiempo mínimo: un envío casi instantáneo se rechaza (429) y sin marca de tiempo válida es 400", async () => {
+    vi.stubEnv("VERCEL_ENV", "preview");
+    const fast = await POST(req({ ...base, startedAt: Date.now() - 500 }));
+    expect(fast.status).toBe(429);
+    expect((await fast.json()).code).toBe("too_fast");
+    expect((await POST(req({ ...base }))).status).toBe(400);
+    expect((await POST(req({ ...base, startedAt: Date.now() + 60_000 }))).status).toBe(400);
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("devuelve 422 con errores por campo si la validación falla", async () => {
@@ -104,12 +158,17 @@ describe("POST /api/contact", () => {
     expect(init.headers["Idempotency-Key"]).toMatch(/^people-ag-contact-[0-9a-f]{40}$/);
   });
 
-  it("acepta una consulta sin empresa y lo indica en el correo", async () => {
+  it("la empresa y el perfil son obligatorios; teléfono y comentarios son opcionales y se indican en el correo", async () => {
     configure();
     fetchMock.mockResolvedValue(new Response("{}", { status: 200 }));
-    const res = await POST(req({ ...valid, company: "" }));
+    expect((await POST(req({ ...valid, company: "" }))).status).toBe(422);
+    expect((await POST(req({ ...valid, position: "" }))).status).toBe(422);
+    const res = await POST(req({ ...valid, message: "" }));
     expect(res.status).toBe(200);
-    expect(JSON.parse(fetchMock.mock.calls[0][1].body).text).toContain("Empresa: (no indicada)");
+    const text = JSON.parse(fetchMock.mock.calls[0][1].body).text;
+    expect(text).toContain("Teléfono: (no indicado)");
+    expect(text).toContain("Perfil o posición a cubrir: Analista contable");
+    expect(text).toContain("(sin comentarios)");
   });
 
   it("un reenvío idéntico (doble clic) no manda un segundo correo", async () => {
@@ -135,6 +194,14 @@ describe("POST /api/contact", () => {
     vi.stubEnv("VERCEL_ENV", "production");
     const res = await POST(req(valid));
     expect(res.status).toBe(503);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("en producción nunca hay modo de prueba: sin variables, responde 503 y no simula nada", async () => {
+    vi.stubEnv("VERCEL_ENV", "production");
+    const res = await POST(req(valid));
+    expect(res.status).toBe(503);
+    expect((await res.json()).dryRun).toBeUndefined();
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
@@ -203,7 +270,7 @@ describe("POST /api/contact", () => {
 });
 
 describe("idempotencyKey", () => {
-  const data = { ...valid, audience: "empresa" as const };
+  const data = { ...base, audience: "empresa" as const };
   it("es estable para el mismo envío y cambia si cambia el contenido", () => {
     const t = new Date("2026-10-26T18:00:00Z");
     expect(idempotencyKey(data, t)).toBe(idempotencyKey(data, t));
@@ -221,7 +288,9 @@ describe("buildEmail", () => {
         name: "Luis Gómez",
         company: "Acme SA",
         email: "luis@mail.com",
-              message: "<script>alert(1)</script>",
+        phone: "",
+        position: "Vendedor",
+        message: "<script>alert(1)</script>",
         consent: true,
       },
       new Date("2026-10-26T18:00:00Z"),

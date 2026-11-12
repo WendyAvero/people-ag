@@ -4,6 +4,7 @@ import Link from "next/link";
  * Información breve que se muestra junto al formulario, antes de enviar.
  * El detalle completo (y los datos del responsable) está en el aviso de
  * privacidad, que todavía es un borrador.
+ * TEXTO PENDIENTE DE VALIDACIÓN PROFESIONAL: no es un texto legal definitivo.
  */
 export function PrivacyNotice({ id }: { id: string }) {
   return (

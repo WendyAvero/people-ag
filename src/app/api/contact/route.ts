@@ -1,8 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-import { parsePayload } from "@/lib/contact-schema";
+import { LIMITS, parsePayload } from "@/lib/contact-schema";
 import { getMailerConfig, sendContactEmail } from "@/lib/mailer";
-import { isContactFormEnabled } from "@/lib/forms-status";
+import { getContactMode } from "@/lib/forms-status";
 import { isRateLimited, markSent, wasRecentlySent } from "@/lib/rate-limit";
 
 const MAX_BODY_BYTES = 10_000;
@@ -13,6 +13,7 @@ type ApiError = {
     | "bad_request"
     | "validation"
     | "rate_limited"
+    | "too_fast"
     | "not_configured"
     | "delivery_failed";
   message: string;
@@ -107,8 +108,28 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
   }
 
+  // Antispam invisible: tiempo mínimo de llenado. El formulario marca cuándo se mostró;
+  // un envío casi instantáneo (o sin marca válida) no lo hizo una persona leyendo y escribiendo.
+  const now = Date.now();
+  const startedAt = data.startedAt;
+  if (startedAt === undefined || startedAt > now + 5_000 || now - startedAt > 24 * 60 * 60 * 1000) {
+    return fail(400, {
+      ok: false,
+      code: "bad_request",
+      message: "No pudimos leer la solicitud. Recargá la página y probá de nuevo.",
+    });
+  }
+  if (now - startedAt < LIMITS.minFillMs) {
+    return fail(429, {
+      ok: false,
+      code: "too_fast",
+      message:
+        "Enviaste el formulario muy rápido. Esperá unos segundos y volvé a enviarlo.",
+    });
+  }
+
   // Mismo envío repetido (doble clic): ya se despachó, no se manda otro correo.
-  const fingerprint = `${data.email}|${data.message}`;
+  const fingerprint = `${data.email}|${data.position}|${data.message}`;
   if (wasRecentlySent(fingerprint, Date.now())) {
     return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
   }
@@ -122,7 +143,19 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  const config = isContactFormEnabled() ? getMailerConfig() : null;
+  const mode = getContactMode();
+
+  // Modo de prueba (solo Preview/desarrollo): se validó todo, pero NO se envía
+  // ningún correo, NO se llama a terceros y NO se guarda nada. La respuesta lo
+  // dice explícitamente: nunca se confirma un envío que no ocurrió.
+  if (mode === "dry-run") {
+    return NextResponse.json(
+      { ok: true, dryRun: true },
+      { headers: { "Cache-Control": "no-store" } },
+    );
+  }
+
+  const config = mode === "live" ? getMailerConfig() : null;
   if (!config) {
     // Integración pendiente: nunca se confirma un envío que no ocurrió.
     // (El motivo, sin valores, ya quedó registrado por getMailerConfig.)
