@@ -13,8 +13,13 @@ export const LIMITS = {
   companyMin: 2,
   companyMax: 120,
   emailMax: 254,
-  messageMin: 10,
+  phoneMin: 6,
+  phoneMax: 30,
+  positionMin: 3,
+  positionMax: 150,
   messageMax: 2000,
+  /** Tiempo mínimo de llenado (ms): antispam invisible, lo controla el servidor. */
+  minFillMs: 3000,
 } as const;
 
 export type ContactPayload = {
@@ -22,15 +27,25 @@ export type ContactPayload = {
   name: string;
   company: string;
   email: string;
+  /** Opcional: cadena vacía si no se completó. */
+  phone: string;
+  /** Perfil o posición a cubrir. */
+  position: string;
+  /** Comentarios adicionales (opcionales): cadena vacía si no se completó. */
   message: string;
   consent: boolean;
   /** Campo trampa anti-bots: debe llegar vacío. */
   website?: string;
+  /** Momento (ms epoch) en que se mostró el formulario: control de tiempo mínimo. */
+  startedAt?: number;
 };
 
 export type FieldErrors = Partial<
-  Record<"name" | "company" | "email" | "message" | "consent", string>
+  Record<"name" | "company" | "email" | "phone" | "position" | "message" | "consent", string>
 >;
+
+// Teléfono: dígitos con separadores habituales (+, espacios, guiones, puntos, paréntesis).
+const PHONE_RE = /^\+?[\d\s().-]+$/;
 
 const EMAIL_RE = /^[^\s@<>()[\]\\,;:"]+@[^\s@<>()[\]\\,;:"]+\.[^\s@<>()[\]\\,;:"]{2,}$/;
 
@@ -60,7 +75,13 @@ export function parsePayload(input: unknown): {
   const name = asString(raw.name).replace(/\s+/g, " ");
   const company = asString(raw.company).replace(/\s+/g, " ");
   const email = asString(raw.email).toLowerCase();
+  const phone = asString(raw.phone).replace(/\s+/g, " ");
+  const position = asString(raw.position).replace(/\s+/g, " ");
   const message = asString(raw.message);
+  const startedAt =
+    typeof raw.startedAt === "number" && Number.isFinite(raw.startedAt)
+      ? raw.startedAt
+      : undefined;
   const consent = raw.consent === true;
   const website = asString(raw.website);
 
@@ -72,8 +93,9 @@ export function parsePayload(input: unknown): {
     errors.name = `Usá hasta ${LIMITS.nameMax} caracteres.`;
   }
 
-  // La empresa es opcional: solo se valida si se completó.
-  if (company && company.length < LIMITS.companyMin) {
+  if (!company) {
+    errors.company = "Ingresá el nombre de tu empresa.";
+  } else if (company.length < LIMITS.companyMin) {
     errors.company = "El nombre de la empresa es demasiado corto.";
   } else if (company.length > LIMITS.companyMax) {
     errors.company = `Usá hasta ${LIMITS.companyMax} caracteres.`;
@@ -85,12 +107,25 @@ export function parsePayload(input: unknown): {
     errors.email = "Revisá el correo: parece que le falta algo (ej. nombre@dominio.com).";
   }
 
-  if (!message) {
-    errors.message = "Contanos brevemente en qué podemos ayudarte.";
-  } else if (message.length < LIMITS.messageMin) {
-    errors.message = `Escribí al menos ${LIMITS.messageMin} caracteres para que podamos entender tu consulta.`;
-  } else if (message.length > LIMITS.messageMax) {
-    errors.message = `El mensaje supera los ${LIMITS.messageMax} caracteres.`;
+  // El teléfono es opcional: solo se valida si se completó.
+  if (phone) {
+    const digits = phone.replace(/\D/g, "").length;
+    if (!PHONE_RE.test(phone) || digits < LIMITS.phoneMin || phone.length > LIMITS.phoneMax) {
+      errors.phone = "Revisá el teléfono: usá solo números, y opcionalmente +, espacios o guiones.";
+    }
+  }
+
+  if (!position) {
+    errors.position = "Contanos qué perfil o posición necesitás cubrir.";
+  } else if (position.length < LIMITS.positionMin) {
+    errors.position = "Escribí el nombre del perfil o posición (ej. Analista contable).";
+  } else if (position.length > LIMITS.positionMax) {
+    errors.position = `Usá hasta ${LIMITS.positionMax} caracteres.`;
+  }
+
+  // Los comentarios son opcionales: solo se controla el largo.
+  if (message.length > LIMITS.messageMax) {
+    errors.message = `Los comentarios superan los ${LIMITS.messageMax} caracteres.`;
   }
 
   if (!consent) {
@@ -106,9 +141,12 @@ export function parsePayload(input: unknown): {
       name,
       company,
       email,
+      phone,
+      position,
       message,
       consent,
       website,
+      startedAt,
     },
     errors,
   };

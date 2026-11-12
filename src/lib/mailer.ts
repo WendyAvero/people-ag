@@ -44,7 +44,7 @@ function oneLine(value: string): string {
 
 export function buildEmail(data: ContactPayload, receivedAt: Date) {
   const subject = oneLine(
-    "[People AG] Nueva consulta desde el sitio web",
+    "[People AG] Nueva consulta de Reclutamiento y selección",
   );
 
   const when = new Intl.DateTimeFormat("es-AR", {
@@ -54,13 +54,15 @@ export function buildEmail(data: ContactPayload, receivedAt: Date) {
   }).format(receivedAt);
 
   const lines = [
-    "Tipo de consulta: Empresa",
+    "Tipo de consulta: Empresa — Reclutamiento y selección",
     `Nombre y apellido: ${data.name}`,
-    `Empresa: ${data.company || "(no indicada)"}`,
-    `Correo: ${data.email}`,
+    `Empresa: ${data.company}`,
+    `Email laboral: ${data.email}`,
+    `Teléfono: ${data.phone || "(no indicado)"}`,
+    `Perfil o posición a cubrir: ${data.position}`,
     "",
-    "Mensaje:",
-    data.message,
+    "Comentarios adicionales:",
+    data.message || "(sin comentarios)",
     "",
     "—",
     // Registro de consentimiento: queda en esta casilla, no en el sitio.
@@ -82,7 +84,7 @@ export function buildEmail(data: ContactPayload, receivedAt: Date) {
 export function idempotencyKey(data: ContactPayload, now: Date): string {
   const bucket = Math.floor(now.getTime() / (10 * 60 * 1000));
   const hash = createHash("sha256")
-    .update(JSON.stringify([data.email, data.message, bucket]))
+    .update(JSON.stringify([data.email, data.position, data.message, bucket]))
     .digest("hex");
   return `people-ag-contact-${hash.slice(0, 40)}`;
 }

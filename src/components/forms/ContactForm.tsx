@@ -11,35 +11,47 @@ import {
 import { Field, controlClass, describedBy } from "./Field";
 import { PrivacyNotice } from "./PrivacyNotice";
 
-type Status = "idle" | "sending" | "success" | "error";
+type Status = "idle" | "sending" | "success" | "dry-run" | "error";
 
 const FIELD_ORDER = [
   "name",
   "company",
   "email",
+  "phone",
+  "position",
   "message",
   "consent",
 ] as const;
 
 export function ContactForm({
   audience,
-  testMode = false,
+  dryRun = false,
 }: {
   audience: Audience;
-  /** Entorno que no es producción (Preview): se avisa que es de prueba. */
-  testMode?: boolean;
+  /**
+   * Modo de prueba (Preview/desarrollo): el formulario valida pero NO envía ni
+   * guarda nada. Se avisa en pantalla y la confirmación lo aclara.
+   */
+  dryRun?: boolean;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   const successRef = useRef<HTMLDivElement>(null);
+  // Antispam invisible: el servidor exige un tiempo mínimo desde que se mostró el formulario.
+  const startedAtRef = useRef<number>(0);
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
   // Evita dos envíos simultáneos aunque se haga doble clic antes de re-renderizar.
   const sendingRef = useRef(false);
 
+  // Marca el momento en que se mostró el formulario (en el navegador, ya montado).
+  useEffect(() => {
+    startedAtRef.current = Date.now();
+  }, []);
+
   // Al confirmarse el envío, el foco pasa al mensaje para lectores de pantalla.
   useEffect(() => {
-    if (status === "success") successRef.current?.focus();
+    if (status === "success" || status === "dry-run") successRef.current?.focus();
   }, [status]);
 
   const idp = `${audience}`; // prefijo para ids únicos entre formularios
@@ -64,9 +76,12 @@ export function ContactForm({
       name: String(fd.get("name") ?? ""),
       company: String(fd.get("company") ?? ""),
       email: String(fd.get("email") ?? ""),
+      phone: String(fd.get("phone") ?? ""),
+      position: String(fd.get("position") ?? ""),
       message: String(fd.get("message") ?? ""),
       consent: fd.get("consent") === "on",
       website: String(fd.get("website") ?? ""),
+      startedAt: startedAtRef.current,
     };
 
     // Validación inmediata en el navegador (el servidor valida de nuevo).
@@ -92,6 +107,7 @@ export function ContactForm({
       });
       const body = (await res.json().catch(() => null)) as {
         ok?: boolean;
+        dryRun?: boolean;
         message?: string;
         errors?: FieldErrors;
       } | null;
@@ -99,7 +115,9 @@ export function ContactForm({
       // Éxito solo si el servidor confirma que el envío se procesó.
       if (res.ok && body?.ok === true) {
         form.reset();
-        setStatus("success");
+        startedAtRef.current = Date.now();
+        // En modo de prueba el servidor aclara que NO se envió nada: no se muestra como éxito.
+        setStatus(body.dryRun === true ? "dry-run" : "success");
         return;
       }
 
@@ -123,6 +141,32 @@ export function ContactForm({
     } finally {
       sendingRef.current = false;
     }
+  }
+
+  if (status === "dry-run") {
+    return (
+      <div
+        ref={successRef}
+        tabIndex={-1}
+        role="status"
+        className="border border-ink/10 border-l-4 border-l-sand-deep bg-white p-8 outline-none sm:p-10"
+      >
+        <p className="font-display text-xl font-semibold">
+          Vista de prueba: tu consulta no fue enviada
+        </p>
+        <p className="mt-3 max-w-md text-muted">
+          Los datos pasaron la validación, pero este formulario todavía no está
+          habilitado: no se envió ningún correo ni se guardó información.
+        </p>
+        <button
+          type="button"
+          onClick={() => setStatus("idle")}
+          className="mt-6 text-sm font-semibold text-lavender-deep underline underline-offset-4 hover:text-ink"
+        >
+          Volver al formulario
+        </button>
+      </div>
+    );
   }
 
   if (status === "success") {
@@ -159,23 +203,25 @@ export function ContactForm({
       aria-describedby={formError ? `${idp}-form-error` : undefined}
       className="space-y-6"
     >
-      {testMode ? (
+      {dryRun ? (
         <p
           role="note"
           className="border-l-4 border-sand-deep bg-white px-4 py-3 text-sm font-semibold text-sand-deep"
         >
-          Formulario en entorno de prueba. No ingreses datos personales reales.
+          Vista de prueba: este formulario no envía mensajes ni guarda datos.
+          No ingreses datos personales reales.
         </p>
       ) : null}
 
-      {process.env.NODE_ENV === "development" ? (
-        <p className="border-l-2 border-sand-deep bg-white px-4 py-3 text-sm text-sand-deep">
-          Modo desarrollo: el envío real requiere configurar{" "}
-          <code>RESEND_API_KEY</code>, <code>CONTACT_TO_EMAIL</code> y{" "}
-          <code>CONTACT_FROM_EMAIL</code> (ver README). Sin eso, el formulario
-          informa que no está habilitado.
+      <div>
+        <h3 className="font-display text-lg font-semibold">
+          Consultá por Reclutamiento y selección
+        </h3>
+        <p className="mt-1 text-sm text-muted">
+          Los campos con <span aria-hidden="true" className="text-lavender-deep">*</span>
+          <span className="sr-only">asterisco</span> son obligatorios.
         </p>
-      ) : null}
+      </div>
 
       <Field
         id={`${idp}-name`}
@@ -198,7 +244,8 @@ export function ContactForm({
 
       <Field
         id={`${idp}-company`}
-        label="Empresa (opcional)"
+        label="Empresa"
+        required
         error={errors.company}
       >
         <input
@@ -207,6 +254,7 @@ export function ContactForm({
           type="text"
           autoComplete="organization"
           maxLength={LIMITS.companyMax}
+          aria-required="true"
           aria-invalid={errors.company ? true : undefined}
           aria-describedby={describedBy(`${idp}-company`, errors.company)}
           className={controlClass(!!errors.company)}
@@ -215,9 +263,10 @@ export function ContactForm({
 
       <Field
         id={`${idp}-email`}
-        label="Correo electrónico"
+        label="Email laboral"
         required
         error={errors.email}
+        hint="Si podés, usá tu correo de la empresa. Cualquier correo de contacto sirve."
       >
         <input
           id={`${idp}-email`}
@@ -228,30 +277,59 @@ export function ContactForm({
           maxLength={LIMITS.emailMax}
           aria-required="true"
           aria-invalid={errors.email ? true : undefined}
-          aria-describedby={describedBy(`${idp}-email`, errors.email)}
+          aria-describedby={describedBy(`${idp}-email`, errors.email, "hint")}
           className={controlClass(!!errors.email)}
         />
       </Field>
 
       <Field
-        id={`${idp}-message`}
-        label="Mensaje"
+        id={`${idp}-phone`}
+        label="Teléfono (opcional)"
+        error={errors.phone}
+      >
+        <input
+          id={`${idp}-phone`}
+          name="phone"
+          type="tel"
+          inputMode="tel"
+          autoComplete="tel"
+          maxLength={LIMITS.phoneMax}
+          aria-invalid={errors.phone ? true : undefined}
+          aria-describedby={describedBy(`${idp}-phone`, errors.phone)}
+          className={controlClass(!!errors.phone)}
+        />
+      </Field>
+
+      <Field
+        id={`${idp}-position`}
+        label="Perfil o posición a cubrir"
         required
+        error={errors.position}
+      >
+        <input
+          id={`${idp}-position`}
+          name="position"
+          type="text"
+          maxLength={LIMITS.positionMax}
+          aria-required="true"
+          aria-invalid={errors.position ? true : undefined}
+          aria-describedby={describedBy(`${idp}-position`, errors.position)}
+          className={controlClass(!!errors.position)}
+        />
+      </Field>
+
+      <Field
+        id={`${idp}-message`}
+        label="Comentarios adicionales (opcional)"
         error={errors.message}
-        hint="Contanos qué necesitás y en qué momento está tu organización."
       >
         <textarea
           id={`${idp}-message`}
           name="message"
           rows={5}
           maxLength={LIMITS.messageMax}
-          aria-required="true"
           aria-invalid={errors.message ? true : undefined}
-          aria-describedby={describedBy(
-            `${idp}-message`,
-            errors.message,
-            "hint",
-          )}
+          aria-describedby={describedBy(`${idp}-message`, errors.message)}
           className={`${controlClass(!!errors.message)} resize-y`}
         />
       </Field>
@@ -285,6 +363,7 @@ export function ContactForm({
             htmlFor={`${idp}-consent`}
             className="text-sm leading-relaxed text-ink"
           >
+            {/* TEXTO PENDIENTE DE VALIDACIÓN PROFESIONAL (aviso de privacidad en borrador). */}
             Acepto que People AG utilice mis datos para responder mi consulta y
             mantener conversaciones relacionadas con los servicios solicitados.
           </label>
@@ -318,7 +397,11 @@ export function ContactForm({
         aria-busy={status === "sending"}
         className="inline-flex w-full items-center justify-center rounded-full bg-ink px-6 py-3.5 font-display text-sm font-semibold text-cream transition-all duration-200 hover:bg-lavender-deep active:translate-y-px disabled:cursor-wait disabled:opacity-70 focus-visible:outline-lavender-deep sm:w-auto"
       >
-        {status === "sending" ? "Enviando…" : "Enviar consulta"}
+        {status === "sending"
+          ? dryRun
+            ? "Validando…"
+            : "Enviando…"
+          : "Enviar consulta"}
       </button>
     </form>
   );
