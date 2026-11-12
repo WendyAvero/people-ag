@@ -10,7 +10,7 @@ export function Empresas() {
     <section
       id="empresas"
       aria-labelledby="empresas-title"
-      className="bg-white py-20 sm:py-28 lg:py-32"
+      className="bg-white py-16 sm:py-20 lg:py-24"
     >
       <Container>
         <SectionHeading
@@ -24,15 +24,20 @@ export function Empresas() {
           desarrollar a sus líderes o fortalecer sus equipos.
         </SectionHeading>
 
-        <div className="mt-14">
-          <h3 className="font-display text-base font-semibold">
+        {/*
+          Situaciones y servicios forman un mismo bloque de lectura: las cuatro
+          situaciones comparten un recuadro con divisores finos y las tres
+          propuestas aparecen enseguida, con el mismo borde y proporciones.
+        */}
+        <div className="mt-10 border border-line border-l-4 border-l-sand bg-white">
+          <h3 className="px-5 pt-5 font-display text-base font-semibold sm:px-6 sm:pt-6">
             Cuándo conviene hablar con nosotros
           </h3>
-          <ul className="mt-5 grid gap-x-10 gap-y-6 md:grid-cols-2 lg:grid-cols-4">
+          <ul className="mt-4 grid gap-px border-t border-line bg-line md:grid-cols-2 lg:grid-cols-4">
             {companyMoments.map((moment) => (
               <li
                 key={moment}
-                className="border-t-2 border-sand pt-4 text-[0.95rem] leading-relaxed text-ink/90"
+                className="bg-white p-5 text-[0.95rem] leading-relaxed text-ink/90 sm:p-6"
               >
                 {moment}
               </li>
@@ -40,14 +45,14 @@ export function Empresas() {
           </ul>
         </div>
 
-        {/* Las tres líneas de servicio, con el mismo peso */}
-        <div className="mt-20 grid gap-x-10 gap-y-12 md:grid-cols-3">
+        {/* Las tres líneas de servicio, con el mismo peso y filas alineadas */}
+        <div className="mt-6 grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)_auto] lg:grid-cols-3 lg:gap-x-6 lg:gap-y-0">
           {companyServices.map((service) => (
             <ServiceCard key={service.id} service={service} />
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col items-start gap-6 border-l-2 border-sand pl-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-10 flex flex-col items-start gap-6 border-l-2 border-sand pl-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="max-w-xl text-lg leading-snug text-ink">
             Cada trabajo se define en conjunto. No ofrecemos paquetes cerrados:
             armamos el alcance según lo que tu organización necesita.
