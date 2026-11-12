@@ -31,28 +31,38 @@ export function Sobre() {
           />
 
           {hasProfile ? (
-            <div className="mt-10 max-w-2xl border-l-2 border-sand pl-6">
-              <p className="font-display text-xl font-semibold">{founder.name}</p>
-              {founder.role ? (
-                <p className="mt-1 text-sm text-muted">{founder.role}</p>
-              ) : null}
-              {founder.bio?.map((paragraph) => (
-                <p key={paragraph} className="mt-4 leading-relaxed text-ink/90">
-                  {paragraph}
-                </p>
-              ))}
+            <div className="mt-10 grid items-start gap-10 lg:grid-cols-12 lg:gap-12">
+              <div className="max-w-2xl border-l-2 border-sand pl-6 lg:col-span-7">
+                <p className="font-display text-xl font-semibold">{founder.name}</p>
+                {founder.role ? (
+                  <p className="mt-1 text-sm text-muted">{founder.role}</p>
+                ) : null}
+                {founder.bio?.map((paragraph) => (
+                  <p key={paragraph} className="mt-4 leading-relaxed text-ink/90">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
               {founder.credentials && founder.credentials.length > 0 ? (
-                <ul className="mt-5 space-y-2 text-[0.95rem]">
-                  {founder.credentials.map((item) => (
-                    <li key={item} className="flex gap-3">
-                      <span
-                        aria-hidden="true"
-                        className="mt-[0.6em] h-1.5 w-1.5 shrink-0 rounded-full bg-sand"
-                      />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
+                <aside
+                  aria-labelledby="formacion-title"
+                  className="border border-ink/10 border-l-4 border-l-lavender bg-white p-6 sm:p-8 lg:col-span-5"
+                >
+                  <h3 id="formacion-title" className="eyebrow text-lavender-deep">
+                    Formación
+                  </h3>
+                  <ul className="mt-4 space-y-3 text-[0.95rem] leading-snug">
+                    {founder.credentials.map((item) => (
+                      <li key={item} className="flex gap-3">
+                        <span
+                          aria-hidden="true"
+                          className="mt-[0.55em] h-1.5 w-1.5 shrink-0 rounded-full bg-sand"
+                        />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </aside>
               ) : null}
             </div>
           ) : null}

@@ -13,31 +13,32 @@ export function ComoTrabajamos() {
       <Container>
         <SectionHeading
           id="metodo-title"
-          eyebrow="Cómo trabajamos"
+          eyebrow="Método de trabajo"
           title="Un método con estructura, adaptado a cada organización"
           tone="light"
         >
-          Antes de proponer una solución, entendemos el problema. Estos cuatro
-          pasos ordenan cada proyecto y dejan claro qué se hace, en qué orden y
-          con qué criterio.
+          Este es el método general de trabajo de People AG, común a las tres
+          líneas de servicio: antes de proponer una solución, entendemos el
+          problema. Cada servicio, además, tiene su propio proceso, que podés
+          ver en su página.
         </SectionHeading>
 
-        <ol className="mt-16 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+        <ol className="mt-16 grid gap-x-10 sm:grid-cols-2 lg:grid-cols-4">
           {processSteps.map((step, index) => (
-            <li key={step.title} className="relative border-t border-cream/30 pt-6">
+            <li key={step.title} className="relative row-span-4 mb-12 grid grid-rows-subgrid gap-y-0 border-t border-cream/30 pt-6">
               <span
                 aria-hidden="true"
                 className="font-display text-5xl font-light text-sand"
               >
                 {String(index + 1).padStart(2, "0")}
               </span>
-              <h3 className="mt-5 text-xl font-semibold leading-snug">
+              <h3 className="mt-5 self-start text-xl font-semibold leading-snug">
                 {step.title}
               </h3>
-              <p className="mt-3 text-[0.95rem] leading-relaxed text-cream/80">
+              <p className="mt-3 self-start text-[0.95rem] leading-relaxed text-cream/80">
                 {step.description}
               </p>
-              <p className="mt-4 border-t border-cream/20 pt-3 text-sm font-medium text-sand-light">
+              <p className="mt-4 self-start border-t border-cream/20 pt-3 text-sm font-medium text-sand-light">
                 <span className="eyebrow mr-2 text-cream/70">Resultado</span>
                 {step.outcome}
               </p>

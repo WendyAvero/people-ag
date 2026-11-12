@@ -3,10 +3,16 @@ import { describe, expect, it } from "vitest";
 import { companyServices, processSteps } from "@/content/services";
 
 describe("contenido de servicios", () => {
-  it("hay exactamente dos servicios principales, sin el antiguo acompañamiento", () => {
+  it("hay exactamente tres líneas de servicio, en el orden aprobado y sin el antiguo acompañamiento", () => {
     expect(companyServices.map((s) => s.id)).toEqual([
       "reclutamiento",
       "consultoria",
+      "capacitacion",
+    ]);
+    expect(companyServices.map((s) => s.title)).toEqual([
+      "Reclutamiento y selección",
+      "Consultoría estratégica de Recursos Humanos",
+      "Capacitación, talleres y desarrollo de equipos",
     ]);
   });
 

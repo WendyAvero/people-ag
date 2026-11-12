@@ -45,6 +45,7 @@ describe("páginas de servicio", () => {
     expect(servicePageList.map((p) => p.slug)).toEqual([
       "reclutamiento-y-seleccion-de-personal",
       "consultoria-estrategica-de-recursos-humanos",
+      "capacitacion-talleres-y-desarrollo-de-equipos",
     ]);
   });
 
@@ -60,7 +61,8 @@ describe("páginas de servicio", () => {
     for (const p of servicePageList) {
       const svc = companyServices.find((s) => s.id === p.serviceId);
       expect(svc, p.slug).toBeDefined();
-      expect(p.steps).toHaveLength(svc!.items!.length);
+      // Solo los servicios con lista de ítems en la home la conservan en la página.
+      if (svc!.items) expect(p.steps).toHaveLength(svc!.items.length);
     }
   });
 
@@ -111,20 +113,21 @@ describe("metadata y palabras clave de la home", () => {
 });
 
 describe("sitemap y datos estructurados", () => {
-  it("el sitemap lista la home y las dos páginas de servicio, sin privacidad (borrador)", () => {
+  it("el sitemap lista la home y las tres páginas de servicio, sin privacidad (borrador)", () => {
     const urls = sitemap().map((e) => e.url);
-    expect(urls).toHaveLength(3);
+    expect(urls).toHaveLength(4);
+    expect(urls.some((u) => u.endsWith("/capacitacion-talleres-y-desarrollo-de-equipos"))).toBe(true);
     expect(urls.some((u) => u.endsWith("/reclutamiento-y-seleccion-de-personal"))).toBe(true);
     expect(urls.some((u) => u.endsWith("/consultoria-estrategica-de-recursos-humanos"))).toBe(true);
     expect(urls.some((u) => u.includes("privacidad"))).toBe(false);
   });
 
-  it("la home declara Argentina y Uruguay y los dos servicios", () => {
+  it("la home declara Argentina y Uruguay y los tres servicios", () => {
     const json = JSON.stringify(homeJsonLd());
     expect(json).toContain('"name":"Argentina"');
     expect(json).toContain('"name":"Uruguay"');
     expect(json).toContain("wendyavero@people-ag.com");
-    expect(json.match(/"@type":"Service"/g)).toHaveLength(2);
+    expect(json.match(/"@type":"Service"/g)).toHaveLength(3);
     expect(json).not.toMatch(/aggregateRating|review|telephone|streetAddress/);
   });
 

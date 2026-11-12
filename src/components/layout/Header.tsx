@@ -1,10 +1,13 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 
 import { navItems } from "@/config/site";
 import { ButtonLink } from "@/components/ui/ButtonLink";
+import { companyServices } from "@/content/services";
+import { servicePathById } from "@/content/service-pages";
 import { Logo } from "./Logo";
 
 /**
@@ -13,10 +16,14 @@ import { Logo } from "./Logo";
  */
 export function Header({ home = true }: { home?: boolean }) {
   const prefix = home ? "" : "/";
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<string>(home ? "inicio" : "");
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const servicesRef = useRef<HTMLLIElement>(null);
+  const servicesButtonRef = useRef<HTMLButtonElement>(null);
 
   // Fondo del encabezado al hacer scroll.
   useEffect(() => {
@@ -44,6 +51,26 @@ export function Header({ home = true }: { home?: boolean }) {
     sections.forEach((s) => observer.observe(s));
     return () => observer.disconnect();
   }, []);
+
+  // Submenú «Servicios» (escritorio): se cierra con Escape, clic afuera o al salir el foco.
+  useEffect(() => {
+    if (!servicesOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setServicesOpen(false);
+        servicesButtonRef.current?.focus();
+      }
+    };
+    const onPointer = (e: MouseEvent) => {
+      if (!servicesRef.current?.contains(e.target as Node)) setServicesOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("mousedown", onPointer);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("mousedown", onPointer);
+    };
+  }, [servicesOpen]);
 
   // Cerrar el menú móvil con Escape y devolver el foco al botón.
   useEffect(() => {
@@ -77,21 +104,85 @@ export function Header({ home = true }: { home?: boolean }) {
           <ul className="flex items-center gap-9">
             {navItems.map((item) => {
               const isActive = active === item.id;
+              const linkClass = `relative py-2 text-sm font-medium transition-colors hover:text-lavender-deep ${
+                isActive ? "text-lavender-deep" : "text-ink/80"
+              } after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:bg-lavender-deep after:transition-transform after:duration-300 ${
+                isActive
+                  ? "after:scale-x-100"
+                  : "after:scale-x-0 hover:after:scale-x-100"
+              }`;
+
+              if (item.id !== "empresas") {
+                return (
+                  <li key={item.id}>
+                    <a
+                      href={`${prefix}${item.href}`}
+                      aria-current={isActive ? "true" : undefined}
+                      className={linkClass}
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                );
+              }
+
               return (
-                <li key={item.id}>
+                <li
+                  key={item.id}
+                  ref={servicesRef}
+                  className="relative flex items-center gap-1"
+                  onBlur={(e) => {
+                    if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+                      setServicesOpen(false);
+                    }
+                  }}
+                >
                   <a
                     href={`${prefix}${item.href}`}
                     aria-current={isActive ? "true" : undefined}
-                    className={`relative py-2 text-sm font-medium transition-colors hover:text-lavender-deep ${
-                      isActive ? "text-lavender-deep" : "text-ink/80"
-                    } after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:bg-lavender-deep after:transition-transform after:duration-300 ${
-                      isActive
-                        ? "after:scale-x-100"
-                        : "after:scale-x-0 hover:after:scale-x-100"
-                    }`}
+                    className={linkClass}
                   >
                     {item.label}
                   </a>
+                  <button
+                    ref={servicesButtonRef}
+                    type="button"
+                    aria-expanded={servicesOpen}
+                    aria-controls="submenu-servicios"
+                    aria-label="Mostrar las líneas de servicio"
+                    onClick={() => setServicesOpen((v) => !v)}
+                    className="-ml-1 inline-flex h-11 w-11 items-center justify-center rounded-full text-ink/80 transition-colors hover:text-lavender-deep"
+                  >
+                    <ChevronDown
+                      size={16}
+                      aria-hidden="true"
+                      className={`transition-transform ${servicesOpen ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                  <ul
+                    id="submenu-servicios"
+                    hidden={!servicesOpen}
+                    className="absolute left-0 top-full z-50 mt-2 w-[26rem] border border-line border-t-2 border-t-sand bg-white p-2 shadow-soft"
+                  >
+                    {companyServices.map((service) => (
+                      <li key={service.id}>
+                        <a
+                          href={servicePathById[service.id]}
+                          onClick={() => setServicesOpen(false)}
+                          aria-current={
+                            pathname === servicePathById[service.id] ? "page" : undefined
+                          }
+                          className={`block rounded-sm border-l-2 px-3 py-2.5 text-sm font-medium transition-colors hover:bg-cream hover:text-lavender-deep ${
+                            pathname === servicePathById[service.id]
+                              ? "border-l-lavender-deep text-lavender-deep"
+                              : "border-l-transparent text-ink/90"
+                          }`}
+                        >
+                          {service.title}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
                 </li>
               );
             })}
@@ -139,6 +230,28 @@ export function Header({ home = true }: { home?: boolean }) {
               >
                 {item.label}
               </a>
+              {item.id === "empresas" ? (
+                <ul className="border-b border-line/70 pb-2 pl-4">
+                  {companyServices.map((service) => (
+                    <li key={service.id}>
+                      <a
+                        href={servicePathById[service.id]}
+                        onClick={() => setOpen(false)}
+                        aria-current={
+                          pathname === servicePathById[service.id] ? "page" : undefined
+                        }
+                        className={`flex min-h-11 items-center py-2 text-[0.95rem] ${
+                          pathname === servicePathById[service.id]
+                            ? "font-semibold text-lavender-deep"
+                            : "text-ink/85"
+                        }`}
+                      >
+                        {service.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
             </li>
           ))}
         </ul>

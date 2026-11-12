@@ -95,15 +95,17 @@ export const siteConfig = {
    */
   founder: {
     name: "Wendy Avero González" as string | null,
-    role: "Licenciada en Relaciones del Trabajo · Universidad de Buenos Aires" as
+    role: "Fundadora de People AG" as
       | string
       | null,
     bio: [
-      "Soy profesional de Recursos Humanos y fundadora de People AG, una consultora orientada a acompañar a las empresas en sus desafíos de gestión de personas.",
-      "Mi enfoque combina formación técnica, visión de negocio y una mirada integral de las organizaciones. Trabajo para que Recursos Humanos aporte soluciones concretas: desde incorporar a las personas adecuadas hasta profesionalizar procesos, fortalecer el liderazgo y acompañar decisiones estratégicas.",
-      "Creo en una gestión de personas con criterio, cercana a la realidad de cada empresa y alineada con sus objetivos. Por eso, cada propuesta parte de comprender la necesidad, definir prioridades y construir soluciones que puedan implementarse y sostenerse en el tiempo.",
+      "Soy profesional de Recursos Humanos y fundadora de People AG, una consultora que acompaña a las empresas en su gestión de personas: desde incorporar a las personas adecuadas hasta profesionalizar procesos, fortalecer el liderazgo e integrar equipos.",
+      "Creo en una gestión de personas con criterio, cercana a la realidad de cada empresa y alineada con sus objetivos. Cada propuesta parte de comprender la necesidad y definir prioridades, para construir soluciones que puedan sostenerse en el tiempo.",
     ] as string[] | null,
-    credentials: null as string[] | null,
+    credentials: [
+      "Licenciatura en Relaciones del Trabajo (Universidad de Buenos Aires)",
+      "Formación en Change Management",
+    ] as string[] | null,
     /** Ruta dentro de /public, por ejemplo "/fundadora.jpg". */
     photo: null as string | null,
     photoAlt: null as string | null,
@@ -123,7 +125,7 @@ if (!siteConfig.privacyIsDraft) {
 
 export const navItems = [
   { label: "Inicio", href: "#inicio", id: "inicio" },
-  { label: "Empresas", href: "#empresas", id: "empresas" },
+  { label: "Servicios", href: "#empresas", id: "empresas" },
   { label: "Sobre People AG", href: "#sobre", id: "sobre" },
   { label: "Contacto", href: "#contacto", id: "contacto" },
 ] as const;

@@ -8,21 +8,20 @@
 
 export type CompanyService = {
   /** También es el ancla de la sección: /#reclutamiento, etc. */
-  id: "reclutamiento" | "consultoria";
+  id: "reclutamiento" | "consultoria" | "capacitacion";
   title: string;
-  lead: string;
+  /** Frase corta (tarjeta de la home, panel del Hero y bloque «También podemos ayudarte con»). */
+  short: string;
   /** Pasos o ítems del servicio (se muestran en orden). */
   items?: string[];
   /** Variante agrupada (opcional): ítems organizados por grupos. */
   groups?: { label: string; items: string[] }[];
-  cta: { label: string };
 };
 
 export const companyServices: CompanyService[] = [
   {
     id: "reclutamiento",
     title: "Reclutamiento y selección",
-    lead: "Un proceso integral, de punta a punta: desde definir bien el perfil hasta presentarte a los finalistas y acompañarte durante toda la selección.",
     items: [
       "Relevamiento y definición del perfil.",
       "Diseño de la estrategia de búsqueda.",
@@ -32,12 +31,11 @@ export const companyServices: CompanyService[] = [
       "Presentación de finalistas.",
       "Acompañamiento durante el proceso de selección.",
     ],
-    cta: { label: "Necesito incorporar talento" },
+    short: "Del perfil a los finalistas, con acompañamiento.",
   },
   {
     id: "consultoria",
     title: "Consultoría estratégica de Recursos Humanos",
-    lead: "Acompañamos a las empresas a ordenar, profesionalizar y desarrollar su gestión de personas, combinando proyectos específicos con asesoramiento continuo según las necesidades del negocio.",
     items: [
       "Diagnóstico organizacional y definición de prioridades.",
       "Diseño y mejora de procesos, políticas y herramientas de RR. HH.",
@@ -45,7 +43,12 @@ export const companyServices: CompanyService[] = [
       "Asesoramiento a dueños, directores y gerentes en decisiones sobre personas y organización.",
       "Seguimiento continuo de prioridades y proyectos.",
     ],
-    cta: { label: "Quiero profesionalizar RR. HH." },
+    short: "Ordenar y profesionalizar la gestión de personas: estructuras, procesos y prácticas.",
+  },
+  {
+    id: "capacitacion",
+    title: "Capacitación, talleres y desarrollo de equipos",
+    short: "Formación y talleres para desarrollar competencias, fortalecer vínculos y mejorar el funcionamiento de los equipos.",
   },
 ];
 
@@ -54,6 +57,7 @@ export const companyMoments = [
   "Necesitás incorporar a alguien y querés un proceso de selección con criterio, de principio a fin.",
   "Tu organización creció y la gestión de personas todavía se resuelve sobre la marcha.",
   "No contás con un equipo de RR. HH. completo y necesitás respaldo especializado.",
+  "Querés que tus líderes y tu equipo desarrollen habilidades o trabajen mejor en conjunto.",
 ] as const;
 
 export const processSteps = [
