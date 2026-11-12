@@ -4,11 +4,6 @@ import { ArrowRight } from "@/components/ui/icons";
 import { companyServices } from "@/content/services";
 import { contactHref, servicePathById } from "@/lib/contact-link";
 
-const shortLabels: Record<string, string> = {
-  reclutamiento: "Del perfil a los finalistas, con acompañamiento.",
-  consultoria: "Ordenar, profesionalizar y desarrollar la gestión de personas.",
-};
-
 export function Hero() {
   return (
     <section
@@ -19,7 +14,7 @@ export function Hero() {
       <Container className="grid items-center gap-14 lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-7">
           <p className="eyebrow text-lavender-deep">
-            Consultoría estratégica de Recursos Humanos para empresas
+            Consultora de Recursos Humanos y Desarrollo Organizacional para empresas
           </p>
 
           <h1
@@ -33,9 +28,11 @@ export function Hero() {
           </h1>
 
           <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted">
-            Ayudamos a las empresas, en especial a las PyMEs, a incorporar a
-            las personas indicadas, ordenar la gestión de su equipo y decidir
-            con criterio. Soluciones a medida, pensadas para el negocio y para
+            Somos una consultora de Recursos Humanos y Desarrollo
+            Organizacional. Ayudamos a las empresas, en especial a las PyMEs, a
+            incorporar a las personas indicadas, ordenar la gestión de su
+            equipo, desarrollar a sus líderes y fortalecer el trabajo en
+            equipo. Soluciones a medida, pensadas para el negocio y para
             quienes lo conducen.
           </p>
 
@@ -56,7 +53,7 @@ export function Hero() {
 
         {/* Composición editorial: índice de soluciones para empresas */}
         <div className="lg:col-span-5">
-          <div className="lg:relative lg:h-[31rem]">
+          <div className="lg:relative lg:h-[37rem]">
             <div
               aria-hidden="true"
               className="absolute right-0 top-0 hidden h-[64%] w-[78%] bg-sand lg:block"
@@ -74,7 +71,7 @@ export function Hero() {
                 Soluciones para empresas
               </p>
               <ol className="mt-4">
-                {companyServices.map((service, index) => (
+                {companyServices.map((service) => (
                   <li
                     key={service.id}
                     className="border-t border-ink/10 first:border-t-0"
@@ -83,18 +80,12 @@ export function Hero() {
                       href={servicePathById[service.id]}
                       className="group flex items-start gap-4 py-4"
                     >
-                      <span
-                        aria-hidden="true"
-                        className="pt-0.5 font-display text-sm font-semibold tracking-widest text-sand-deep"
-                      >
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
                       <span className="flex-1">
                         <span className="block font-display text-base font-semibold leading-snug text-ink">
                           {service.title}
                         </span>
                         <span className="mt-1 block text-sm leading-snug text-muted">
-                          {shortLabels[service.id]}
+                          {service.short}
                         </span>
                       </span>
                       <ArrowRight

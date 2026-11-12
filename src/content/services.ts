@@ -8,9 +8,11 @@
 
 export type CompanyService = {
   /** También es el ancla de la sección: /#reclutamiento, etc. */
-  id: "reclutamiento" | "consultoria";
+  id: "reclutamiento" | "consultoria" | "capacitacion" | "integracion";
   title: string;
   lead: string;
+  /** Frase corta (panel del Hero y bloque «También podemos ayudarte con»). */
+  short: string;
   /** Pasos o ítems del servicio (se muestran en orden). */
   items?: string[];
   /** Variante agrupada (opcional): ítems organizados por grupos. */
@@ -32,6 +34,7 @@ export const companyServices: CompanyService[] = [
       "Presentación de finalistas.",
       "Acompañamiento durante el proceso de selección.",
     ],
+    short: "Del perfil a los finalistas, con acompañamiento.",
     cta: { label: "Necesito incorporar talento" },
   },
   {
@@ -45,7 +48,22 @@ export const companyServices: CompanyService[] = [
       "Asesoramiento a dueños, directores y gerentes en decisiones sobre personas y organización.",
       "Seguimiento continuo de prioridades y proyectos.",
     ],
+    short: "Ordenar, profesionalizar y desarrollar la gestión de personas.",
     cta: { label: "Quiero profesionalizar RR. HH." },
+  },
+  {
+    id: "capacitacion",
+    title: "Capacitación y desarrollo",
+    lead: "Programas y talleres a medida para que líderes y equipos desarrollen habilidades de gestión, comunicación y servicio. En modalidad presencial o remota, en Argentina y Uruguay.",
+    short: "Programas y talleres a medida para líderes y equipos.",
+    cta: { label: "Quiero capacitar a mi equipo" },
+  },
+  {
+    id: "integracion",
+    title: "Integración y desarrollo de equipos",
+    lead: "Talleres y acompañamiento para que los equipos se alineen, se comuniquen mejor y trabajen con acuerdos claros. En modalidad presencial o remota, en Argentina y Uruguay.",
+    short: "Talleres para alinear, comunicar y acordar como equipo.",
+    cta: { label: "Quiero un taller para mi equipo" },
   },
 ];
 
@@ -54,6 +72,7 @@ export const companyMoments = [
   "Necesitás incorporar a alguien y querés un proceso de selección con criterio, de principio a fin.",
   "Tu organización creció y la gestión de personas todavía se resuelve sobre la marcha.",
   "No contás con un equipo de RR. HH. completo y necesitás respaldo especializado.",
+  "Querés que tus líderes y tu equipo desarrollen habilidades o trabajen mejor en conjunto.",
 ] as const;
 
 export const processSteps = [

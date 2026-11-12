@@ -7,12 +7,14 @@
 
 export type ServiceSlug =
   | "reclutamiento-y-seleccion-de-personal"
-  | "consultoria-estrategica-de-recursos-humanos";
+  | "consultoria-estrategica-de-recursos-humanos"
+  | "capacitacion-y-desarrollo-para-empresas"
+  | "integracion-y-desarrollo-de-equipos";
 
 export type ServicePage = {
   slug: ServiceSlug;
   /** Debe coincidir con CompanyService.id (preselección del servicio). */
-  serviceId: "reclutamiento" | "consultoria";
+  serviceId: "reclutamiento" | "consultoria" | "capacitacion" | "integracion";
   /** Título corto para <title> (el template agrega " | People AG"). */
   metaTitle: string;
   metaDescription: string;
@@ -25,13 +27,15 @@ export type ServicePage = {
   mailSubject: string;
   whenTitle: string;
   when: string[];
+  /** Temáticas del servicio (opcional): se muestra una sección solo si existen. */
+  topicsTitle?: string;
+  topics?: string[];
   stepsTitle: string;
   stepsIntro: string;
   steps: { title: string; text: string }[];
   approachTitle: string;
   approach: { title: string; text: string }[];
   faqs: { q: string; a: string }[];
-  related: { slug: ServiceSlug; title: string; text: string };
 };
 
 export const servicePages: Record<ServiceSlug, ServicePage> = {
@@ -128,11 +132,6 @@ export const servicePages: Record<ServiceSlug, ServicePage> = {
         a: "Escribinos contándonos qué posición necesitás cubrir. Te respondemos por correo para coordinar una primera conversación.",
       },
     ],
-    related: {
-      slug: "consultoria-estrategica-de-recursos-humanos",
-      title: "Consultoría estratégica de Recursos Humanos",
-      text: "Si además querés ordenar procesos, políticas y prácticas de gestión de personas, conocé nuestro servicio de consultoría.",
-    },
   },
 
   "consultoria-estrategica-de-recursos-humanos": {
@@ -216,11 +215,191 @@ export const servicePages: Record<ServiceSlug, ServicePage> = {
         a: "Escribinos contándonos qué te preocupa o qué querés ordenar. Te respondemos por correo para coordinar una primera conversación.",
       },
     ],
-    related: {
-      slug: "reclutamiento-y-seleccion-de-personal",
-      title: "Reclutamiento y selección de personal",
-      text: "Si lo que necesitás es incorporar a alguien, conocé nuestro proceso de selección de punta a punta.",
-    },
+  },
+
+  "capacitacion-y-desarrollo-para-empresas": {
+    slug: "capacitacion-y-desarrollo-para-empresas",
+    serviceId: "capacitacion",
+    metaTitle: "Capacitación y desarrollo para empresas",
+    metaDescription:
+      "Capacitación y desarrollo para empresas y PyMEs de Argentina y Uruguay: liderazgo, comunicación, atención al cliente y más. Presencial o remota.",
+    name: "Capacitación y desarrollo para empresas",
+    eyebrow: "Capacitación y desarrollo",
+    h1: "Capacitación y desarrollo para empresas y PyMEs",
+    lead: "Programas y talleres para que líderes y equipos desarrollen habilidades concretas de gestión, comunicación y servicio. Se diseñan a medida, en modalidad presencial o remota, en Argentina y Uruguay.",
+    ctaLabel: "Quiero capacitar a mi equipo",
+    mailSubject: "Consulta por capacitación y desarrollo",
+    whenTitle: "Cuándo conviene capacitar a un equipo",
+    when: [
+      "Sumaste líderes nuevos o mandos medios que necesitan herramientas para gestionar equipos.",
+      "La comunicación o la atención al cliente generan reclamos o fricciones.",
+      "Hay conversaciones difíciles que se vienen postergando.",
+      "Querés desarrollar habilidades concretas sin recurrir a un programa genérico.",
+    ],
+    topicsTitle: "Temáticas de capacitación",
+    topics: [
+      "Liderazgo y gestión de equipos.",
+      "Comunicación efectiva.",
+      "Atención al cliente y calidad de servicio.",
+      "Feedback y conversaciones difíciles.",
+      "Delegación y gestión de conflictos.",
+      "Habilidades para mandos medios.",
+      "Capacitación a medida.",
+    ],
+    stepsTitle: "Cómo trabajamos una capacitación",
+    stepsIntro:
+      "Cada propuesta parte de entender al equipo y su momento. El formato, la duración y la cantidad de participantes se definen con cada empresa según el objetivo.",
+    steps: [
+      {
+        title: "Entender la necesidad y el contexto",
+        text: "Conversamos con quien conduce el equipo para conocer qué se quiere lograr, qué situación se vive hoy y qué se intentó hasta ahora.",
+      },
+      {
+        title: "Definir objetivos y contenidos",
+        text: "Acordamos qué habilidades se van a trabajar y qué contenidos conviene priorizar.",
+      },
+      {
+        title: "Diseñar el formato con la empresa",
+        text: "Definimos la modalidad (presencial o remota), la duración y los participantes según el objetivo y la realidad del equipo.",
+      },
+      {
+        title: "Dictar con dinámicas prácticas",
+        text: "Trabajamos con casos y situaciones propias del equipo, para que lo visto pueda aplicarse en el día a día.",
+      },
+      {
+        title: "Cerrar con conclusiones y recomendaciones",
+        text: "Al finalizar, compartimos conclusiones y recomendaciones para dar continuidad a lo trabajado.",
+      },
+    ],
+    approachTitle: "Cómo entendemos la capacitación",
+    approach: [
+      {
+        title: "Práctica y cercana a tu realidad",
+        text: "Partimos de situaciones reales de tu empresa, no de contenidos genéricos.",
+      },
+      {
+        title: "Pensada para PyMEs",
+        text: "En las PyMEs los líderes suelen cumplir varios roles; ajustamos los contenidos y el formato a esa realidad.",
+      },
+      {
+        title: "Conectada con la gestión de personas",
+        text: "Podemos articular la capacitación con la selección y la consultoría de Recursos Humanos, según lo que necesites.",
+      },
+    ],
+    faqs: [
+      {
+        q: "¿Se dictan de forma presencial o remota?",
+        a: "Ambas modalidades son posibles, en Argentina y Uruguay. La definimos con cada empresa según el objetivo y el equipo.",
+      },
+      {
+        q: "¿Se pueden armar temas a medida?",
+        a: "Sí. Además de las temáticas habituales, diseñamos capacitaciones a medida a partir de lo que tu equipo necesita.",
+      },
+      {
+        q: "¿Sirve para PyMEs con equipos chicos?",
+        a: "Sí. Está pensada para empresas y PyMEs; el formato y el alcance se ajustan al tamaño y a las prioridades del equipo.",
+      },
+      {
+        q: "¿Se puede combinar con un taller de integración?",
+        a: "Sí. Podemos combinar capacitación con talleres de integración y desarrollo de equipos, según lo que necesite tu empresa.",
+      },
+      {
+        q: "¿Cómo empiezo?",
+        a: "Escribinos contándonos qué querés trabajar con tu equipo. Te respondemos por correo para coordinar una primera conversación.",
+      },
+    ],
+  },
+
+  "integracion-y-desarrollo-de-equipos": {
+    slug: "integracion-y-desarrollo-de-equipos",
+    serviceId: "integracion",
+    metaTitle: "Integración y desarrollo de equipos",
+    metaDescription:
+      "Talleres de integración y desarrollo de equipos para empresas y PyMEs de Argentina y Uruguay: comunicación, acuerdos y confianza, presencial o remota.",
+    name: "Integración y desarrollo de equipos",
+    eyebrow: "Integración y desarrollo de equipos",
+    h1: "Integración y desarrollo de equipos para empresas y PyMEs",
+    lead: "Talleres y acompañamiento para que los equipos se alineen, se comuniquen mejor y trabajen con acuerdos claros. En modalidad presencial o remota, en Argentina y Uruguay.",
+    ctaLabel: "Quiero un taller para mi equipo",
+    mailSubject: "Consulta por integración y desarrollo de equipos",
+    whenTitle: "Cuándo conviene un taller de integración",
+    when: [
+      "Se formó un equipo nuevo o se fusionaron áreas.",
+      "Hay desalineación sobre los objetivos o las prioridades.",
+      "La colaboración entre personas o áreas se volvió difícil.",
+      "Querés conocer cómo funciona un equipo antes de intervenir.",
+    ],
+    topicsTitle: "Qué trabajamos con los equipos",
+    topics: [
+      "Talleres de integración de equipos.",
+      "Alineación de objetivos y prioridades.",
+      "Comunicación y colaboración.",
+      "Acuerdos y códigos de trabajo del equipo.",
+      "Dinámicas de confianza.",
+      "Diagnóstico y mejora del funcionamiento del equipo.",
+    ],
+    stepsTitle: "Cómo trabajamos con tu equipo",
+    stepsIntro:
+      "Partimos de cómo trabaja hoy el equipo. El formato, la duración y la cantidad de participantes se definen con cada empresa según el objetivo.",
+    steps: [
+      {
+        title: "Conversar con quien conduce el equipo",
+        text: "Entendemos qué se busca, cuál es el momento del equipo y qué se espera de la intervención.",
+      },
+      {
+        title: "Relevar cómo trabaja hoy el equipo",
+        text: "Según el caso, con entrevistas o una encuesta breve, para partir de información y no de supuestos.",
+      },
+      {
+        title: "Diseñar el taller a medida",
+        text: "Armamos las actividades según el objetivo y la modalidad elegida, presencial o remota.",
+      },
+      {
+        title: "Facilitar la jornada",
+        text: "Conducimos el taller con dinámicas participativas, para que todas las personas puedan intervenir.",
+      },
+      {
+        title: "Cerrar con acuerdos y recomendaciones",
+        text: "El equipo termina con acuerdos de trabajo concretos, y le dejamos recomendaciones para sostenerlos.",
+      },
+    ],
+    approachTitle: "Cómo entendemos el trabajo con equipos",
+    approach: [
+      {
+        title: "Talleres participativos y prácticos",
+        text: "El equipo trabaja y conversa; no son charlas para escuchar.",
+      },
+      {
+        title: "Partimos del diagnóstico",
+        text: "Diseñamos cada taller a partir de cómo funciona el equipo, no de una dinámica estándar.",
+      },
+      {
+        title: "Acuerdos que se puedan sostener",
+        text: "Buscamos acuerdos simples y concretos, que el equipo pueda llevar a su día a día.",
+      },
+    ],
+    faqs: [
+      {
+        q: "¿Cuándo conviene hacer un taller de integración?",
+        a: "Cuando se formó un equipo nuevo, cambió la conducción, se fusionaron áreas o la colaboración se volvió difícil. También sirve para conocer cómo funciona un equipo antes de intervenir.",
+      },
+      {
+        q: "¿Se hace de forma presencial o remota?",
+        a: "Ambas modalidades son posibles, en Argentina y Uruguay. La definimos con cada empresa según el objetivo y el equipo.",
+      },
+      {
+        q: "¿Participan todas las personas del equipo o solo los líderes?",
+        a: "Lo definimos con la empresa según el objetivo: puede involucrar a todo el equipo, a los líderes o a ambos. Sirve tanto para PyMEs como para equipos más grandes.",
+      },
+      {
+        q: "¿Se puede combinar con capacitación?",
+        a: "Sí. Podemos combinar talleres de integración con capacitaciones en liderazgo, comunicación u otras temáticas, según lo que necesite tu empresa.",
+      },
+      {
+        q: "¿Cómo empiezo?",
+        a: "Escribinos contándonos qué situación vive tu equipo. Te respondemos por correo para coordinar una primera conversación.",
+      },
+    ],
   },
 };
 
@@ -230,4 +409,11 @@ export const servicePageList = Object.values(servicePages);
 export const servicePathById: Record<ServicePage["serviceId"], string> = {
   reclutamiento: "/reclutamiento-y-seleccion-de-personal",
   consultoria: "/consultoria-estrategica-de-recursos-humanos",
+  capacitacion: "/capacitacion-y-desarrollo-para-empresas",
+  integracion: "/integracion-y-desarrollo-de-equipos",
 };
+
+/** Las demás páginas de servicio, en el orden de la lista (bloque «También podemos ayudarte con»). */
+export function otherServicePages(slug: ServiceSlug): ServicePage[] {
+  return servicePageList.filter((p) => p.slug !== slug);
+}

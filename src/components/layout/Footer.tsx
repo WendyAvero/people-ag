@@ -8,6 +8,8 @@ import { Logo } from "./Logo";
 const serviceLinks = [
   { label: "Reclutamiento y selección de personal", href: "/reclutamiento-y-seleccion-de-personal" },
   { label: "Consultoría estratégica de RR. HH.", href: "/consultoria-estrategica-de-recursos-humanos" },
+  { label: "Capacitación y desarrollo", href: "/capacitacion-y-desarrollo-para-empresas" },
+  { label: "Integración y desarrollo de equipos", href: "/integracion-y-desarrollo-de-equipos" },
   { label: "Cómo trabajamos", href: "/#metodo" },
 ];
 
@@ -28,9 +30,9 @@ export function Footer() {
           <div className="md:col-span-5">
             <Logo className="h-20" />
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-cream/75">
-              Consultoría estratégica de Recursos Humanos para empresas.
-              Selección, profesionalización de la gestión de personas y
-              asesoramiento adaptado a cada organización.
+              Consultora de Recursos Humanos y Desarrollo Organizacional para
+              empresas. Selección, consultoría, capacitación y desarrollo de
+              equipos, con soluciones adaptadas a cada organización.
             </p>
 
             {linkedin || instagram ? (

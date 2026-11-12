@@ -15,8 +15,10 @@ describe("Sobre People AG y pie con la configuración real", () => {
   it("muestra el título, la fundadora y su credencial", () => {
     expect(sobre).toContain("Experiencia profesional. Criterio de negocio. Soluciones reales.");
     expect(sobre).toContain("Wendy Avero González");
-    expect(sobre).toContain("Licenciada en Relaciones del Trabajo · Universidad de Buenos Aires");
-    expect(sobre).toContain("fundadora de People AG");
+    expect(sobre).toContain("Fundadora de People AG");
+    expect(sobre).toContain("Licenciatura en Relaciones del Trabajo (Universidad de Buenos Aires)");
+    expect(sobre).toContain("Formación en Change Management");
+    expect(sobre).not.toMatch(/Coaching/i);
   });
 
   it("muestra los tres bloques de valor actualizados", () => {
@@ -37,7 +39,7 @@ describe("Sobre People AG y pie con la configuración real", () => {
   it("el pie usa la nueva descripción institucional", () => {
     const text = footer.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
     expect(text).toContain(
-      "Consultoría estratégica de Recursos Humanos para empresas. Selección, profesionalización de la gestión de personas y asesoramiento adaptado a cada organización.",
+      "Consultora de Recursos Humanos y Desarrollo Organizacional para empresas. Selección, consultoría, capacitación y desarrollo de equipos, con soluciones adaptadas a cada organización.",
     );
   });
 });

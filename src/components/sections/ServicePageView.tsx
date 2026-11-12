@@ -7,12 +7,13 @@ import { Container } from "@/components/ui/Container";
 import { ArrowRight } from "@/components/ui/icons";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { mailtoHref, siteConfig } from "@/config/site";
-import { servicePages, type ServicePage } from "@/content/service-pages";
+import { otherServicePages, type ServicePage } from "@/content/service-pages";
+import { companyServices } from "@/content/services";
 import { jsonLdString, serviceJsonLd } from "@/lib/structured-data";
 
 /** Página de servicio indexable. Reutiliza los componentes y estilos del sitio. */
 export function ServicePageView({ page }: { page: ServicePage }) {
-  const related = servicePages[page.related.slug];
+  const others = otherServicePages(page.slug);
   const mail = mailtoHref(page.mailSubject);
 
   return (
@@ -57,9 +58,6 @@ export function ServicePageView({ page }: { page: ServicePage }) {
                     className="transition-transform group-hover:translate-x-0.5"
                   />
                 </ButtonLink>
-                <ButtonLink href={`/${related.slug}`} variant="secondary">
-                  {page.related.title}
-                </ButtonLink>
               </div>
               <p className="mt-4 text-sm text-muted">
                 Escribinos a{" "}
@@ -99,6 +97,37 @@ export function ServicePageView({ page }: { page: ServicePage }) {
             </ul>
           </Container>
         </section>
+
+        {/* Temáticas (solo si la página las define) */}
+        {page.topics && page.topicsTitle ? (
+          <section
+            aria-labelledby="tematicas-title"
+            className="bg-cream py-16 sm:py-24"
+          >
+            <Container>
+              <SectionHeading
+                id="tematicas-title"
+                eyebrow="Temáticas"
+                title={page.topicsTitle}
+                className="max-w-3xl!"
+              />
+              <ul className="mt-10 grid gap-x-10 gap-y-3 sm:grid-cols-2">
+                {page.topics.map((topic) => (
+                  <li
+                    key={topic}
+                    className="flex gap-3 text-[0.95rem] leading-snug"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="mt-[0.55em] h-1.5 w-1.5 shrink-0 rounded-full bg-sand"
+                    />
+                    <span>{topic}</span>
+                  </li>
+                ))}
+              </ul>
+            </Container>
+          </section>
+        ) : null}
 
         {/* Pasos / ejes */}
         <section
@@ -191,13 +220,13 @@ export function ServicePageView({ page }: { page: ServicePage }) {
           </Container>
         </section>
 
-        {/* Servicio relacionado + contacto */}
+        {/* Contacto */}
         <section
           aria-labelledby="cierre-title"
           className="bg-white py-16 sm:py-24"
         >
-          <Container className="grid gap-12 lg:grid-cols-2 lg:gap-16">
-            <div>
+          <Container>
+            <div className="max-w-2xl">
               <h2 id="cierre-title" className="text-2xl font-semibold sm:text-3xl">
                 Conversemos sobre tu empresa
               </h2>
@@ -212,25 +241,48 @@ export function ServicePageView({ page }: { page: ServicePage }) {
                 {siteConfig.contactEmail}
               </p>
             </div>
-            <div className="border border-ink/10 border-l-4 border-l-sand p-6 sm:p-8">
-              <p className="eyebrow text-sand-deep">Otro servicio</p>
-              <h3 className="mt-3 font-display text-xl font-semibold">
-                <Link
-                  href={`/${related.slug}`}
-                  className="underline-offset-4 hover:underline"
-                >
-                  {page.related.title}
-                </Link>
-              </h3>
-              <p className="mt-3 leading-relaxed text-muted">{page.related.text}</p>
-              <Link
-                href={`/${related.slug}`}
-                className="mt-5 inline-flex items-center gap-2 font-display text-sm font-semibold text-lavender-deep underline-offset-4 hover:underline"
-              >
-                Ver el servicio
-                <ArrowRight aria-hidden="true" width={16} height={16} />
-              </Link>
-            </div>
+          </Container>
+        </section>
+
+        {/* Enlaces a las demás líneas de servicio */}
+        <section
+          aria-labelledby="tambien-title"
+          className="bg-cream py-16 sm:py-24"
+        >
+          <Container>
+            <h2 id="tambien-title" className="text-2xl font-semibold sm:text-3xl">
+              También podemos ayudarte con
+            </h2>
+            <ul className="mt-10 grid gap-x-10 gap-y-8 md:grid-cols-3">
+              {others.map((other) => {
+                const service = companyServices.find((c) => c.id === other.serviceId);
+                return (
+                  <li key={other.slug} className="border-t-2 border-lavender pt-4">
+                    <h3 className="font-display text-lg font-semibold leading-snug">
+                      <Link
+                        href={`/${other.slug}`}
+                        className="underline-offset-4 hover:underline"
+                      >
+                        {other.name}
+                      </Link>
+                    </h3>
+                    {service ? (
+                      <p className="mt-2 text-[0.95rem] leading-relaxed text-muted">
+                        {service.short}
+                      </p>
+                    ) : null}
+                    <Link
+                      href={`/${other.slug}`}
+                      className="mt-4 inline-flex items-center gap-2 font-display text-sm font-semibold text-lavender-deep underline-offset-4 hover:underline"
+                    >
+                      Ver el servicio
+                      <span className="sr-only">: {other.name}</span>
+                      <ArrowRight aria-hidden="true" width={16} height={16} />
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
           </Container>
         </section>
       </main>
