@@ -272,9 +272,9 @@ export const servicePages: Record<ServiceSlug, ServicePage> = {
       title: "Capacitaciones y talleres a medida",
       text: "Si lo que necesita tu equipo no está en esta lista, diseñamos la propuesta a partir de tu situación.",
     },
-    stepsTitle: "Cómo trabajamos una capacitación o un taller",
+    stepsTitle: "Cómo diseñamos cada intervención",
     stepsIntro:
-      "Cada propuesta parte de entender al equipo y su momento. El proceso es el mismo para formar que para facilitar: lo que cambia es el objetivo. El formato, la duración y la cantidad de participantes se definen con cada empresa.",
+      "Cada propuesta parte de entender al equipo y su momento. El proceso es el mismo para desarrollar competencias, fortalecer vínculos o mejorar el funcionamiento del equipo: lo que cambia es el objetivo. El formato, la duración y la cantidad de participantes se definen con cada empresa.",
     steps: [
       {
         title: "Entender la necesidad y el contexto",

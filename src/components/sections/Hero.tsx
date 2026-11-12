@@ -9,7 +9,7 @@ export function Hero() {
     <section
       id="inicio"
       aria-labelledby="hero-title"
-      className="relative overflow-hidden pt-28 pb-20 sm:pt-36 sm:pb-24 lg:pt-44 lg:pb-32"
+      className="relative overflow-hidden pt-28 pb-20 sm:pt-36 sm:pb-24 lg:pt-56 lg:pb-32"
     >
       <Container className="grid items-center gap-14 lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-7">

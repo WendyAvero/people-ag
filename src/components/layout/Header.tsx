@@ -162,7 +162,7 @@ export function Header({ home = true }: { home?: boolean }) {
                   <ul
                     id="submenu-servicios"
                     hidden={!servicesOpen}
-                    className="absolute left-0 top-full z-50 mt-2 w-80 border border-line border-t-2 border-t-sand bg-white p-2 shadow-soft"
+                    className="absolute left-0 top-full z-50 mt-2 w-[26rem] border border-line border-t-2 border-t-sand bg-white p-2 shadow-soft"
                   >
                     {companyServices.map((service) => (
                       <li key={service.id}>
