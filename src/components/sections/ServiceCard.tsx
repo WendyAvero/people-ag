@@ -4,7 +4,7 @@ import { servicePathById } from "@/lib/contact-link";
 
 /**
  * Tarjeta de una línea de servicio en la home: nombre, una frase y un único
- * enlace a su página. Las cuatro usan el mismo diseño y el mismo peso: ninguna
+ * enlace a su página. Las tres usan el mismo diseño y el mismo peso: ninguna
  * se presenta como principal.
  */
 export function ServiceCard({ service }: { service: CompanyService }) {
@@ -16,7 +16,7 @@ export function ServiceCard({ service }: { service: CompanyService }) {
     >
       <h3
         id={`${service.id}-title`}
-        className="text-xl font-semibold leading-snug sm:text-2xl lg:text-xl xl:text-2xl"
+        className="text-xl font-semibold leading-snug sm:text-2xl md:text-xl lg:text-2xl"
       >
         {service.title}
       </h3>

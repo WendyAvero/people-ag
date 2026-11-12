@@ -98,8 +98,8 @@ export function ServicePageView({ page }: { page: ServicePage }) {
           </Container>
         </section>
 
-        {/* Temáticas (solo si la página las define) */}
-        {page.topics && page.topicsTitle ? (
+        {/* Temáticas, agrupadas por objetivo (solo si la página las define) */}
+        {page.topicGroups && page.topicsTitle ? (
           <section
             aria-labelledby="tematicas-title"
             className="bg-cream py-16 sm:py-24"
@@ -111,16 +111,35 @@ export function ServicePageView({ page }: { page: ServicePage }) {
                 title={page.topicsTitle}
                 className="max-w-3xl!"
               />
-              <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {page.topics.map((topic) => (
-                  <li
-                    key={topic}
-                    className="border border-ink/10 border-l-4 border-l-sand bg-white px-5 py-5 font-display text-lg font-semibold leading-snug"
-                  >
-                    {topic.replace(/\.$/, "")}
-                  </li>
+              <div className="mt-10 grid gap-x-8 gap-y-10 lg:grid-cols-3">
+                {page.topicGroups.map((group) => (
+                  <div key={group.title}>
+                    <h3 className="border-t-2 border-lavender pt-4 font-display text-sm font-semibold uppercase tracking-[0.14em] text-lavender-deep">
+                      {group.title}
+                    </h3>
+                    <ul className="mt-4 space-y-3">
+                      {group.items.map((item) => (
+                        <li
+                          key={item}
+                          className="border border-ink/10 border-l-4 border-l-sand bg-white px-5 py-4 font-display text-lg font-semibold leading-snug"
+                        >
+                          {item.replace(/\.$/, "")}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 ))}
-              </ul>
+              </div>
+              {page.topicsCustom ? (
+                <div className="mt-10 border border-ink/10 border-l-4 border-l-lavender bg-white p-6 sm:p-8">
+                  <h3 className="font-display text-lg font-semibold">
+                    {page.topicsCustom.title}
+                  </h3>
+                  <p className="mt-2 leading-relaxed text-muted">
+                    {page.topicsCustom.text}
+                  </p>
+                </div>
+              ) : null}
             </Container>
           </section>
         ) : null}
@@ -249,7 +268,7 @@ export function ServicePageView({ page }: { page: ServicePage }) {
             <h2 id="tambien-title" className="text-2xl font-semibold sm:text-3xl">
               También podemos ayudarte con
             </h2>
-            <ul className="mt-10 grid gap-x-10 gap-y-8 md:grid-cols-3">
+            <ul className="mt-10 grid gap-x-10 gap-y-8 md:grid-cols-2">
               {others.map((other) => {
                 const service = companyServices.find((c) => c.id === other.serviceId);
                 return (

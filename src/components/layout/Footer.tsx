@@ -8,8 +8,7 @@ import { Logo } from "./Logo";
 const serviceLinks = [
   { label: "Reclutamiento y selección de personal", href: "/reclutamiento-y-seleccion-de-personal" },
   { label: "Consultoría estratégica de RR. HH.", href: "/consultoria-estrategica-de-recursos-humanos" },
-  { label: "Capacitación y desarrollo", href: "/capacitacion-y-desarrollo-para-empresas" },
-  { label: "Integración y desarrollo de equipos", href: "/integracion-y-desarrollo-de-equipos" },
+  { label: "Capacitación, talleres y desarrollo de equipos", href: "/capacitacion-talleres-y-desarrollo-de-equipos" },
   { label: "Cómo trabajamos", href: "/#metodo" },
 ];
 

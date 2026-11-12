@@ -45,7 +45,7 @@ export function Hero() {
 
         {/* Composición editorial: índice de soluciones para empresas */}
         <div className="lg:col-span-5">
-          <div className="lg:relative lg:h-[37rem]">
+          <div className="lg:relative lg:h-[31rem]">
             <div
               aria-hidden="true"
               className="absolute right-0 top-0 hidden h-[64%] w-[78%] bg-sand lg:block"

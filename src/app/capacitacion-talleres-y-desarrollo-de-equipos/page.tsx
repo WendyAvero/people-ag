@@ -4,7 +4,7 @@ import { ServicePageView } from "@/components/sections/ServicePageView";
 import { siteConfig } from "@/config/site";
 import { servicePages } from "@/content/service-pages";
 
-const page = servicePages["integracion-y-desarrollo-de-equipos"];
+const page = servicePages["capacitacion-talleres-y-desarrollo-de-equipos"];
 const path = `/${page.slug}`;
 
 export const metadata: Metadata = {

@@ -17,7 +17,7 @@ export function ComoTrabajamos() {
           title="Un método con estructura, adaptado a cada organización"
           tone="light"
         >
-          Este es el método general de trabajo de People AG, común a las cuatro
+          Este es el método general de trabajo de People AG, común a las tres
           líneas de servicio: antes de proponer una solución, entendemos el
           problema. Cada servicio, además, tiene su propio proceso, que podés
           ver en su página.

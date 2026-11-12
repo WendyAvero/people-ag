@@ -45,8 +45,7 @@ describe("páginas de servicio", () => {
     expect(servicePageList.map((p) => p.slug)).toEqual([
       "reclutamiento-y-seleccion-de-personal",
       "consultoria-estrategica-de-recursos-humanos",
-      "capacitacion-y-desarrollo-para-empresas",
-      "integracion-y-desarrollo-de-equipos",
+      "capacitacion-talleres-y-desarrollo-de-equipos",
     ]);
   });
 
@@ -114,22 +113,21 @@ describe("metadata y palabras clave de la home", () => {
 });
 
 describe("sitemap y datos estructurados", () => {
-  it("el sitemap lista la home y las cuatro páginas de servicio, sin privacidad (borrador)", () => {
+  it("el sitemap lista la home y las tres páginas de servicio, sin privacidad (borrador)", () => {
     const urls = sitemap().map((e) => e.url);
-    expect(urls).toHaveLength(5);
-    expect(urls.some((u) => u.endsWith("/capacitacion-y-desarrollo-para-empresas"))).toBe(true);
-    expect(urls.some((u) => u.endsWith("/integracion-y-desarrollo-de-equipos"))).toBe(true);
+    expect(urls).toHaveLength(4);
+    expect(urls.some((u) => u.endsWith("/capacitacion-talleres-y-desarrollo-de-equipos"))).toBe(true);
     expect(urls.some((u) => u.endsWith("/reclutamiento-y-seleccion-de-personal"))).toBe(true);
     expect(urls.some((u) => u.endsWith("/consultoria-estrategica-de-recursos-humanos"))).toBe(true);
     expect(urls.some((u) => u.includes("privacidad"))).toBe(false);
   });
 
-  it("la home declara Argentina y Uruguay y los cuatro servicios", () => {
+  it("la home declara Argentina y Uruguay y los tres servicios", () => {
     const json = JSON.stringify(homeJsonLd());
     expect(json).toContain('"name":"Argentina"');
     expect(json).toContain('"name":"Uruguay"');
     expect(json).toContain("wendyavero@people-ag.com");
-    expect(json.match(/"@type":"Service"/g)).toHaveLength(4);
+    expect(json.match(/"@type":"Service"/g)).toHaveLength(3);
     expect(json).not.toMatch(/aggregateRating|review|telephone|streetAddress/);
   });
 

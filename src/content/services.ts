@@ -8,7 +8,7 @@
 
 export type CompanyService = {
   /** También es el ancla de la sección: /#reclutamiento, etc. */
-  id: "reclutamiento" | "consultoria" | "capacitacion" | "integracion";
+  id: "reclutamiento" | "consultoria" | "capacitacion";
   title: string;
   /** Frase corta (tarjeta de la home, panel del Hero y bloque «También podemos ayudarte con»). */
   short: string;
@@ -43,17 +43,12 @@ export const companyServices: CompanyService[] = [
       "Asesoramiento a dueños, directores y gerentes en decisiones sobre personas y organización.",
       "Seguimiento continuo de prioridades y proyectos.",
     ],
-    short: "Ordenar, profesionalizar y desarrollar la gestión de personas.",
+    short: "Ordenar y profesionalizar la gestión de personas: estructuras, procesos y prácticas.",
   },
   {
     id: "capacitacion",
-    title: "Capacitación y desarrollo",
-    short: "Programas y talleres a medida para líderes y equipos.",
-  },
-  {
-    id: "integracion",
-    title: "Integración y desarrollo de equipos",
-    short: "Talleres para alinear, comunicar y acordar como equipo.",
+    title: "Capacitación, talleres y desarrollo de equipos",
+    short: "Formación y talleres para desarrollar competencias, fortalecer vínculos y mejorar el funcionamiento de los equipos.",
   },
 ];
 

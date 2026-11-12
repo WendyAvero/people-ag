@@ -28,11 +28,9 @@ function walk(dir: string): string[] {
   });
 }
 
-const newPages = servicePageList.filter((p) =>
-  ["capacitacion-y-desarrollo-para-empresas", "integracion-y-desarrollo-de-equipos"].includes(p.slug),
-);
+const newPages = servicePageList.filter((p) => p.slug === "capacitacion-talleres-y-desarrollo-de-equipos");
 
-describe("ampliación a cuatro líneas de servicio", () => {
+describe("ampliación a tres líneas de servicio", () => {
   it("el titular de la home no cambia", () => {
     const hero = text(renderToStaticMarkup(<Hero />));
     expect(hero).toContain("Contratá mejor. Gestioná personas con criterio.");
@@ -47,10 +45,10 @@ describe("ampliación a cuatro líneas de servicio", () => {
     }
   });
 
-  it("la sección de servicios muestra las cuatro líneas con el mismo tratamiento", () => {
+  it("la sección de servicios muestra las tres líneas con el mismo tratamiento", () => {
     const html = renderToStaticMarkup(<Empresas />);
-    expect(html.match(/<article /g)).toHaveLength(4);
-    for (const id of ["reclutamiento", "consultoria", "capacitacion", "integracion"]) {
+    expect(html.match(/<article /g)).toHaveLength(3);
+    for (const id of ["reclutamiento", "consultoria", "capacitacion"]) {
       expect(html).toContain(`id="${id}"`);
     }
     // Sin bloque destacado con fondo propio ni numeración que sugiera prioridad.
@@ -58,26 +56,25 @@ describe("ampliación a cuatro líneas de servicio", () => {
     expect(text(html)).not.toMatch(/\b0[1-4]\b/);
   });
 
-  it("el submenú «Servicios» tiene exactamente las cuatro entradas aprobadas, en orden", () => {
+  it("el submenú «Servicios» tiene exactamente las tres entradas aprobadas, en orden", () => {
     const html = renderToStaticMarkup(<Header />);
     const sub = html.match(/<ul id="submenu-servicios"[\s\S]*?<\/ul>/)?.[0] ?? "";
     const items = [...sub.matchAll(/<a [^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map((m) => [m[2], m[1]]);
     expect(items).toEqual([
       ["Reclutamiento y selección", "/reclutamiento-y-seleccion-de-personal"],
       ["Consultoría estratégica de Recursos Humanos", "/consultoria-estrategica-de-recursos-humanos"],
-      ["Capacitación y desarrollo", "/capacitacion-y-desarrollo-para-empresas"],
-      ["Integración y desarrollo de equipos", "/integracion-y-desarrollo-de-equipos"],
+      ["Capacitación, talleres y desarrollo de equipos", "/capacitacion-talleres-y-desarrollo-de-equipos"],
     ]);
     expect(text(html)).toContain("Servicios");
     expect(text(html)).not.toContain("Empresas");
   });
 
-  it("el pie enlaza a las cuatro páginas", () => {
+  it("el pie enlaza a las tres páginas", () => {
     const html = renderToStaticMarkup(<Footer />);
     for (const p of servicePageList) expect(html).toContain(`href="/${p.slug}"`);
   });
 
-  it("cada página enlaza a las otras tres con «También podemos ayudarte con»", () => {
+  it("cada página enlaza a las otras dos con «También podemos ayudarte con»", () => {
     for (const page of servicePageList) {
       const html = renderToStaticMarkup(<ServicePageView page={page} />);
       expect(html, page.slug).toContain("También podemos ayudarte con");
@@ -93,7 +90,7 @@ describe("ampliación a cuatro líneas de servicio", () => {
   });
 
   it("las páginas nuevas presentan modalidad y países sin promesas no definidas", () => {
-    expect(newPages).toHaveLength(2);
+    expect(newPages).toHaveLength(1);
     for (const p of newPages) {
       const t = JSON.stringify(p);
       expect(t, p.slug).toMatch(/presencial o remota/i);
@@ -103,14 +100,18 @@ describe("ampliación a cuatro líneas de servicio", () => {
     }
   });
 
-  it("las páginas nuevas tienen las temáticas aprobadas", () => {
-    const [cap, int] = newPages;
-    expect(cap.topics).toHaveLength(7);
-    expect(int.topics).toHaveLength(6);
-    expect(cap.ctaLabel).toBe("Quiero capacitar a mi equipo");
-    expect(int.ctaLabel).toBe("Quiero un taller para mi equipo");
-    expect(cap.mailSubject).toBe("Consulta por capacitación y desarrollo");
-    expect(int.mailSubject).toBe("Consulta por integración y desarrollo de equipos");
+  it("la página de capacitación unifica las temáticas, organizadas por objetivo", () => {
+    const [cap] = newPages;
+    expect(cap.h1).toBe("Capacitación, talleres y desarrollo de equipos para empresas y PyMEs");
+    expect(cap.topicGroups?.map((g) => g.title)).toEqual([
+      "Desarrollar competencias",
+      "Fortalecer vínculos",
+      "Mejorar el funcionamiento del equipo",
+    ]);
+    expect(cap.topicGroups?.flatMap((g) => g.items)).toHaveLength(11);
+    expect(cap.topicsCustom?.title).toBe("Capacitaciones y talleres a medida");
+    expect(cap.ctaLabel).toBe("Quiero desarrollar a mi equipo");
+    expect(cap.mailSubject).toBe("Consulta por capacitación, talleres y desarrollo de equipos");
     for (const p of newPages) {
       const html = renderToStaticMarkup(<ServicePageView page={p} />);
       expect(html).toContain("Temáticas");
@@ -134,7 +135,7 @@ describe("ampliación a cuatro líneas de servicio", () => {
     ].join(" ");
     expect(elsewhere).not.toMatch(/Relaciones del Trabajo|Change Management|Coaching/i);
   });
-  it("el Hero tiene un texto de apoyo breve y dos CTA iguales para las cuatro líneas", () => {
+  it("el Hero tiene un texto de apoyo breve y dos CTA iguales para las tres líneas", () => {
     const html = renderToStaticMarkup(<Hero />);
     const hero = text(html);
     expect(hero).toContain("Contratá mejor. Gestioná personas con criterio.");
@@ -154,7 +155,7 @@ describe("ampliación a cuatro líneas de servicio", () => {
   it("las tarjetas de la Home tienen nombre, una frase y un único enlace, sin botones de contacto", () => {
     const html = renderToStaticMarkup(<Empresas />);
     const cards = html.match(/<article[\s\S]*?<\/article>/g) ?? [];
-    expect(cards).toHaveLength(4);
+    expect(cards).toHaveLength(3);
     for (const card of cards) {
       expect(card.match(/<a /g)).toHaveLength(1);
       expect(card).toContain("Ver el servicio");
@@ -207,12 +208,12 @@ describe("ampliación a cuatro líneas de servicio", () => {
   });
 
   it("el submenú marca la página activa y la flecha tiene área táctil de 44 px", () => {
-    mockPath = "/integracion-y-desarrollo-de-equipos";
+    mockPath = "/capacitacion-talleres-y-desarrollo-de-equipos";
     const html = renderToStaticMarkup(<Header home={false} />);
     mockPath = null;
     const sub = html.match(/<ul id="submenu-servicios"[\s\S]*?<\/ul>/)?.[0] ?? "";
     expect(sub.match(/aria-current="page"/g)).toHaveLength(1);
-    expect(sub).toMatch(/aria-current="page"[^>]*>Integración y desarrollo de equipos/);
+    expect(sub).toMatch(/aria-current="page"[^>]*>Capacitación, talleres y desarrollo de equipos/);
     expect(html).toMatch(/aria-controls="submenu-servicios"[^>]*class="[^"]*h-11 w-11/);
   });
 });
