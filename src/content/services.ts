@@ -52,14 +52,6 @@ export const companyServices: CompanyService[] = [
   },
 ];
 
-/** Situaciones en las que una empresa suele necesitar este tipo de apoyo. */
-export const companyMoments = [
-  "Necesitás incorporar a alguien y querés un proceso de selección con criterio, de principio a fin.",
-  "Tu organización creció y la gestión de personas todavía se resuelve sobre la marcha.",
-  "No contás con un equipo de RR. HH. completo y necesitás respaldo especializado.",
-  "Querés que tus líderes y tu equipo desarrollen habilidades o trabajen mejor en conjunto.",
-] as const;
-
 export const processSteps = [
   {
     title: "Escuchamos y comprendemos la necesidad",
