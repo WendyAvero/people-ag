@@ -2,7 +2,7 @@ import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ServiceCard } from "@/components/sections/ServiceCard";
-import { companyMoments, companyServices } from "@/content/services";
+import { companyServices } from "@/content/services";
 import { contactHref } from "@/lib/contact-link";
 
 export function Empresas() {
@@ -24,29 +24,8 @@ export function Empresas() {
           desarrollar a sus líderes o fortalecer sus equipos.
         </SectionHeading>
 
-        {/*
-          Situaciones y servicios forman un mismo bloque de lectura: las cuatro
-          situaciones comparten un recuadro con divisores finos y las tres
-          propuestas aparecen enseguida, con el mismo borde y proporciones.
-        */}
-        <div className="mt-10 border border-line border-l-4 border-l-sand bg-white">
-          <h3 className="px-5 pt-5 font-display text-base font-semibold sm:px-6 sm:pt-6">
-            Cuándo conviene hablar con nosotros
-          </h3>
-          <ul className="mt-4 grid gap-px border-t border-line bg-line md:grid-cols-2 lg:grid-cols-4">
-            {companyMoments.map((moment) => (
-              <li
-                key={moment}
-                className="bg-white p-5 text-[0.95rem] leading-relaxed text-ink/90 sm:p-6"
-              >
-                {moment}
-              </li>
-            ))}
-          </ul>
-        </div>
-
         {/* Las tres líneas de servicio, con el mismo peso y filas alineadas */}
-        <div className="mt-6 grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)_auto] lg:grid-cols-3 lg:gap-x-6 lg:gap-y-0">
+        <div className="mt-10 grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)_auto] lg:grid-cols-3 lg:gap-x-6 lg:gap-y-0">
           {companyServices.map((service) => (
             <ServiceCard key={service.id} service={service} />
           ))}
