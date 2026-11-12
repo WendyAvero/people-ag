@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Menu, X } from "lucide-react";
 
@@ -15,6 +16,7 @@ import { Logo } from "./Logo";
  */
 export function Header({ home = true }: { home?: boolean }) {
   const prefix = home ? "" : "/";
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<string>(home ? "inicio" : "");
@@ -149,7 +151,7 @@ export function Header({ home = true }: { home?: boolean }) {
                     aria-controls="submenu-servicios"
                     aria-label="Mostrar las líneas de servicio"
                     onClick={() => setServicesOpen((v) => !v)}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-full text-ink/80 transition-colors hover:text-lavender-deep"
+                    className="-ml-1 inline-flex h-11 w-11 items-center justify-center rounded-full text-ink/80 transition-colors hover:text-lavender-deep"
                   >
                     <ChevronDown
                       size={16}
@@ -167,7 +169,14 @@ export function Header({ home = true }: { home?: boolean }) {
                         <a
                           href={servicePathById[service.id]}
                           onClick={() => setServicesOpen(false)}
-                          className="block rounded-sm px-3 py-2.5 text-sm font-medium text-ink/90 transition-colors hover:bg-cream hover:text-lavender-deep"
+                          aria-current={
+                            pathname === servicePathById[service.id] ? "page" : undefined
+                          }
+                          className={`block rounded-sm border-l-2 px-3 py-2.5 text-sm font-medium transition-colors hover:bg-cream hover:text-lavender-deep ${
+                            pathname === servicePathById[service.id]
+                              ? "border-l-lavender-deep text-lavender-deep"
+                              : "border-l-transparent text-ink/90"
+                          }`}
                         >
                           {service.title}
                         </a>
@@ -228,7 +237,14 @@ export function Header({ home = true }: { home?: boolean }) {
                       <a
                         href={servicePathById[service.id]}
                         onClick={() => setOpen(false)}
-                        className="flex min-h-11 items-center py-2 text-[0.95rem] text-ink/85"
+                        aria-current={
+                          pathname === servicePathById[service.id] ? "page" : undefined
+                        }
+                        className={`flex min-h-11 items-center py-2 text-[0.95rem] ${
+                          pathname === servicePathById[service.id]
+                            ? "font-semibold text-lavender-deep"
+                            : "text-ink/85"
+                        }`}
                       >
                         {service.title}
                       </a>

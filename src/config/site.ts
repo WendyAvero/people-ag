@@ -99,9 +99,8 @@ export const siteConfig = {
       | string
       | null,
     bio: [
-      "Soy profesional de Recursos Humanos y fundadora de People AG, una consultora orientada a acompañar a las empresas en sus desafíos de gestión de personas.",
-      "Mi enfoque combina formación técnica, visión de negocio y una mirada integral de las organizaciones. Trabajo para que Recursos Humanos aporte soluciones concretas: desde incorporar a las personas adecuadas hasta profesionalizar procesos, fortalecer el liderazgo, integrar equipos y acompañar decisiones estratégicas.",
-      "Creo en una gestión de personas con criterio, cercana a la realidad de cada empresa y alineada con sus objetivos. Por eso, cada propuesta parte de comprender la necesidad, definir prioridades y construir soluciones que puedan implementarse y sostenerse en el tiempo.",
+      "Soy profesional de Recursos Humanos y fundadora de People AG, una consultora que acompaña a las empresas en su gestión de personas: desde incorporar a las personas adecuadas hasta profesionalizar procesos, fortalecer el liderazgo e integrar equipos.",
+      "Creo en una gestión de personas con criterio, cercana a la realidad de cada empresa y alineada con sus objetivos. Cada propuesta parte de comprender la necesidad y definir prioridades, para construir soluciones que puedan sostenerse en el tiempo.",
     ] as string[] | null,
     credentials: [
       "Licenciatura en Relaciones del Trabajo (Universidad de Buenos Aires)",

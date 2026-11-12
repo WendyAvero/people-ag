@@ -111,17 +111,13 @@ export function ServicePageView({ page }: { page: ServicePage }) {
                 title={page.topicsTitle}
                 className="max-w-3xl!"
               />
-              <ul className="mt-10 grid gap-x-10 gap-y-3 sm:grid-cols-2">
+              <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {page.topics.map((topic) => (
                   <li
                     key={topic}
-                    className="flex gap-3 text-[0.95rem] leading-snug"
+                    className="border border-ink/10 border-l-4 border-l-sand bg-white px-5 py-5 font-display text-lg font-semibold leading-snug"
                   >
-                    <span
-                      aria-hidden="true"
-                      className="mt-[0.55em] h-1.5 w-1.5 shrink-0 rounded-full bg-sand"
-                    />
-                    <span>{topic}</span>
+                    {topic.replace(/\.$/, "")}
                   </li>
                 ))}
               </ul>

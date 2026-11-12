@@ -10,21 +10,18 @@ export type CompanyService = {
   /** También es el ancla de la sección: /#reclutamiento, etc. */
   id: "reclutamiento" | "consultoria" | "capacitacion" | "integracion";
   title: string;
-  lead: string;
-  /** Frase corta (panel del Hero y bloque «También podemos ayudarte con»). */
+  /** Frase corta (tarjeta de la home, panel del Hero y bloque «También podemos ayudarte con»). */
   short: string;
   /** Pasos o ítems del servicio (se muestran en orden). */
   items?: string[];
   /** Variante agrupada (opcional): ítems organizados por grupos. */
   groups?: { label: string; items: string[] }[];
-  cta: { label: string };
 };
 
 export const companyServices: CompanyService[] = [
   {
     id: "reclutamiento",
     title: "Reclutamiento y selección",
-    lead: "Un proceso integral, de punta a punta: desde definir bien el perfil hasta presentarte a los finalistas y acompañarte durante toda la selección.",
     items: [
       "Relevamiento y definición del perfil.",
       "Diseño de la estrategia de búsqueda.",
@@ -35,12 +32,10 @@ export const companyServices: CompanyService[] = [
       "Acompañamiento durante el proceso de selección.",
     ],
     short: "Del perfil a los finalistas, con acompañamiento.",
-    cta: { label: "Necesito incorporar talento" },
   },
   {
     id: "consultoria",
     title: "Consultoría estratégica de Recursos Humanos",
-    lead: "Acompañamos a las empresas a ordenar, profesionalizar y desarrollar su gestión de personas, combinando proyectos específicos con asesoramiento continuo según las necesidades del negocio.",
     items: [
       "Diagnóstico organizacional y definición de prioridades.",
       "Diseño y mejora de procesos, políticas y herramientas de RR. HH.",
@@ -49,21 +44,16 @@ export const companyServices: CompanyService[] = [
       "Seguimiento continuo de prioridades y proyectos.",
     ],
     short: "Ordenar, profesionalizar y desarrollar la gestión de personas.",
-    cta: { label: "Quiero profesionalizar RR. HH." },
   },
   {
     id: "capacitacion",
     title: "Capacitación y desarrollo",
-    lead: "Programas y talleres a medida para que líderes y equipos desarrollen habilidades de gestión, comunicación y servicio. En modalidad presencial o remota, en Argentina y Uruguay.",
     short: "Programas y talleres a medida para líderes y equipos.",
-    cta: { label: "Quiero capacitar a mi equipo" },
   },
   {
     id: "integracion",
     title: "Integración y desarrollo de equipos",
-    lead: "Talleres y acompañamiento para que los equipos se alineen, se comuniquen mejor y trabajen con acuerdos claros. En modalidad presencial o remota, en Argentina y Uruguay.",
     short: "Talleres para alinear, comunicar y acordar como equipo.",
-    cta: { label: "Quiero un taller para mi equipo" },
   },
 ];
 

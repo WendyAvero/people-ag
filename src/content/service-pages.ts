@@ -46,7 +46,7 @@ export const servicePages: Record<ServiceSlug, ServicePage> = {
     metaDescription:
       "Reclutamiento y selección de personal para empresas y PyMEs de Argentina y Uruguay: definición del perfil, búsqueda, evaluación y finalistas. Modalidad remota.",
     name: "Reclutamiento y selección de personal",
-    eyebrow: "Reclutamiento y selección",
+    eyebrow: "Selección de punta a punta",
     h1: "Reclutamiento y selección de personal para empresas",
     lead: "Un proceso de selección de punta a punta para dueños, directores y gerentes que necesitan incorporar a la persona indicada: desde definir bien el perfil hasta presentarte a los finalistas y acompañarte en la decisión. Trabajamos con PyMEs y empresas de Argentina y Uruguay, también de forma remota.",
     ctaLabel: "Necesito incorporar talento",
@@ -141,7 +141,7 @@ export const servicePages: Record<ServiceSlug, ServicePage> = {
     metaDescription:
       "Consultoría de Recursos Humanos para empresas y PyMEs de Argentina y Uruguay: diagnóstico, procesos, acompañamiento a líderes y asesoramiento continuo.",
     name: "Consultoría estratégica de Recursos Humanos",
-    eyebrow: "Consultoría de RR. HH.",
+    eyebrow: "Gestión de personas con mirada de negocio",
     h1: "Consultoría estratégica de Recursos Humanos para empresas",
     lead: "Acompañamos a dueños, directores y gerentes a ordenar, profesionalizar y desarrollar la gestión de personas, combinando proyectos específicos con asesoramiento continuo según las necesidades del negocio. Trabajamos con PyMEs y empresas de Argentina y Uruguay, también de forma remota.",
     ctaLabel: "Quiero profesionalizar RR. HH.",
@@ -224,7 +224,7 @@ export const servicePages: Record<ServiceSlug, ServicePage> = {
     metaDescription:
       "Capacitación y desarrollo para empresas y PyMEs de Argentina y Uruguay: liderazgo, comunicación, atención al cliente y más. Presencial o remota.",
     name: "Capacitación y desarrollo para empresas",
-    eyebrow: "Capacitación y desarrollo",
+    eyebrow: "Formación para líderes y equipos",
     h1: "Capacitación y desarrollo para empresas y PyMEs",
     lead: "Programas y talleres para que líderes y equipos desarrollen habilidades concretas de gestión, comunicación y servicio. Se diseñan a medida, en modalidad presencial o remota, en Argentina y Uruguay.",
     ctaLabel: "Quiero capacitar a mi equipo",
@@ -317,7 +317,7 @@ export const servicePages: Record<ServiceSlug, ServicePage> = {
     metaDescription:
       "Talleres de integración y desarrollo de equipos para empresas y PyMEs de Argentina y Uruguay: comunicación, acuerdos y confianza, presencial o remota.",
     name: "Integración y desarrollo de equipos",
-    eyebrow: "Integración y desarrollo de equipos",
+    eyebrow: "Talleres para equipos",
     h1: "Integración y desarrollo de equipos para empresas y PyMEs",
     lead: "Talleres y acompañamiento para que los equipos se alineen, se comuniquen mejor y trabajen con acuerdos claros. En modalidad presencial o remota, en Argentina y Uruguay.",
     ctaLabel: "Quiero un taller para mi equipo",

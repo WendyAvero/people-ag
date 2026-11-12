@@ -41,7 +41,7 @@ export function Empresas() {
         </div>
 
         {/* Las cuatro líneas de servicio, con el mismo peso */}
-        <div className="mt-20 grid gap-x-12 gap-y-14 md:grid-cols-2">
+        <div className="mt-20 grid gap-x-10 gap-y-12 md:grid-cols-2 lg:grid-cols-4">
           {companyServices.map((service) => (
             <ServiceCard key={service.id} service={service} />
           ))}

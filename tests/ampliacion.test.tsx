@@ -7,12 +7,17 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { Empresas } from "@/components/sections/Empresas";
 import { Hero } from "@/components/sections/Hero";
+import { ComoTrabajamos } from "@/components/sections/ComoTrabajamos";
 import { ServicePageView } from "@/components/sections/ServicePageView";
 import { Sobre } from "@/components/sections/Sobre";
 import { siteConfig } from "@/config/site";
 import { servicePageList } from "@/content/service-pages";
 
 vi.mock("@/components/layout/Logo", () => ({ Logo: () => null }));
+
+// El submenú marca la página activa según la ruta (hook de Next, sin router en tests).
+let mockPath: string | null = null;
+vi.mock("next/navigation", () => ({ usePathname: () => mockPath }));
 
 const text = (html: string) => html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
 
@@ -128,5 +133,86 @@ describe("ampliación a cuatro líneas de servicio", () => {
       JSON.stringify(siteConfig.description),
     ].join(" ");
     expect(elsewhere).not.toMatch(/Relaciones del Trabajo|Change Management|Coaching/i);
+  });
+  it("el Hero tiene un texto de apoyo breve y dos CTA iguales para las cuatro líneas", () => {
+    const html = renderToStaticMarkup(<Hero />);
+    const hero = text(html);
+    expect(hero).toContain("Contratá mejor. Gestioná personas con criterio.");
+    expect(hero).toContain(
+      "Ayudamos a las empresas, en especial a las PyMEs, a incorporar talento, ordenar la gestión de personas y desarrollar a sus líderes y equipos. Soluciones a medida.",
+    );
+    expect(hero).not.toContain("Somos una consultora");
+    const buttons = [...html.matchAll(/<a [^>]*class="[^"]*rounded-full[^"]*"[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)];
+    const ctas = buttons.map((m) => [text(m[2]).trim(), m[1]]).filter(([l]) => /Conversemos|Ver los servicios/.test(l));
+    expect(ctas).toEqual([
+      ["Conversemos sobre tu empresa", "#contacto-empresa"],
+      ["Ver los servicios", "#empresas"],
+    ]);
+    expect(hero).not.toMatch(/Necesito incorporar talento|Quiero profesionalizar/);
+  });
+
+  it("las tarjetas de la Home tienen nombre, una frase y un único enlace, sin botones de contacto", () => {
+    const html = renderToStaticMarkup(<Empresas />);
+    const cards = html.match(/<article[\s\S]*?<\/article>/g) ?? [];
+    expect(cards).toHaveLength(4);
+    for (const card of cards) {
+      expect(card.match(/<a /g)).toHaveLength(1);
+      expect(card).toContain("Ver el servicio");
+      expect(card).not.toMatch(/mailto:|contacto-empresa|rounded-full border/);
+      expect(card.match(/<p /g)).toHaveLength(1);
+    }
+    for (const p of servicePageList) expect(html).toContain(`href="/${p.slug}"`);
+  });
+
+  it("«Método de trabajo» aclara que es el método general y conserva los cuatro pasos", () => {
+    const html = renderToStaticMarkup(<ComoTrabajamos />);
+    const t = text(html);
+    expect(t).toContain("método general de trabajo de People AG");
+    expect(t).toContain("Cada servicio, además, tiene su propio proceso");
+    expect(html.match(/<li /g)).toHaveLength(4);
+    for (const n of ["01", "02", "03", "04"]) expect(t).toContain(n);
+    expect(html).toContain("grid-rows-subgrid"); // pasos y resultados alineados
+  });
+
+  it("los procesos específicos de cada servicio se conservan en su página", () => {
+    const rec = servicePageList.find((p) => p.serviceId === "reclutamiento")!;
+    const con = servicePageList.find((p) => p.serviceId === "consultoria")!;
+    expect(rec.steps).toHaveLength(7);
+    expect(con.steps).toHaveLength(5);
+    for (const p of newPages) expect(p.steps).toHaveLength(5);
+  });
+
+  it("«Sobre» muestra bio en dos párrafos y la formación en un bloque propio", () => {
+    const html = renderToStaticMarkup(<Sobre />);
+    expect(siteConfig.founder.bio).toHaveLength(2);
+    expect(html).toContain('aria-labelledby="formacion-title"');
+    expect(text(html)).toContain("Fundadora de People AG");
+    expect(text(html)).toContain("Licenciatura en Relaciones del Trabajo (Universidad de Buenos Aires)");
+    expect(text(html)).toContain("Formación en Change Management");
+    expect(text(html)).not.toMatch(/Coaching|UCEMA|certificad/i);
+  });
+
+  it("el eyebrow de cada página de servicio no repite el comienzo del H1", () => {
+    for (const p of servicePageList) {
+      expect(p.h1.toLowerCase().startsWith(p.eyebrow.toLowerCase()), p.slug).toBe(false);
+      expect(p.eyebrow.toLowerCase(), p.slug).not.toBe(p.name.toLowerCase());
+    }
+  });
+
+  it("«Temáticas» se presenta como tarjetas con borde, sin relleno sombreado", () => {
+    const html = renderToStaticMarkup(<ServicePageView page={newPages[0]} />);
+    const block = html.slice(html.indexOf('aria-labelledby="tematicas-title"'));
+    expect(block).toContain("border-l-sand bg-white");
+    expect(block).toContain("Liderazgo y gestión de equipos");
+  });
+
+  it("el submenú marca la página activa y la flecha tiene área táctil de 44 px", () => {
+    mockPath = "/integracion-y-desarrollo-de-equipos";
+    const html = renderToStaticMarkup(<Header home={false} />);
+    mockPath = null;
+    const sub = html.match(/<ul id="submenu-servicios"[\s\S]*?<\/ul>/)?.[0] ?? "";
+    expect(sub.match(/aria-current="page"/g)).toHaveLength(1);
+    expect(sub).toMatch(/aria-current="page"[^>]*>Integración y desarrollo de equipos/);
+    expect(html).toMatch(/aria-controls="submenu-servicios"[^>]*class="[^"]*h-11 w-11/);
   });
 });
