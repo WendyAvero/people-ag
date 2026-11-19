@@ -11,10 +11,8 @@ export const metadata: Metadata = {
   title: "Aviso de privacidad",
   description: `Cómo ${siteConfig.name} trata los datos personales que se reciben a través del formulario de contacto.`,
   alternates: { canonical: "/privacidad" },
-  // Mientras sea un borrador no debería aparecer en buscadores.
-  robots: siteConfig.privacyIsDraft
-    ? { index: false, follow: false }
-    : { index: true, follow: true },
+  // Fijo: esta página nunca se indexa, esté o no en borrador.
+  robots: { index: false, follow: false },
 };
 
 /** Marca visible de un dato que debe completarse antes de publicar. */

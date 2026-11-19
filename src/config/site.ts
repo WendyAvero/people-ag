@@ -31,7 +31,7 @@ export const siteConfig = {
   name: "People AG",
   tagline: "Consultora de Recursos Humanos para empresas",
   description:
-    "Consultora de Recursos Humanos para empresas y PyMEs de Argentina y Uruguay: selección de personal, consultoría estratégica y acompañamiento.",
+    "Consultora de Recursos Humanos para empresas: selección de personal, consultoría estratégica y desarrollo de equipos en Argentina y Uruguay.",
   url: siteUrl,
   locale: "es_AR",
 

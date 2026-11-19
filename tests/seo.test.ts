@@ -3,6 +3,7 @@ import { join } from "node:path";
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import { siteConfig } from "@/config/site";
 import { servicePageList, servicePages } from "@/content/service-pages";
 import { companyServices } from "@/content/services";
 import { homeJsonLd, jsonLdString, serviceJsonLd } from "@/lib/structured-data";
@@ -89,9 +90,9 @@ describe("metadata y palabras clave de la home", () => {
     expect(title.length).toBeLessThanOrEqual(60);
   });
 
-  it("la description de la home menciona PyMEs, Argentina y Uruguay y cabe en el snippet", async () => {
+  it("la description de la home menciona Argentina y Uruguay, no se posiciona solo para PyMEs y cabe en el snippet", async () => {
     const { siteConfig } = await import("@/config/site");
-    expect(siteConfig.description).toMatch(/PyMEs/);
+    expect(siteConfig.description).not.toMatch(/PyMEs/);
     expect(siteConfig.description).toMatch(/Argentina y Uruguay/);
     expect(siteConfig.description.length).toBeLessThanOrEqual(170);
   });
@@ -102,13 +103,23 @@ describe("metadata y palabras clave de la home", () => {
     expect(home.metadata.alternates?.canonical).toBe("/");
   });
 
-  it("las páginas de servicio tienen preguntas frecuentes sin repetir y mencionan PyMEs", () => {
+  it("las páginas de servicio tienen preguntas frecuentes sin repetir", () => {
     for (const p of servicePageList) {
       const qs = p.faqs.map((f) => f.q);
       expect(new Set(qs).size, p.slug).toBe(qs.length);
       expect(qs.length, p.slug).toBeGreaterThanOrEqual(5);
-      expect(JSON.stringify(p), p.slug).toMatch(/PyMEs?/);
     }
+  });
+
+  it("el posicionamiento es para empresas en general, no exclusivo de PyMEs", () => {
+    for (const p of servicePageList) {
+      const t = JSON.stringify(p);
+      expect(t, p.slug).toMatch(/empresas/i);
+      expect(t, p.slug).not.toMatch(/PyMEs?/i);
+      expect(t, p.slug).not.toMatch(/solo (para )?(PyMEs|pequeñ)|exclusiv/i);
+    }
+    expect(siteConfig.description).toMatch(/para empresas/);
+    expect(siteConfig.description).not.toMatch(/PyMEs?/i);
   });
 });
 
