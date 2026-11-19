@@ -12,16 +12,20 @@ Next.js (App Router) + TypeScript + Tailwind CSS.
 
 ### Etapa 1 — Web informativa (lista para publicar)
 
-Variables (todas se cargan en Vercel → *Settings → Environment Variables*):
+Variables que cargás en Vercel → *Settings → Environment Variables*. `VERCEL_ENV` y `NODE_ENV` son automáticas y no se configuran (ver abajo).
 
 | Variable | ¿Obligatoria? | Qué poner |
 |---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | Sí, para el dominio definitivo | `https://www.tu-dominio.com` (con `https://`, sin barra final ni ruta) |
+| `NEXT_PUBLIC_SITE_URL` | No, pero recomendada para el dominio definitivo | `https://www.tu-dominio.com` (con `https://`, sin barra final ni ruta). Si falta, se usa `https://people-ag.com` en producción y `http://localhost:3000` en desarrollo, y `npm run check:env` muestra una advertencia |
 | `NEXT_PUBLIC_LINKEDIN_URL` | No | URL completa de LinkedIn. Vacía = no se muestra el ícono |
 | `NEXT_PUBLIC_INSTAGRAM_URL` | No | URL completa de Instagram. Vacía = no se muestra |
 | `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | No | Solo si activás analítica (ver más abajo). Vacía = no se carga nada |
 
-Qué hace `NEXT_PUBLIC_SITE_URL`: define la dirección oficial del sitio para Google, el mapa del sitio (`sitemap.xml`), `robots.txt` y la imagen que se ve al compartir el link. Si falta en el build de **producción** de Vercel, el build falla a propósito para no publicar con direcciones de prueba.
+Qué hace `NEXT_PUBLIC_SITE_URL`: define la dirección oficial del sitio para Google, el mapa del sitio (`sitemap.xml`), `robots.txt` y la imagen que se ve al compartir el link. Si falta, el build **no falla**: el sitio usa `https://people-ag.com` como dominio canónico y `npm run check:env` avisa. Si el dominio definitivo es otro, configurala antes de publicar.
+
+Variables automáticas (**no las configures a mano** en Vercel ni en `.env.local`):
+- `VERCEL_ENV`: la define Vercel (`production`, `preview` o `development`). El sitio la usa para decidir si el formulario es de prueba o de envío real.
+- `NODE_ENV`: la define Next.js/Node (`production` en el build de producción, `development` con `npm run dev`).
 
 **Cómo configurarla para el dominio definitivo**
 1. Vercel → tu proyecto → *Settings → Domains* → agregá tu dominio y seguí las instrucciones de DNS que muestra Vercel.
@@ -57,6 +61,7 @@ Variables **solo para el formulario** (secretas, solo servidor):
 | `RESEND_API_KEY` | La clave de Resend (empieza con `re_`) |
 | `CONTACT_TO_EMAIL` | `wendyavero@people-ag.com` (una sola dirección) |
 | `CONTACT_FROM_EMAIL` | Remitente de un dominio verificado en Resend, ej. `People AG <contacto@people-ag.com>` |
+| `RESEND_API_URL` (opcional, solo pruebas locales) | Solo para probar contra un servidor simulado en `localhost` (`http://localhost:puerto/...`). Cualquier otro host se rechaza. **No la configures en Vercel ni en producción**: debe quedar sin definir. |
 
 Campos del formulario (consultas de Reclutamiento y selección): nombre y apellido, empresa, email laboral, teléfono (opcional), perfil o posición a cubrir, comentarios adicionales (opcional) y casilla de consentimiento (no premarcada). Protecciones: validación en navegador y servidor, campo trampa (honeypot), tiempo mínimo de llenado (invisible, 3 s, sin CAPTCHA ni servicios externos), máximo 5 envíos por IP cada 10 minutos, descarte de reenvíos idénticos (doble clic) y clave de idempotencia en Resend.
 
@@ -95,7 +100,7 @@ No lo cambies a `false` hasta completar los datos reales y tener la revisión le
 
 ## Analítica (apagada)
 
-Si definís `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` se carga Plausible (sin cookies). Actualizá el punto 9 del aviso de privacidad antes de activarla.
+Si definís `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` se carga Plausible (sin cookies). Antes de activarla hay que actualizar la sección 8 del aviso de privacidad, que hoy afirma que el sitio no usa herramientas de analítica. Ese cambio corresponde a la revisión legal: este README no modifica el aviso.
 
 ## Verificar antes de publicar (comandos)
 
