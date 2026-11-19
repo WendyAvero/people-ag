@@ -6,7 +6,8 @@ import { servicePageList } from "@/content/service-pages";
 // Sin <lastmod>: no se inventan fechas de modificación.
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes: MetadataRoute.Sitemap = [
-    { url: `${siteConfig.url}/`, changeFrequency: "monthly", priority: 1 },
+    // Sin barra final: coincide con el canonical de la home y con el de las páginas de servicio.
+    { url: siteConfig.url, changeFrequency: "monthly", priority: 1 },
     ...servicePageList.map((p) => ({
       url: `${siteConfig.url}/${p.slug}`,
       changeFrequency: "monthly" as const,

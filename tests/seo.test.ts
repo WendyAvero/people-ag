@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { siteConfig } from "@/config/site";
+import { isIndexableDeployment } from "@/lib/indexing";
 import { servicePageList, servicePages } from "@/content/service-pages";
 import { companyServices } from "@/content/services";
 import { homeJsonLd, jsonLdString, serviceJsonLd } from "@/lib/structured-data";
@@ -123,7 +124,36 @@ describe("metadata y palabras clave de la home", () => {
   });
 });
 
+describe("indexación por entorno", () => {
+  it("solo el deployment de producción es indexable", () => {
+    expect(isIndexableDeployment({ VERCEL_ENV: "production" })).toBe(true);
+    expect(isIndexableDeployment({ VERCEL_ENV: "preview" })).toBe(false);
+    expect(isIndexableDeployment({ VERCEL_ENV: "development" })).toBe(false);
+    expect(isIndexableDeployment({ VERCEL_ENV: "preview", NODE_ENV: "production" })).toBe(false);
+  });
+
+  it("sin VERCEL_ENV (build local) usa NODE_ENV", () => {
+    expect(isIndexableDeployment({ NODE_ENV: "production" })).toBe(true);
+    expect(isIndexableDeployment({ NODE_ENV: "development" })).toBe(false);
+    expect(isIndexableDeployment({})).toBe(false);
+  });
+
+  it("layout y next.config aplican la regla de indexación", () => {
+    const layoutSrc = readFileSync(join(process.cwd(), "src", "app", "layout.tsx"), "utf8");
+    const nextSrc = readFileSync(join(process.cwd(), "next.config.ts"), "utf8");
+    expect(layoutSrc).toContain("isIndexableDeployment(process.env)");
+    expect(nextSrc).toContain("X-Robots-Tag");
+    expect(nextSrc).toContain("isIndexableDeployment(process.env)");
+  });
+});
+
 describe("sitemap y datos estructurados", () => {
+  it("la home del sitemap coincide con el canonical (sin barra final)", () => {
+    const urls = sitemap().map((e) => e.url);
+    expect(urls).toContain(siteConfig.url);
+    expect(urls).not.toContain(`${siteConfig.url}/`);
+  });
+
   it("el sitemap lista la home y las tres páginas de servicio, sin privacidad (borrador)", () => {
     const urls = sitemap().map((e) => e.url);
     expect(urls).toHaveLength(4);

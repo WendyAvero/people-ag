@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+import { isIndexableDeployment } from "./src/lib/indexing";
+
 const isProd = process.env.NODE_ENV === "production";
 const plausible = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN?.trim()
   ? "https://plausible.io"
@@ -49,7 +51,11 @@ const nextConfig: NextConfig = {
     },
   },
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    // Preview y desarrollo no se indexan: el header aplica también a los recursos no HTML.
+    const robotsHeaders = isIndexableDeployment(process.env)
+      ? []
+      : [{ key: "X-Robots-Tag", value: "noindex, nofollow" }];
+    return [{ source: "/:path*", headers: [...securityHeaders, ...robotsHeaders] }];
   },
 };
 
