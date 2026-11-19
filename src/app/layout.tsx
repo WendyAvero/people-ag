@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Analytics } from "@/components/Analytics";
 import { siteConfig } from "@/config/site";
+import { isIndexableDeployment } from "@/lib/indexing";
 
 /*
   Tipografías autoalojadas (paquetes @fontsource-variable): no se hacen pedidos
@@ -49,7 +50,10 @@ export const metadata: Metadata = {
     title,
     description: siteConfig.description,
   },
-  robots: { index: true, follow: true },
+  // Solo el deployment de producción se indexa. Preview y desarrollo: noindex.
+  robots: isIndexableDeployment(process.env)
+    ? { index: true, follow: true }
+    : { index: false, follow: false },
 };
 
 export const viewport: Viewport = {

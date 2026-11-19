@@ -28,7 +28,7 @@ export function Hero() {
           </h1>
 
           <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted">
-            Ayudamos a las empresas, en especial a las PyMEs, a incorporar
+            Ayudamos a las empresas a incorporar
             talento, ordenar la gestión de personas y desarrollar a sus
             líderes y equipos. Soluciones a medida.
           </p>

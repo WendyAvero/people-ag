@@ -3,6 +3,8 @@ import { join } from "node:path";
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import { siteConfig } from "@/config/site";
+import { isIndexableDeployment } from "@/lib/indexing";
 import { servicePageList, servicePages } from "@/content/service-pages";
 import { companyServices } from "@/content/services";
 import { homeJsonLd, jsonLdString, serviceJsonLd } from "@/lib/structured-data";
@@ -89,9 +91,9 @@ describe("metadata y palabras clave de la home", () => {
     expect(title.length).toBeLessThanOrEqual(60);
   });
 
-  it("la description de la home menciona PyMEs, Argentina y Uruguay y cabe en el snippet", async () => {
+  it("la description de la home menciona Argentina y Uruguay, no se posiciona solo para PyMEs y cabe en el snippet", async () => {
     const { siteConfig } = await import("@/config/site");
-    expect(siteConfig.description).toMatch(/PyMEs/);
+    expect(siteConfig.description).not.toMatch(/PyMEs/);
     expect(siteConfig.description).toMatch(/Argentina y Uruguay/);
     expect(siteConfig.description.length).toBeLessThanOrEqual(170);
   });
@@ -102,17 +104,56 @@ describe("metadata y palabras clave de la home", () => {
     expect(home.metadata.alternates?.canonical).toBe("/");
   });
 
-  it("las páginas de servicio tienen preguntas frecuentes sin repetir y mencionan PyMEs", () => {
+  it("las páginas de servicio tienen preguntas frecuentes sin repetir", () => {
     for (const p of servicePageList) {
       const qs = p.faqs.map((f) => f.q);
       expect(new Set(qs).size, p.slug).toBe(qs.length);
       expect(qs.length, p.slug).toBeGreaterThanOrEqual(5);
-      expect(JSON.stringify(p), p.slug).toMatch(/PyMEs?/);
     }
+  });
+
+  it("el posicionamiento es para empresas en general, no exclusivo de PyMEs", () => {
+    for (const p of servicePageList) {
+      const t = JSON.stringify(p);
+      expect(t, p.slug).toMatch(/empresas/i);
+      expect(t, p.slug).not.toMatch(/PyMEs?/i);
+      expect(t, p.slug).not.toMatch(/solo (para )?(PyMEs|pequeñ)|exclusiv/i);
+    }
+    expect(siteConfig.description).toMatch(/para empresas/);
+    expect(siteConfig.description).not.toMatch(/PyMEs?/i);
+  });
+});
+
+describe("indexación por entorno", () => {
+  it("solo el deployment de producción es indexable", () => {
+    expect(isIndexableDeployment({ VERCEL_ENV: "production" })).toBe(true);
+    expect(isIndexableDeployment({ VERCEL_ENV: "preview" })).toBe(false);
+    expect(isIndexableDeployment({ VERCEL_ENV: "development" })).toBe(false);
+    expect(isIndexableDeployment({ VERCEL_ENV: "preview", NODE_ENV: "production" })).toBe(false);
+  });
+
+  it("sin VERCEL_ENV (build local) usa NODE_ENV", () => {
+    expect(isIndexableDeployment({ NODE_ENV: "production" })).toBe(true);
+    expect(isIndexableDeployment({ NODE_ENV: "development" })).toBe(false);
+    expect(isIndexableDeployment({})).toBe(false);
+  });
+
+  it("layout y next.config aplican la regla de indexación", () => {
+    const layoutSrc = readFileSync(join(process.cwd(), "src", "app", "layout.tsx"), "utf8");
+    const nextSrc = readFileSync(join(process.cwd(), "next.config.ts"), "utf8");
+    expect(layoutSrc).toContain("isIndexableDeployment(process.env)");
+    expect(nextSrc).toContain("X-Robots-Tag");
+    expect(nextSrc).toContain("isIndexableDeployment(process.env)");
   });
 });
 
 describe("sitemap y datos estructurados", () => {
+  it("la home del sitemap coincide con el canonical (sin barra final)", () => {
+    const urls = sitemap().map((e) => e.url);
+    expect(urls).toContain(siteConfig.url);
+    expect(urls).not.toContain(`${siteConfig.url}/`);
+  });
+
   it("el sitemap lista la home y las tres páginas de servicio, sin privacidad (borrador)", () => {
     const urls = sitemap().map((e) => e.url);
     expect(urls).toHaveLength(4);
