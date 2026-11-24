@@ -2,7 +2,7 @@ import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { ArrowRight } from "@/components/ui/icons";
 import { companyServices } from "@/content/services";
-import { servicePathById } from "@/lib/contact-link";
+import { contactHref, servicePathById } from "@/lib/contact-link";
 
 export function Hero() {
   return (
@@ -28,13 +28,13 @@ export function Hero() {
           </h1>
 
           <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted">
-            Ayudamos a las empresas, en especial a las PyMEs, a incorporar
+            Ayudamos a las empresas a incorporar
             talento, ordenar la gestión de personas y desarrollar a sus
             líderes y equipos. Soluciones a medida.
           </p>
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href="#contacto-empresa">
+            <ButtonLink href={contactHref()}>
               Conversemos sobre tu empresa
             </ButtonLink>
             <ButtonLink href="#empresas" variant="secondary">

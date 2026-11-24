@@ -45,11 +45,11 @@ export const servicePages: Record<ServiceSlug, ServicePage> = {
     serviceId: "reclutamiento",
     metaTitle: "Reclutamiento y selección de personal",
     metaDescription:
-      "Reclutamiento y selección de personal para empresas y PyMEs de Argentina y Uruguay: definición del perfil, búsqueda, evaluación y finalistas. Modalidad remota.",
+      "Reclutamiento y selección de personal para empresas en Argentina y Uruguay: perfil, búsqueda, evaluación y finalistas. Trabajo presencial o remoto.",
     name: "Reclutamiento y selección de personal",
     eyebrow: "Selección de punta a punta",
     h1: "Reclutamiento y selección de personal para empresas",
-    lead: "Un proceso de selección de punta a punta para dueños, directores y gerentes que necesitan incorporar a la persona indicada: desde definir bien el perfil hasta presentarte a los finalistas y acompañarte en la decisión. Trabajamos con PyMEs y empresas de Argentina y Uruguay, también de forma remota.",
+    lead: "Un proceso de selección de punta a punta para dueños, directores y gerentes que necesitan incorporar a la persona indicada: desde definir bien el perfil hasta presentarte a los finalistas y acompañarte en la decisión. Trabajamos con empresas de Argentina y Uruguay, también de forma remota.",
     ctaLabel: "Necesito incorporar talento",
     mailSubject: "Consulta por reclutamiento y selección",
     whenTitle: "Cuándo conviene sumar un proceso de selección profesional",
@@ -125,7 +125,7 @@ export const servicePages: Record<ServiceSlug, ServicePage> = {
         a: "El reclutamiento consiste en atraer y reunir candidatos para una posición; la selección, en evaluarlos, compararlos con el perfil definido y elegir a quién incorporar. Un proceso completo de búsqueda y selección de personal abarca ambas etapas.",
       },
       {
-        q: "¿Sirve para una PyME que no tiene área de Recursos Humanos?",
+        q: "¿Sirve para empresas que no tienen un área de Recursos Humanos?",
         a: "Sí. Está pensado para empresas que no cuentan con un área de RR. HH. con tiempo para una búsqueda. Nos ocupamos del proceso y vos participás en las decisiones clave, como la definición del perfil y la elección final.",
       },
       {
@@ -140,11 +140,11 @@ export const servicePages: Record<ServiceSlug, ServicePage> = {
     serviceId: "consultoria",
     metaTitle: "Consultoría estratégica de Recursos Humanos",
     metaDescription:
-      "Consultoría de Recursos Humanos para empresas y PyMEs de Argentina y Uruguay: diagnóstico, procesos, acompañamiento a líderes y asesoramiento continuo.",
+      "Consultoría estratégica de RR. HH. para empresas: diagnóstico, diseño de procesos, acompañamiento a líderes y asesoramiento continuo en Argentina y Uruguay.",
     name: "Consultoría estratégica de Recursos Humanos",
     eyebrow: "Gestión de personas con mirada de negocio",
     h1: "Consultoría estratégica de Recursos Humanos para empresas",
-    lead: "Acompañamos a dueños, directores y gerentes a ordenar, profesionalizar y desarrollar la gestión de personas, combinando proyectos específicos con asesoramiento continuo según las necesidades del negocio. Trabajamos con PyMEs y empresas de Argentina y Uruguay, también de forma remota.",
+    lead: "Acompañamos a dueños, directores y gerentes a ordenar, profesionalizar y desarrollar la gestión de personas, combinando proyectos específicos con asesoramiento continuo según las necesidades del negocio. Trabajamos con empresas de Argentina y Uruguay, también de forma remota.",
     ctaLabel: "Quiero profesionalizar RR. HH.",
     mailSubject: "Consulta por consultoría de Recursos Humanos",
     whenTitle: "Cuándo conviene contar con una consultoría de RR. HH.",
@@ -200,7 +200,7 @@ export const servicePages: Record<ServiceSlug, ServicePage> = {
         a: "Es un servicio externo que ayuda a una empresa a ordenar y mejorar cómo gestiona a las personas: desde un diagnóstico de la situación hasta el diseño de procesos y políticas, el acompañamiento a los líderes y el asesoramiento en decisiones. Cada propuesta se arma según el momento y las prioridades de la organización.",
       },
       {
-        q: "¿Sirve para una PyME o para una empresa sin área de Recursos Humanos?",
+        q: "¿Sirve para una empresa que no tiene un área de Recursos Humanos completa?",
         a: "Sí. Acompañamos tanto a organizaciones sin un área de RR. HH. completa como a las que quieren profesionalizar la que ya tienen. El alcance se define en conjunto, según el tamaño y las prioridades de tu empresa.",
       },
       {
@@ -223,10 +223,10 @@ export const servicePages: Record<ServiceSlug, ServicePage> = {
     serviceId: "capacitacion",
     metaTitle: "Capacitación, talleres y desarrollo de equipos",
     metaDescription:
-      "Capacitación, talleres y desarrollo de equipos para empresas y PyMEs de Argentina y Uruguay: liderazgo, comunicación e integración. Presencial o remota.",
+      "Capacitación y talleres para equipos de empresas: liderazgo, comunicación, feedback e integración. Diseño a medida, presencial o remoto en Argentina y Uruguay.",
     name: "Capacitación, talleres y desarrollo de equipos",
     eyebrow: "Formación y trabajo en equipo",
-    h1: "Capacitación, talleres y desarrollo de equipos para empresas y PyMEs",
+    h1: "Capacitación, talleres y desarrollo de equipos para empresas",
     lead: "Programas, talleres y acompañamiento para desarrollar competencias, fortalecer vínculos y mejorar el funcionamiento de los equipos. Se diseñan a medida, en modalidad presencial o remota, en Argentina y Uruguay.",
     ctaLabel: "Quiero desarrollar a mi equipo",
     mailSubject: "Consulta por capacitación, talleres y desarrollo de equipos",
@@ -305,7 +305,7 @@ export const servicePages: Record<ServiceSlug, ServicePage> = {
       },
       {
         title: "Partimos del diagnóstico",
-        text: "Diseñamos cada propuesta a partir de cómo funciona el equipo, no de contenidos ni dinámicas estándar. En las PyMEs, donde los líderes suelen cumplir varios roles, ajustamos el formato a esa realidad.",
+        text: "Diseñamos cada propuesta a partir de cómo funciona el equipo, no de contenidos ni dinámicas estándar. Cuando los líderes cumplen varios roles, ajustamos el formato a esa realidad.",
       },
       {
         title: "Acuerdos sostenibles, conectados con RR. HH.",
@@ -326,8 +326,8 @@ export const servicePages: Record<ServiceSlug, ServicePage> = {
         a: "Sí. Además de las temáticas habituales, diseñamos capacitaciones y talleres a medida a partir de lo que tu equipo necesita.",
       },
       {
-        q: "¿Sirve para PyMEs con equipos chicos? ¿Participa todo el equipo?",
-        a: "Sí, está pensada para empresas y PyMEs. Definimos con la empresa si participa todo el equipo, solo los líderes o ambos, según el objetivo.",
+        q: "¿Sirve para equipos pequeños? ¿Participa todo el equipo?",
+        a: "Sí, está pensada para empresas de cualquier tamaño. Definimos con la empresa si participa todo el equipo, solo los líderes o ambos, según el objetivo.",
       },
       {
         q: "¿Cuándo conviene hacer un taller de integración?",

@@ -102,7 +102,7 @@ describe("ampliación a tres líneas de servicio", () => {
 
   it("la página de capacitación unifica las temáticas, organizadas por objetivo", () => {
     const [cap] = newPages;
-    expect(cap.h1).toBe("Capacitación, talleres y desarrollo de equipos para empresas y PyMEs");
+    expect(cap.h1).toBe("Capacitación, talleres y desarrollo de equipos para empresas");
     expect(cap.topicGroups?.map((g) => g.title)).toEqual([
       "Desarrollar competencias",
       "Fortalecer vínculos",
@@ -135,18 +135,31 @@ describe("ampliación a tres líneas de servicio", () => {
     ].join(" ");
     expect(elsewhere).not.toMatch(/Relaciones del Trabajo|Change Management|Coaching/i);
   });
+  it("el texto visible posiciona a People AG para empresas en general, sin limitarse a PyMEs", () => {
+    const visible = [
+      renderToStaticMarkup(<Hero />),
+      renderToStaticMarkup(<Empresas />),
+      renderToStaticMarkup(<ComoTrabajamos />),
+      renderToStaticMarkup(<Header />),
+      renderToStaticMarkup(<Footer />),
+      ...servicePageList.map((p) => renderToStaticMarkup(<ServicePageView page={p} />)),
+    ].map(text).join(" ");
+    expect(visible).not.toMatch(/PyMEs?/i);
+    expect(visible).toMatch(/empresas/i);
+  });
+
   it("el Hero tiene un texto de apoyo breve y dos CTA iguales para las tres líneas", () => {
     const html = renderToStaticMarkup(<Hero />);
     const hero = text(html);
     expect(hero).toContain("Contratá mejor. Gestioná personas con criterio.");
     expect(hero).toContain(
-      "Ayudamos a las empresas, en especial a las PyMEs, a incorporar talento, ordenar la gestión de personas y desarrollar a sus líderes y equipos. Soluciones a medida.",
+      "Ayudamos a las empresas a incorporar talento, ordenar la gestión de personas y desarrollar a sus líderes y equipos. Soluciones a medida.",
     );
     expect(hero).not.toContain("Somos una consultora");
     const buttons = [...html.matchAll(/<a [^>]*class="[^"]*rounded-full[^"]*"[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)];
     const ctas = buttons.map((m) => [text(m[2]).trim(), m[1]]).filter(([l]) => /Conversemos|Ver los servicios/.test(l));
     expect(ctas).toEqual([
-      ["Conversemos sobre tu empresa", "#contacto-empresa"],
+      ["Conversemos sobre tu empresa", "mailto:contacto@people-ag.com?subject=Consulta%20de%20empresa"],
       ["Ver los servicios", "#empresas"],
     ]);
     expect(hero).not.toMatch(/Necesito incorporar talento|Quiero profesionalizar/);

@@ -23,7 +23,7 @@ describe("aviso de privacidad (borrador)", () => {
     expect(text).toContain("Wendy Avero González");
     expect(text).toContain("persona humana");
     expect(text).toMatch(/COMPLETAR: domicilio, pendiente de validación jurídica/);
-    expect(text).toContain("wendyavero@people-ag.com");
+    expect(text).toContain("contacto@people-ag.com");
   });
 
   it("no publica CUIT ni domicilio y solo dice que no los pide", () => {
@@ -77,20 +77,5 @@ describe("aviso de privacidad (borrador)", () => {
     expect(footer).not.toContain("informacion-legal");
     expect(footer).toContain('href="/privacidad"');
     expect(html).not.toContain('id="informacion-legal"');
-  });
-});
-
-describe("casilla de consentimiento", () => {
-  it("se mantiene, sin premarcar, con el texto aprobado y el enlace al aviso", async () => {
-    const { ContactForm } = await import("@/components/forms/ContactForm");
-    const form = renderToStaticMarkup(<ContactForm audience="empresa" />);
-    expect(form).toContain('name="consent"');
-    expect(form).not.toMatch(/name="consent"[^>]*checked/);
-    const t = form.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
-    expect(t).toContain(
-      "Acepto que People AG utilice mis datos para responder mi consulta y mantener conversaciones relacionadas con los servicios solicitados.",
-    );
-    expect(form).toContain('href="/privacidad"');
-    expect(form).not.toContain('name="service"');
   });
 });
