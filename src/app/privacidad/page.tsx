@@ -9,7 +9,7 @@ import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
   title: "Aviso de privacidad",
-  description: `Cómo ${siteConfig.name} trata los datos personales que se reciben a través del formulario de contacto.`,
+  description: `Cómo ${siteConfig.name} trata los datos personales que se reciben a través de la consulta por correo electrónico.`,
   alternates: { canonical: "/privacidad" },
   // Fijo: esta página nunca se indexa, esté o no en borrador.
   robots: { index: false, follow: false },

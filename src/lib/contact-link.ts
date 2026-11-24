@@ -1,14 +1,11 @@
 import { mailtoHref } from "@/config/site";
 import { servicePages, servicePathById, type ServicePage } from "@/content/service-pages";
-import { isContactFormEnabled } from "@/lib/forms-status";
 
 /**
- * Destino de los botones de contacto de la home.
- * - Con el formulario habilitado: ancla al formulario (comportamiento actual).
- * - Sin formulario: correo de contacto, con el asunto del servicio.
+ * Destino de los botones de contacto: siempre el correo electrónico (mailto:),
+ * con el asunto del servicio cuando corresponde.
  */
 export function contactHref(serviceId?: ServicePage["serviceId"]): string {
-  if (isContactFormEnabled()) return "#contacto-empresa";
   const subject = serviceId
     ? Object.values(servicePages).find((p) => p.serviceId === serviceId)?.mailSubject
     : "Consulta de empresa";

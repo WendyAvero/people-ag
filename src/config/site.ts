@@ -36,10 +36,9 @@ export const siteConfig = {
   locale: "es_AR",
 
   /**
-   * Correo de contacto (enlaces mailto, datos estructurados). Las consultas del formulario llegan a CONTACT_TO_EMAIL.
-   * Es el único correo real del sitio; se usa vía enlace mailto:.
+   * Correo de contacto: único canal del sitio, por enlaces mailto: y datos estructurados.
    */
-  contactEmail: "wendyavero@people-ag.com",
+  contactEmail: "contacto@people-ag.com",
 
   /** Países donde se ofrecen los servicios (también para datos estructurados). */
   areas: [
@@ -57,27 +56,10 @@ export const siteConfig = {
   },
 
   /**
-   * Analítica opcional y sin cookies (Plausible). Solo se carga si se define
-   * NEXT_PUBLIC_PLAUSIBLE_DOMAIN. Ver README antes de activarla.
-   */
-  analytics: {
-    plausibleDomain: process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN?.trim() || null,
-  },
-
-  /**
    * Mientras sea true, la página /privacidad muestra el aviso de "borrador".
    * Pasalo a false únicamente después de la revisión jurídica.
    */
   privacyIsDraft: true,
-
-  /**
-   * Envío real del formulario de contacto. Mientras sea false, el formulario
-   * solo puede mostrarse en Preview/desarrollo en "modo de prueba": valida pero
-   * NO envía correos, NO llama a terceros y NO guarda datos, aunque haya
-   * variables de correo cargadas. Pasalo a true únicamente cuando lo autorices
-   * (y, en producción, además exige privacyIsDraft = false).
-   */
-  contactDeliveryEnabled: false,
 
   /**
    * Datos legales del responsable del tratamiento. Completar con datos REALES

@@ -2,6 +2,7 @@ import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { processSteps } from "@/content/services";
+import { contactHref } from "@/lib/contact-link";
 
 export function ComoTrabajamos() {
   return (
@@ -47,7 +48,7 @@ export function ComoTrabajamos() {
         </ol>
 
         <div className="mt-16">
-          <ButtonLink href="#contacto-empresa" variant="accent">
+          <ButtonLink href={contactHref()} variant="accent">
             Conversemos sobre tu empresa
           </ButtonLink>
         </div>

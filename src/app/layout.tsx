@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 
 import "./globals.css";
-import { Analytics } from "@/components/Analytics";
 import { siteConfig } from "@/config/site";
 import { isIndexableDeployment } from "@/lib/indexing";
 
@@ -73,7 +72,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Saltar al contenido
         </a>
         {children}
-        <Analytics />
       </body>
     </html>
   );

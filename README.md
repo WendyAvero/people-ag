@@ -1,31 +1,27 @@
 # People AG — sitio web
 
-Landing de People AG, consultoría estratégica de Recursos Humanos para empresas (dueños, directores y gerentes). El sitio es exclusivamente B2B.
+Web institucional de People AG, consultoría estratégica de Recursos Humanos para empresas (dueños, directores y gerentes). El sitio es exclusivamente B2B.
 Next.js (App Router) + TypeScript + Tailwind CSS.
 
-> **Resumen en una línea:** la web informativa se puede publicar ya mismo, sin configurar nada más que el dominio.
-> El **formulario de contacto se enciende solo** cuando cargás las 3 variables de correo (ver "Etapa 2"). Mientras no estén, la web **no muestra el formulario** ni pide datos personales.
+> **Resumen en una línea:** la web es informativa y no recolecta datos. El contacto es **exclusivamente por correo electrónico** (enlaces `mailto:`). No hay formulario, API de envío, cuentas, cookies ni herramientas de analítica.
 
 ---
 
-## Dos etapas de lanzamiento
+## Variables de entorno
 
-### Etapa 1 — Web informativa (lista para publicar)
-
-Variables que cargás en Vercel → *Settings → Environment Variables*. `VERCEL_ENV` y `NODE_ENV` son automáticas y no se configuran (ver abajo).
+Variables que cargás en Vercel → *Settings → Environment Variables*. Son opcionales: el sitio funciona sin ninguna.
 
 | Variable | ¿Obligatoria? | Qué poner |
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | No, pero recomendada para el dominio definitivo | `https://www.tu-dominio.com` (con `https://`, sin barra final ni ruta). Si falta, se usa `https://people-ag.com` en producción y `http://localhost:3000` en desarrollo, y `npm run check:env` muestra una advertencia |
 | `NEXT_PUBLIC_LINKEDIN_URL` | No | URL completa de LinkedIn. Vacía = no se muestra el ícono |
 | `NEXT_PUBLIC_INSTAGRAM_URL` | No | URL completa de Instagram. Vacía = no se muestra |
-| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | No | Solo si activás analítica (ver más abajo). Vacía = no se carga nada |
 
 Qué hace `NEXT_PUBLIC_SITE_URL`: define la dirección oficial del sitio para Google, el mapa del sitio (`sitemap.xml`), `robots.txt` y la imagen que se ve al compartir el link. Si falta, el build **no falla**: el sitio usa `https://people-ag.com` como dominio canónico y `npm run check:env` avisa. Si el dominio definitivo es otro, configurala antes de publicar.
 
-Variables automáticas (**no las configures a mano** en Vercel ni en `.env.local`):
-- `VERCEL_ENV`: la define Vercel (`production`, `preview` o `development`). El sitio la usa para decidir si el formulario es de prueba o de envío real.
-- `NODE_ENV`: la define Next.js/Node (`production` en el build de producción, `development` con `npm run dev`).
+Variable automática (**no la configures a mano**):
+- `VERCEL_ENV`: la define Vercel (`production`, `preview` o `development`). El sitio la usa para decidir si un deployment se indexa: solo `production` se indexa.
+- `NODE_ENV`: la define Next.js/Node. Se usa como respaldo cuando `VERCEL_ENV` no existe (por ejemplo, en un build local).
 
 **Cómo configurarla para el dominio definitivo**
 1. Vercel → tu proyecto → *Settings → Domains* → agregá tu dominio y seguí las instrucciones de DNS que muestra Vercel.
@@ -35,47 +31,24 @@ Variables automáticas (**no las configures a mano** en Vercel ni en `.env.local
 
 Si no definís la variable, el sitio usa `https://people-ag.com` como dominio canónico (sitemap, canonical y Open Graph). La dirección `people-ag.vercel.app` sigue funcionando como alternativa, pero los buscadores reciben siempre `people-ag.com` como principal.
 
-### SEO y páginas de servicio
+## Contacto
+
+- Canal único: `contacto@people-ag.com` por enlace `mailto:` (se cambia en `contactEmail`, `src/config/site.ts`).
+- Todos los botones de contacto (Hero, Empresas, Método de trabajo, páginas de servicio y sección Contacto) abren el correo. La función `contactHref()` en `src/lib/contact-link.ts` centraliza el destino.
+- Si el sitio necesita recibir datos por otro medio en el futuro, eso es una decisión nueva que debe pasar por revisión legal antes de implementarse.
+
+## SEO y páginas de servicio
 
 - Páginas indexables: `/`, `/reclutamiento-y-seleccion-de-personal` y `/consultoria-estrategica-de-recursos-humanos`. El contenido está en `src/content/service-pages.ts` (se edita sin tocar el diseño).
 - Cada página tiene su propio title, description, canonical y Open Graph. El sitemap (`/sitemap.xml`) y `robots.txt` se generan solos.
 - Datos estructurados (Schema.org) en `src/lib/structured-data.ts`: Argentina y Uruguay como zonas de servicio. No incluyen reseñas, teléfono ni dirección.
-- Canal de contacto: `wendyavero@people-ag.com` por enlace `mailto:` (se cambia en `contactEmail`, `src/config/site.ts`). Con el formulario apagado, los botones de contacto abren el correo; cuando se habilite el formulario vuelven a llevar al formulario.
 - Pendientes manuales: verificar `people-ag.com` en Google Search Console, enviar el sitemap y, si querés, redirigir `vercel.app` hacia `people-ag.com` desde Vercel.
-
-### Etapa 2 — Habilitar el formulario (NO hacer hasta tener lo legal resuelto)
-
-El formulario recibe **datos personales**. Antes de habilitarlo en producción:
-
-- [ ] Completar los datos reales de `/privacidad` (los marcados `[COMPLETAR: …]`) y cargar `legal` en `src/config/site.ts`.
-- [ ] Que un/a abogado/a revise el aviso y el texto del consentimiento (Argentina y también Uruguay).
-- [ ] Cambiar `privacyIsDraft` a `false` en `src/config/site.ts` (ver "Política de privacidad").
-- [ ] Cuenta de [Resend](https://resend.com) con el dominio `people-ag.com` verificado (registros DNS que Resend indica) y una API key.
-
-**Seguro por diseño:** en **producción** el formulario no aparece mientras `privacyIsDraft` sea `true`, aunque las variables estén cargadas (así nunca se pide un consentimiento que remita a un aviso incompleto). En *Preview* y desarrollo sí se puede probar con el aviso en borrador.
-
-Variables **solo para el formulario** (secretas, solo servidor):
-
-| Variable | Qué poner |
-|---|---|
-| `RESEND_API_KEY` | La clave de Resend (empieza con `re_`) |
-| `CONTACT_TO_EMAIL` | `wendyavero@people-ag.com` (una sola dirección) |
-| `CONTACT_FROM_EMAIL` | Remitente de un dominio verificado en Resend, ej. `People AG <contacto@people-ag.com>` |
-| `RESEND_API_URL` (opcional, solo pruebas locales) | Solo para probar contra un servidor simulado en `localhost` (`http://localhost:puerto/...`). Cualquier otro host se rechaza. **No la configures en Vercel ni en producción**: debe quedar sin definir. |
-
-Campos del formulario (consultas de Reclutamiento y selección): nombre y apellido, empresa, email laboral, teléfono (opcional), perfil o posición a cubrir, comentarios adicionales (opcional) y casilla de consentimiento (no premarcada). Protecciones: validación en navegador y servidor, campo trampa (honeypot), tiempo mínimo de llenado (invisible, 3 s, sin CAPTCHA ni servicios externos), máximo 5 envíos por IP cada 10 minutos, descarte de reenvíos idénticos (doble clic) y clave de idempotencia en Resend.
-
-Modos: **producción** muestra siempre el correo (`mailto:`), nunca el formulario, mientras `privacyIsDraft` sea `true`. En **Preview/desarrollo** el formulario se muestra en **modo de prueba**: valida y aplica el antispam pero **no envía correos, no llama a terceros y no guarda datos**, y lo dice en pantalla ("Vista de prueba: tu consulta no fue enviada"); nunca se confirma un envío que no ocurrió. El envío real exige, además de las **tres** variables de correo válidas, pasar `contactDeliveryEnabled` a `true` en `src/config/site.ts` (decisión explícita, hoy `false`) y, en producción, `privacyIsDraft = false`. Hay que hacer **Redeploy** al cambiar variables.
-
-Para probar sin riesgo: en Vercel podés cargar las 3 variables solo en **Preview** (no en Production), desplegar una rama y enviar una consulta de prueba de cada tipo (formulario de empresas). Verificá que el correo llegue. Recién ahí cargarlas en Production.
-
----
 
 ## Publicar en Vercel (paso a paso)
 
 1. Subí el proyecto a un repositorio de GitHub (sin `node_modules`, `.next` ni `.env.local`).
 2. En [vercel.com](https://vercel.com): *Add New → Project* → importá el repositorio (detecta Next.js solo, no cambies nada del build).
-3. Cargá las variables de la Etapa 1 y **Deploy**.
+3. Cargá las variables opcionales de arriba (si las necesitás) y **Deploy**.
 4. Abrí la URL que te da Vercel y revisá la web en el celular y en la computadora.
 5. Asociá el dominio (*Settings → Domains*) y hacé el Redeploy del paso de `NEXT_PUBLIC_SITE_URL`.
 
@@ -96,11 +69,6 @@ No lo cambies a `false` hasta completar los datos reales y tener la revisión le
 - **Logo:** `public/logo-people-ag.png` (PNG con fondo transparente). Para cambiarlo, reemplazá ese archivo conservando el nombre; el sitio ajusta solo el alto y respeta la proporción. El favicon es `src/app/icon.png` (símbolo del logo) y la imagen al compartir en redes (`src/app/opengraph-image.tsx`) también usa el logo.
 - Orden de secciones: `src/app/page.tsx`. Orden del menú: `navItems` en `src/config/site.ts`.
 - Año del pie: `copyrightYear` en `src/config/site.ts`.
-- Los botones con `data-servicio` hacia `#contacto-empresa` preseleccionan el servicio en el formulario (el valor debe existir en `serviceOptions` de `src/lib/contact-schema.ts`; hay un test que lo controla).
-
-## Analítica (apagada)
-
-Si definís `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` se carga Plausible (sin cookies). Antes de activarla hay que actualizar la sección 8 del aviso de privacidad, que hoy afirma que el sitio no usa herramientas de analítica. Ese cambio corresponde a la revisión legal: este README no modifica el aviso.
 
 ## Verificar antes de publicar (comandos)
 
@@ -110,34 +78,32 @@ npm run lint          # estilo de código
 npm run typecheck     # TypeScript
 npm test              # pruebas automáticas
 npm run build         # build de producción
-npm run check:env                    # revisa variables de la web informativa
-npm run check:env -- --formularios   # además exige las de correo
+npm run check:env     # revisa las variables públicas
 ```
-`check:env` lee `.env.local` si existe, no imprime secretos y **no** prueba que Resend acepte la clave.
+`check:env` lee `.env.local` si existe y no imprime valores.
 
 Para correr en tu computadora: `cp .env.example .env.local`, completá lo que corresponda y `npm run dev` (http://localhost:3000).
 
 ## Seguridad (resumen)
 
 - Cabeceras: CSP, HSTS, X-Frame-Options, nosniff, Referrer-Policy y Permissions-Policy (`next.config.ts`). La CSP admite `'unsafe-inline'` en scripts/estilos porque Next inyecta scripts de hidratación en páginas estáticas; el resto de orígenes está restringido.
-- Formulario: validación en cliente y servidor, consentimiento obligatorio, campo trampa anti-bots, límite de 5 envíos por IP cada 10 minutos (en memoria: de mejor esfuerzo en serverless; para algo más estricto, sumar captcha o rate limiting de la plataforma), control de origen, tope de tamaño, correo en texto plano, sin guardar datos en el sitio.
-- `RESEND_API_URL` solo se acepta apuntando a localhost (pruebas); en producción debe estar vacía.
-- Los logs nunca incluyen datos de la consulta ni claves. El sitio no usa cookies ni almacenamiento del navegador.
+- Preview y desarrollo no se indexan: `noindex` en meta y `X-Robots-Tag` fuera de producción.
+- El sitio no usa cookies, almacenamiento del navegador ni scripts de terceros, y no tiene endpoints propios de recolección de datos.
 
 ## Estructura
 
 ```
 src/
-  app/                 páginas, API del formulario, sitemap, robots, imagen OG, 404
-  components/          layout, sections (una por sección), forms, ui
+  app/                 páginas, sitemap, robots, imagen OG, 404
+  components/          layout, sections (una por sección), ui
   config/site.ts       datos del sitio, redes, fundadora, datos legales
-  content/services.ts  textos de servicios y método
-  lib/                 validación, correo, rate limit, estado de formularios
+  content/             textos de servicios, método y páginas
+  lib/                 datos estructurados, enlaces de contacto, indexación, validación de variables
 tests/                 pruebas automáticas
-docs/                  auditoría de prelanzamiento
+docs/                  auditoría de prelanzamiento (histórica)
 ```
 
 ## Qué está verificado y qué no
 
-Verificado: lint, TypeScript, pruebas, build, navegador (Chrome headless, escritorio y móvil), accesibilidad automática (axe), en modo informativo y con formulario contra un servidor de correo **simulado**.
-**No verificado:** envío real con Resend (faltan credenciales), Safari/Firefox, celulares reales, lector de pantalla. Procedimiento de prueba real: `docs/AUDITORIA-PRELANZAMIENTO.md`.
+Verificado en el código: lint, TypeScript, pruebas y build.
+**No verificado desde este repositorio:** comportamiento en Vercel (Preview y producción), Lighthouse, Safari/Firefox, celulares reales, lector de pantalla. Procedimiento de prueba: `docs/AUDITORIA-PRELANZAMIENTO.md` (documento histórico, pendiente de actualizar).

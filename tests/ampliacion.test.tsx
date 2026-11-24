@@ -159,7 +159,7 @@ describe("ampliación a tres líneas de servicio", () => {
     const buttons = [...html.matchAll(/<a [^>]*class="[^"]*rounded-full[^"]*"[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)];
     const ctas = buttons.map((m) => [text(m[2]).trim(), m[1]]).filter(([l]) => /Conversemos|Ver los servicios/.test(l));
     expect(ctas).toEqual([
-      ["Conversemos sobre tu empresa", "#contacto-empresa"],
+      ["Conversemos sobre tu empresa", "mailto:contacto@people-ag.com?subject=Consulta%20de%20empresa"],
       ["Ver los servicios", "#empresas"],
     ]);
     expect(hero).not.toMatch(/Necesito incorporar talento|Quiero profesionalizar/);

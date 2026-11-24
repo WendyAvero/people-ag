@@ -3,9 +3,6 @@ import type { NextConfig } from "next";
 import { isIndexableDeployment } from "./src/lib/indexing";
 
 const isProd = process.env.NODE_ENV === "production";
-const plausible = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN?.trim()
-  ? "https://plausible.io"
-  : "";
 
 /**
  * Content Security Policy. Next.js inyecta scripts en línea para hidratar, y
@@ -15,11 +12,11 @@ const plausible = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN?.trim()
  */
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' ${plausible}`.trim(),
+  "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self'",
-  `connect-src 'self' ${plausible}`.trim(),
+  "connect-src 'self'",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
